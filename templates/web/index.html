@@ -1,0 +1,327 @@
+{% extends "web/base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative h-screen bg-cover bg-center bg-no-repeat overflow-hidden z-0" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+    <div class="flex items-center justify-center h-full">
+        <div class="text-center text-white px-4">
+            <h1 id="hero-title" class="text-5xl md:text-7xl font-light mb-6">
+                Care beyond medicine
+            </h1>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+    </div>
+</section>
+
+<!-- Our Purpose Section -->
+<section class="relative z-10 py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Title -->
+        <div class="text-center mb-12">
+            <h2 class="purpose-title text-4xl md:text-5xl font-light text-gray-800 mb-6">
+                Our purpose
+            </h2>
+            <p class="purpose-text text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
+                At Getz Pharma, our purpose is to foster growth and well-being for all, 
+                especially those most in need. We aim to successfully integrate corporate responsibility 
+                concerns into the company's values, culture, and business decisions.
+            </p>
+        </div>
+        
+        <!-- Image Grid with Mixed Sizes -->
+        <div class="relative mt-16">
+            <!-- Desktop View -->
+            <div class="hidden md:grid grid-cols-12 gap-4 auto-rows-fr">
+                <!-- Row 1 -->
+                <!-- Large Image 1 - Team -->
+                <div class="slider-item col-span-4 row-span-2 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-full">
+                        <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Team" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+                
+                <!-- Medium Image 1 - Doctor -->
+                <div class="slider-item col-span-4 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-64">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Doctor" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+                
+                <!-- Medium Image 2 - Solar Panels -->
+                <div class="slider-item col-span-4 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-64">
+                        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Solar Panels" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+                
+                <!-- Row 2 -->
+                <!-- Small Image 1 - Children -->
+                <div class="slider-item col-span-2 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-48">
+                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+                             alt="Children" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+                
+                <!-- Medium Image 3 - Education -->
+                <div class="slider-item col-span-6 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-48">
+                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Education" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+                
+                <!-- Row 3 -->
+                <!-- Large Image 2 - Nature -->
+                <div class="slider-item col-span-8 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-80">
+                        <img src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                             alt="Nature" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+                
+                <!-- Medium Image 4 - Healthcare -->
+                <div class="slider-item col-span-4 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg group cursor-pointer h-80">
+                        <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Healthcare" 
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile View - Simple Grid -->
+            <div class="grid md:hidden grid-cols-2 gap-4">
+                <div class="slider-item opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+                             alt="Team" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="slider-item opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+                             alt="Doctor" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="slider-item opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+                             alt="Solar Panels" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="slider-item opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" 
+                             alt="Children" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="slider-item col-span-2 opacity-0">
+                    <div class="relative overflow-hidden rounded-lg shadow-lg h-56">
+                        <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Education" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Commitments Section -->
+<section id="impact" class="relative z-10 py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Title -->
+        <div class="text-center mb-6">
+            <h2 class="commitments-title text-4xl md:text-5xl font-light text-gray-800 opacity-0">
+                Our commitments
+            </h2>
+        </div>
+        
+        <div class="text-center mb-16">
+            <p class="commitments-text text-lg text-gray-600 max-w-3xl mx-auto opacity-0">
+                Getz Pharma's Corporate Social Responsibility (CSR) initiatives 
+                are divided into four broad categories.
+            </p>
+        </div>
+        
+        <!-- Commitment Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Education Card -->
+            <div class="commitment-card relative overflow-hidden rounded-2xl shadow-lg group cursor-pointer h-96 opacity-0">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Education" 
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold text-white">Education</h3>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
+                            <svg class="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Environment Card -->
+            <div class="commitment-card relative overflow-hidden rounded-2xl shadow-lg group cursor-pointer h-96 opacity-0">
+                <img src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Environment" 
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold text-white">Environment</h3>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
+                            <svg class="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Health Card -->
+            <div class="commitment-card relative overflow-hidden rounded-2xl shadow-lg group cursor-pointer h-96 opacity-0">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Health" 
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold text-white">Health</h3>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
+                            <svg class="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cultural Heritage Card -->
+            <div class="commitment-card relative overflow-hidden rounded-2xl shadow-lg group cursor-pointer h-96 opacity-0">
+                <img src="https://images.unsplash.com/photo-1548604803-2ce3d9b5e4f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Cultural Heritage" 
+                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-2xl font-semibold text-white">Cultural Heritage</h3>
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
+                            <svg class="w-5 h-5 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Hero title animation - simple fade in
+    gsap.from('#hero-title', {
+        opacity: 0,
+        y: 30,
+        duration: 1.5,
+        ease: 'power3.out',
+        delay: 0.3
+    });
+    
+    // Image grid items animation
+    const sliderItems = document.querySelectorAll('.slider-item');
+    sliderItems.forEach((item, index) => {
+        gsap.to(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 85%',
+                toggleActions: 'play none none none'
+            },
+            opacity: 1,
+            scale: 1.05,
+            duration: 0.6,
+            delay: index * 0.08,
+            ease: 'power2.out',
+            onComplete: () => {
+                gsap.to(item, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: 'power2.inOut'
+                });
+            }
+        });
+    });
+    
+    // Our Commitments section animations
+    gsap.to('.commitments-title', {
+        scrollTrigger: {
+            trigger: '.commitments-title',
+            start: 'top 80%',
+            toggleActions: 'play none none none'
+        },
+        opacity: 1,
+        y: -20,
+        duration: 1,
+        ease: 'power2.out'
+    });
+    
+    gsap.to('.commitments-text', {
+        scrollTrigger: {
+            trigger: '.commitments-text',
+            start: 'top 80%',
+            toggleActions: 'play none none none'
+        },
+        opacity: 1,
+        y: -20,
+        duration: 1,
+        delay: 0.2,
+        ease: 'power2.out'
+    });
+    
+    // Commitment cards staggered animation
+    const commitmentCards = document.querySelectorAll('.commitment-card');
+    commitmentCards.forEach((card, index) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none none'
+            },
+            opacity: 1,
+            y: -30,
+            duration: 0.8,
+            delay: index * 0.15,
+            ease: 'power2.out'
+        });
+    });
+</script>
+{% endblock %}
