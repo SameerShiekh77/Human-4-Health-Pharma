@@ -35,7 +35,7 @@
                     <a href="/" class="flex items-center">
                         <div class="flex items-center">
                             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold text-xl">G</span>
+                                <span class="text-white font-bold text-xl">H</span>
                             </div>
                             <div class="ml-2">
                                 <span class="text-2xl font-bold text-gray-800">Human 4 Health</span>
@@ -47,11 +47,10 @@
                 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">About</a>
-                    <a href="#products" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Products</a>
-                    <a href="#innovation" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Innovation</a>
-                    <a href="#global" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Global</a>
-                    <a href="#impact" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Impact</a>
+                    <a href="{% url 'about-us' %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">About</a>
+                    <a href="{% url "products" %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Products</a>
+                    <a href="{% url "innovations" %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Innovation</a>
+                    <a href="{% url "impact" %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Impact</a>
                     <a href="#news" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">News & Events</a>
                     <a href="#careers" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Careers</a>
                     <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contact Us</a>
@@ -80,11 +79,10 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 pt-2 pb-4 space-y-2">
-                <a href="#about" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">About</a>
-                <a href="#products" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Products</a>
-                <a href="#innovation" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Innovation</a>
-                <a href="#global" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Global</a>
-                <a href="#impact" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Impact</a>
+                <a href="{% url 'about-us' %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">About</a>
+                <a href="{% url "products" %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Products</a>
+                <a href="{% url "innovations" %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Innovation</a>
+                <a href="{% url "impact" %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Impact</a>
                 <a href="#news" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">News & Events</a>
                 <a href="#careers" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Careers</a>
                 <a href="#contact" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Contact Us</a>
@@ -105,7 +103,7 @@
                 <div class="lg:col-span-3">
                     <div class="flex items-center mb-6">
                         <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-xl">G</span>
+                            <span class="text-white font-bold text-xl">H</span>
                         </div>
                         <div class="ml-2">
                             <span class="text-2xl font-bold">Human 4 Health</span>
@@ -121,8 +119,8 @@
                 <div class="lg:col-span-2">
                     <h3 class="font-semibold text-lg mb-4">About</h3>
                     <ul class="space-y-2">
-                        <li><a href="#products" class="text-gray-300 hover:text-white transition-colors duration-200">Products</a></li>
-                        <li><a href="#innovation" class="text-gray-300 hover:text-white transition-colors duration-200">Innovation</a></li>
+                        <li><a href="{% url "products" %}" class="text-gray-300 hover:text-white transition-colors duration-200">Products</a></li>
+                        <li><a href="{% url "innovations" %}" class="text-gray-300 hover:text-white transition-colors duration-200">Innovation</a></li>
                     </ul>
                 </div>
                 
@@ -139,7 +137,6 @@
                 
                 <!-- Global Column -->
                 <div class="lg:col-span-2">
-                    <h3 class="font-semibold text-lg mb-4">Global</h3>
                     <h3 class="font-semibold text-lg mb-4 mt-6">News & Events</h3>
                     <h3 class="font-semibold text-lg mb-4 mt-6">Careers</h3>
                 </div>
@@ -202,7 +199,7 @@
                     <a href="#terms" class="hover:text-white transition-colors duration-200">Terms of use</a>
                 </div>
                 <div>
-                    <p>Copyright © 2025 Human 4 Health Pharma. All rights reserved.</p>
+                    <p>Copyright © <span id="currentYear"></span> Human 4 Health Pharma. All rights reserved.</p>
                 </div>
             </div>
         </div>
@@ -210,6 +207,10 @@
 
     <!-- Mobile Menu Toggle Script -->
     <script>
+
+        let year = new Date().getFullYear();
+        document.getElementById('currentYear').textContent = year;
+
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');

@@ -1,0 +1,464 @@
+{% extends 'web/base.html' %}
+
+{% block title %}Innovation - Human 4 Health Pharma{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-20 bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div class="hero-content">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-light text-gray-900 mb-6 leading-tight">
+                    Redefining health with <br>
+                    <span class="text-blue-500 font-normal">innovative science</span>
+                </h1>
+                <p class="text-lg text-gray-600 leading-relaxed mb-8">
+                    Human 4 Health Pharma is a generic pharmaceutical company, developing products that have passed the Bio-Equivalence (BE) from the UK-FDA accredited BE centers.
+                </p>
+            </div>
+
+            <!-- Right Images Grid -->
+            <div class="hero-images grid grid-cols-2 gap-4">
+                <div class="space-y-4">
+                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Research Team" class="w-full h-64 object-cover">
+                    </div>
+                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1579154341068-c4e3c1c7e5c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Laboratory Research" class="w-full h-48 object-cover">
+                    </div>
+                </div>
+                <div class="space-y-4 pt-12">
+                    <div class="rounded-2xl overflow-hidden shadow-lg">
+                        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Microscope Analysis" class="w-full h-56 object-cover">
+                    </div>
+                    <div class="rounded-2xl overflow-hidden shadow-lg bg-blue-100 flex items-center justify-center h-48">
+                        <img src="https://images.unsplash.com/photo-1614935151651-0bea6508db6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Molecular Structure" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Commitment to Quality Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="quality-content mb-12">
+            <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-4">Commitment to quality</h2>
+            <p class="text-lg text-gray-600 max-w-3xl">
+                Our products are manufactured in a safe and quality-controlled environment, extending from the product's design to delivery to the customer.
+            </p>
+        </div>
+
+        <!-- Lab Image with Stat Card -->
+        <div class="relative rounded-2xl overflow-hidden shadow-xl">
+            <img src="https://images.unsplash.com/photo-1583911860205-72f8ac8ddcbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="Laboratory Facility" class="w-full h-96 object-cover">
+            
+            <!-- Stat Card Overlay -->
+            <div class="stat-card absolute bottom-8 right-8 bg-blue-600 text-white rounded-2xl p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <svg class="w-16 h-16 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="text-4xl font-bold mb-1">140+</div>
+                        <div class="text-lg opacity-90">molecules developed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Clinical Research Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="clinical-content mb-12">
+            <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-4">Clinical research</h2>
+            <p class="text-lg text-gray-600 max-w-3xl">
+                Getz Pharma promotes an environment of constant research and development, supporting clinical research, statistical analysis, and publication services to benefit both the fraternity and patients.
+            </p>
+        </div>
+
+        <!-- Research Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Vault Card 1 -->
+            <div class="vault-card group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Scientific Publications" class="w-full h-80 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <div class="text-lg font-semibold mb-1">The Vault - 100 Scientific</div>
+                    <div class="text-2xl font-bold">Publications</div>
+                    <button class="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vault Card 2 -->
+            <div class="vault-card group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                <img src="https://images.unsplash.com/photo-1581093458791-9d42e85d0f8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Scientific Research" class="w-full h-80 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <div class="text-lg font-semibold mb-1">The Vault - 140 Scientific</div>
+                    <div class="text-2xl font-bold">Publications</div>
+                    <button class="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vault Card 3 -->
+            <div class="vault-card group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pharmaceutical Research" class="w-full h-80 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-cyan-600/90 via-cyan-600/50 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold">THE VAULT 24/2</div>
+                    <button class="absolute top-6 right-6 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Research Services Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Side - DNA Illustration -->
+            <div class="dna-illustration flex justify-center">
+                <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="DNA Research" class="rounded-2xl shadow-xl">
+            </div>
+
+            <!-- Right Side - Services Accordion -->
+            <div class="services-content">
+                <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-4">Research services</h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    Getz Pharma facilitates and supports researchers with clinical research, statistical analysis and publication services.
+                </p>
+
+                <!-- Accordion Items -->
+                <div class="space-y-3">
+                    <!-- Literature Research -->
+                    <div class="accordion-item bg-blue-600 rounded-xl overflow-hidden shadow-lg">
+                        <button class="accordion-header w-full flex items-center justify-between p-5 text-left text-white hover:bg-blue-700 transition-colors">
+                            <span class="text-lg font-semibold">Literature Research</span>
+                            <svg class="accordion-icon w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                        <div class="accordion-content hidden">
+                            <div class="p-5 pt-0 text-white/90">
+                                <p>Comprehensive literature review and research analysis services to support your pharmaceutical development projects with the latest scientific findings.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Methodology -->
+                    <div class="accordion-item bg-blue-600 rounded-xl overflow-hidden shadow-lg">
+                        <button class="accordion-header w-full flex items-center justify-between p-5 text-left text-white hover:bg-blue-700 transition-colors">
+                            <span class="text-lg font-semibold">Research Methodology</span>
+                            <svg class="accordion-icon w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                        <div class="accordion-content hidden">
+                            <div class="p-5 pt-0 text-white/90">
+                                <p>Expert guidance in developing robust research methodologies, ensuring scientific rigor and reliability in your pharmaceutical studies.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scientific Publications -->
+                    <div class="accordion-item bg-blue-600 rounded-xl overflow-hidden shadow-lg">
+                        <button class="accordion-header w-full flex items-center justify-between p-5 text-left text-white hover:bg-blue-700 transition-colors">
+                            <span class="text-lg font-semibold">Scientific Publications</span>
+                            <svg class="accordion-icon w-6 h-6 transform transition-transform duration-300 rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-5 pt-0 text-white/90">
+                                <p class="mb-4">
+                                    Quality papers are a learning tool for both the submitting author and discover how to write a high quality paper and understand the standards of the journal aimed at publishing in.
+                                </p>
+                                <p>
+                                    Get a brief overview of the guidelines for peer-reviewed, indexed journals.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Synopsis Writing -->
+                    <div class="accordion-item bg-blue-600 rounded-xl overflow-hidden shadow-lg">
+                        <button class="accordion-header w-full flex items-center justify-between p-5 text-left text-white hover:bg-blue-700 transition-colors">
+                            <span class="text-lg font-semibold">Synopsis Writing</span>
+                            <svg class="accordion-icon w-6 h-6 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                        <div class="accordion-content hidden">
+                            <div class="p-5 pt-0 text-white/90">
+                                <p>Professional synopsis writing services to effectively communicate your research objectives, methodology, and expected outcomes to stakeholders and regulatory bodies.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Facility Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-light text-gray-900 mb-4">Our facility</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                Every pack produced and marketed by Getz Pharma passes through stringent process controls, ensuring that all of our brands meet ICH-GR, GMP and Q10 standards.
+            </p>
+        </div>
+
+        <!-- Facility Gallery -->
+        <div class="facility-gallery grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="facility-item rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1631549916768-4119b2e5f926?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Laboratory Equipment 1" class="w-full h-48 object-cover">
+            </div>
+            <div class="facility-item rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Laboratory Equipment 2" class="w-full h-48 object-cover">
+            </div>
+            <div class="facility-item rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1583912267550-a0de8c78e1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Research Lab" class="w-full h-48 object-cover">
+            </div>
+            <div class="facility-item rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Quality Control" class="w-full h-48 object-cover">
+            </div>
+            <div class="facility-item rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Manufacturing Facility" class="w-full h-48 object-cover">
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Anime.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hero Content Animation
+        anime({
+            targets: '.hero-content',
+            translateY: [40, 0],
+            opacity: [0, 1],
+            duration: 1000,
+            easing: 'easeOutQuart',
+            delay: 200
+        });
+
+        // Hero Images Animation
+        anime({
+            targets: '.hero-images > div',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            duration: 1000,
+            delay: anime.stagger(150, {start: 400}),
+            easing: 'easeOutQuart'
+        });
+
+        // Quality Content Animation
+        const qualityObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: '.quality-content',
+                        translateY: [30, 0],
+                        opacity: [0, 1],
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    });
+                    
+                    anime({
+                        targets: '.stat-card',
+                        scale: [0.8, 1],
+                        opacity: [0, 1],
+                        duration: 800,
+                        delay: 400,
+                        easing: 'easeOutElastic(1, .6)'
+                    });
+                    qualityObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        const qualitySection = document.querySelector('.quality-content');
+        if (qualitySection) {
+            qualityObserver.observe(qualitySection);
+        }
+
+        // Clinical Research Animation
+        const clinicalObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: '.clinical-content',
+                        translateY: [30, 0],
+                        opacity: [0, 1],
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    });
+                    
+                    anime({
+                        targets: '.vault-card',
+                        translateY: [50, 0],
+                        opacity: [0, 1],
+                        duration: 800,
+                        delay: anime.stagger(150, {start: 300}),
+                        easing: 'easeOutQuart'
+                    });
+                    clinicalObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        const clinicalSection = document.querySelector('.clinical-content');
+        if (clinicalSection) {
+            clinicalObserver.observe(clinicalSection);
+        }
+
+        // Services Animation
+        const servicesObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: '.dna-illustration',
+                        translateX: [-50, 0],
+                        opacity: [0, 1],
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    });
+                    
+                    anime({
+                        targets: '.services-content',
+                        translateX: [50, 0],
+                        opacity: [0, 1],
+                        duration: 800,
+                        easing: 'easeOutQuart'
+                    });
+                    
+                    anime({
+                        targets: '.accordion-item',
+                        translateY: [30, 0],
+                        opacity: [0, 1],
+                        duration: 600,
+                        delay: anime.stagger(100, {start: 400}),
+                        easing: 'easeOutQuart'
+                    });
+                    servicesObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        const servicesSection = document.querySelector('.services-content');
+        if (servicesSection) {
+            servicesObserver.observe(servicesSection);
+        }
+
+        // Facility Gallery Animation
+        const facilityObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: '.facility-item',
+                        scale: [0.8, 1],
+                        opacity: [0, 1],
+                        duration: 600,
+                        delay: anime.stagger(80),
+                        easing: 'easeOutQuart'
+                    });
+                    facilityObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        const facilityGallery = document.querySelector('.facility-gallery');
+        if (facilityGallery) {
+            facilityObserver.observe(facilityGallery);
+        }
+
+        // Accordion Functionality
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+        
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const item = this.closest('.accordion-item');
+                const content = item.querySelector('.accordion-content');
+                const icon = item.querySelector('.accordion-icon');
+                const isOpen = !content.classList.contains('hidden');
+
+                // Close all accordions
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    if (c !== content) {
+                        c.classList.add('hidden');
+                    }
+                });
+                
+                document.querySelectorAll('.accordion-icon').forEach(i => {
+                    if (i !== icon) {
+                        i.classList.remove('rotate-0');
+                        i.querySelector('path').setAttribute('d', 'M12 4v16m8-8H4');
+                    }
+                });
+
+                // Toggle current accordion
+                if (isOpen) {
+                    content.classList.add('hidden');
+                    icon.classList.remove('rotate-0');
+                    icon.querySelector('path').setAttribute('d', 'M12 4v16m8-8H4');
+                } else {
+                    content.classList.remove('hidden');
+                    icon.classList.add('rotate-0');
+                    icon.querySelector('path').setAttribute('d', 'M20 12H4');
+                    
+                    // Animate content
+                    anime({
+                        targets: content,
+                        maxHeight: [0, content.scrollHeight],
+                        opacity: [0, 1],
+                        duration: 400,
+                        easing: 'easeOutQuart'
+                    });
+                }
+            });
+        });
+
+        // Initialize first accordion as open (Scientific Publications)
+        const scientificPublications = document.querySelectorAll('.accordion-item')[2];
+        if (scientificPublications) {
+            const content = scientificPublications.querySelector('.accordion-content');
+            const icon = scientificPublications.querySelector('.accordion-icon');
+            content.classList.remove('hidden');
+            icon.classList.add('rotate-0');
+        }
+    });
+</script>
+{% endblock %}

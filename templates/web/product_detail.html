@@ -1,0 +1,703 @@
+{% extends 'web/base.html' %}
+
+{% block title %}CardioGuard Plus - Product Details | Human 4 Health Pharma{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="bg-gray-50 py-4 border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="flex items-center space-x-2 text-sm">
+            <a href="/" class="text-gray-500 hover:text-blue-600 transition-colors">Home</a>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <a href="/products" class="text-gray-500 hover:text-blue-600 transition-colors">Products</a>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+            <span class="text-gray-800 font-medium">CardioGuard Plus</span>
+        </nav>
+    </div>
+</section>
+
+<!-- Product Detail Section -->
+<section class="py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Product Image -->
+            <div class="product-image">
+                <div class="relative rounded-2xl overflow-hidden bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 aspect-square flex items-center justify-center shadow-xl">
+                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                    <div class="relative z-10">
+                        <div class="w-64 h-64 bg-white rounded-full flex items-center justify-center shadow-2xl">
+                            <svg class="w-32 h-32 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="absolute top-6 right-6 bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg">In Stock</span>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <div class="mb-6">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-4">
+                        Cardiovascular
+                    </span>
+                    <h1 class="product-title text-4xl md:text-5xl font-light text-gray-900 mb-4">
+                        CardioGuard Plus
+                    </h1>
+                    <p class="text-xl text-gray-600 leading-relaxed">
+                        Advanced cardiovascular support medication designed for comprehensive blood pressure management and heart health optimization.
+                    </p>
+                </div>
+
+                <!-- Key Information -->
+                <div class="grid grid-cols-2 gap-4 mb-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <div class="key-info-item">
+                        <span class="block text-xs text-gray-500 font-medium mb-1">Prescription Required</span>
+                        <span class="block text-lg font-bold text-gray-800">Yes (Rx)</span>
+                    </div>
+                    <div class="key-info-item">
+                        <span class="block text-xs text-gray-500 font-medium mb-1">Available Dosages</span>
+                        <span class="block text-lg font-bold text-gray-800">10mg, 20mg, 40mg</span>
+                    </div>
+                    <div class="key-info-item">
+                        <span class="block text-xs text-gray-500 font-medium mb-1">Pack Size</span>
+                        <span class="block text-lg font-bold text-gray-800">30 Tablets</span>
+                    </div>
+                    <div class="key-info-item">
+                        <span class="block text-xs text-gray-500 font-medium mb-1">Form</span>
+                        <span class="block text-lg font-bold text-gray-800">Film-Coated Tablets</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <button class="flex-1 min-w-[200px] bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>Consult a Doctor</span>
+                    </button>
+                    <button class="flex-1 min-w-[200px] bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                        </svg>
+                        <span>Share Product</span>
+                    </button>
+                </div>
+
+                <!-- Certifications -->
+                <div class="flex items-center space-x-6 pt-6 border-t border-gray-200">
+                    <div class="flex items-center space-x-2 text-sm">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <span class="text-gray-700 font-medium">FDA Approved</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <span class="text-gray-700 font-medium">WHO Certified</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        </svg>
+                        <span class="text-gray-700 font-medium">GMP Certified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Detailed Information Tabs -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Tab Navigation -->
+        <div class="flex flex-wrap border-b border-gray-300 mb-8">
+            <button class="tab-btn active px-6 py-4 font-semibold text-blue-600 border-b-2 border-blue-600 transition-colors hover:text-blue-700" data-tab="description">
+                Description
+            </button>
+            <button class="tab-btn px-6 py-4 font-semibold text-gray-600 border-b-2 border-transparent transition-colors hover:text-blue-600" data-tab="usage">
+                Usage & Dosage
+            </button>
+            <button class="tab-btn px-6 py-4 font-semibold text-gray-600 border-b-2 border-transparent transition-colors hover:text-blue-600" data-tab="composition">
+                Composition
+            </button>
+            <button class="tab-btn px-6 py-4 font-semibold text-gray-600 border-b-2 border-transparent transition-colors hover:text-blue-600" data-tab="side-effects">
+                Side Effects
+            </button>
+            <button class="tab-btn px-6 py-4 font-semibold text-gray-600 border-b-2 border-transparent transition-colors hover:text-blue-600" data-tab="precautions">
+                Precautions
+            </button>
+            <button class="tab-btn px-6 py-4 font-semibold text-gray-600 border-b-2 border-transparent transition-colors hover:text-blue-600" data-tab="storage">
+                Storage
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Description Tab -->
+            <div id="description" class="tab-pane active">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Product Description</h2>
+                    <div class="prose prose-lg max-w-none text-gray-700">
+                        <p class="mb-4">
+                            CardioGuard Plus is a cutting-edge pharmaceutical solution specifically formulated to address cardiovascular health concerns. This advanced medication combines proven therapeutic agents to provide comprehensive support for patients managing hypertension and related cardiac conditions.
+                        </p>
+                        <p class="mb-4">
+                            Developed through rigorous clinical research and testing, CardioGuard Plus has demonstrated exceptional efficacy in maintaining healthy blood pressure levels and promoting overall cardiovascular wellness. The medication works by targeting multiple pathways involved in blood pressure regulation, ensuring optimal therapeutic outcomes.
+                        </p>
+                        <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Key Benefits:</h3>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li>Effective blood pressure management and stabilization</li>
+                            <li>Enhanced cardiovascular protection and support</li>
+                            <li>Reduced risk of heart-related complications</li>
+                            <li>Improved overall cardiac function and health</li>
+                            <li>Long-lasting therapeutic effects with once-daily dosing</li>
+                            <li>Well-tolerated with minimal side effects</li>
+                        </ul>
+                        <p class="mb-4">
+                            CardioGuard Plus is manufactured in state-of-the-art facilities following strict quality control standards and Good Manufacturing Practices (GMP). Each batch undergoes comprehensive testing to ensure purity, potency, and safety.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage & Dosage Tab -->
+            <div id="usage" class="tab-pane hidden">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Usage Instructions & Dosage</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Recommended Dosage</h3>
+                            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
+                                <p class="text-gray-700">
+                                    <strong>Initial Dose:</strong> 10mg once daily, preferably in the morning<br>
+                                    <strong>Maintenance Dose:</strong> 20mg once daily<br>
+                                    <strong>Maximum Dose:</strong> 40mg once daily (as prescribed by physician)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">How to Take</h3>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Take the tablet with a full glass of water</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Can be taken with or without food</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Swallow the tablet whole; do not crush, chew, or break</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Take at the same time each day for best results</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-6 h-6 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Continue taking as prescribed, even if you feel well</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-amber-50 border-l-4 border-amber-500 p-4">
+                            <p class="font-semibold text-amber-900 mb-2">Important Note:</p>
+                            <p class="text-amber-800">If you miss a dose, take it as soon as you remember. If it's almost time for your next dose, skip the missed dose. Do not double the dose to catch up.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Composition Tab -->
+            <div id="composition" class="tab-pane hidden">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Active & Inactive Ingredients</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Active Ingredient</h3>
+                            <div class="bg-blue-50 rounded-lg p-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-lg font-medium text-gray-800">Cardiovascular Active Compound</span>
+                                    <span class="text-lg font-bold text-blue-600">10mg / 20mg / 40mg</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Inactive Ingredients (Excipients)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <span class="text-gray-700">• Microcrystalline cellulose</span>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <span class="text-gray-700">• Lactose monohydrate</span>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <span class="text-gray-700">• Croscarmellose sodium</span>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <span class="text-gray-700">• Magnesium stearate</span>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <span class="text-gray-700">• Hypromellose</span>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <span class="text-gray-700">• Titanium dioxide</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-100 rounded-lg p-6">
+                            <p class="text-gray-700"><strong>Coating:</strong> Film-coated with hypromellose, titanium dioxide, and approved colorants for easy swallowing and stability.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Effects Tab -->
+            <div id="side-effects" class="tab-pane hidden">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Possible Side Effects</h2>
+                    <div class="space-y-6">
+                        <p class="text-gray-700">Like all medications, CardioGuard Plus may cause side effects, although not everyone experiences them. Most side effects are mild and temporary.</p>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-green-700 mb-3">Common Side Effects (Mild)</h3>
+                            <div class="bg-green-50 rounded-lg p-6">
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-start">
+                                        <span class="text-green-600 mr-2">•</span>
+                                        <span>Mild headache (usually temporary)</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-green-600 mr-2">•</span>
+                                        <span>Dizziness or lightheadedness</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-green-600 mr-2">•</span>
+                                        <span>Fatigue or tiredness</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-green-600 mr-2">•</span>
+                                        <span>Nausea or stomach discomfort</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-amber-700 mb-3">Less Common Side Effects</h3>
+                            <div class="bg-amber-50 rounded-lg p-6">
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-start">
+                                        <span class="text-amber-600 mr-2">•</span>
+                                        <span>Flushing or warmth sensation</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-amber-600 mr-2">•</span>
+                                        <span>Swelling of ankles or feet</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-amber-600 mr-2">•</span>
+                                        <span>Palpitations or irregular heartbeat</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-amber-600 mr-2">•</span>
+                                        <span>Muscle cramps</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="bg-red-50 border-l-4 border-red-500 p-6">
+                            <h3 class="text-xl font-semibold text-red-700 mb-3">Seek Immediate Medical Attention If You Experience:</h3>
+                            <ul class="space-y-2 text-red-800">
+                                <li class="flex items-start">
+                                    <span class="mr-2">⚠️</span>
+                                    <span>Severe chest pain or tightness</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">⚠️</span>
+                                    <span>Difficulty breathing or shortness of breath</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">⚠️</span>
+                                    <span>Signs of allergic reaction (rash, itching, swelling)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">⚠️</span>
+                                    <span>Severe dizziness or fainting</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Precautions Tab -->
+            <div id="precautions" class="tab-pane hidden">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Precautions & Warnings</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Before Taking CardioGuard Plus</h3>
+                            <div class="bg-blue-50 rounded-lg p-6">
+                                <p class="text-gray-700 mb-3">Inform your healthcare provider if you:</p>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Have any allergies to medications or ingredients</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Are pregnant, planning to become pregnant, or breastfeeding</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Have liver or kidney disease</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Have diabetes or thyroid disorders</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Are taking other medications (including over-the-counter and herbal supplements)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Special Warnings</h3>
+                            <div class="space-y-4">
+                                <div class="bg-amber-50 border-l-4 border-amber-500 p-4">
+                                    <p class="font-semibold text-amber-900 mb-1">Driving & Operating Machinery</p>
+                                    <p class="text-amber-800">This medication may cause dizziness. Avoid driving or operating heavy machinery until you know how this medicine affects you.</p>
+                                </div>
+                                <div class="bg-red-50 border-l-4 border-red-500 p-4">
+                                    <p class="font-semibold text-red-900 mb-1">Alcohol Consumption</p>
+                                    <p class="text-red-800">Limit or avoid alcohol as it may increase the risk of side effects and lower blood pressure excessively.</p>
+                                </div>
+                                <div class="bg-purple-50 border-l-4 border-purple-500 p-4">
+                                    <p class="font-semibold text-purple-900 mb-1">Pregnancy & Breastfeeding</p>
+                                    <p class="text-purple-800">Consult your doctor before use during pregnancy or while breastfeeding. This medication may not be suitable.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Drug Interactions</h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <p class="text-gray-700 mb-3">CardioGuard Plus may interact with:</p>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• Other blood pressure medications</li>
+                                    <li>• Anti-inflammatory drugs (NSAIDs)</li>
+                                    <li>• Certain antibiotics</li>
+                                    <li>• Diabetes medications</li>
+                                    <li>• Antidepressants</li>
+                                </ul>
+                                <p class="text-gray-700 mt-4"><em>Always inform your healthcare provider about all medications you are taking.</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Storage Tab -->
+            <div id="storage" class="tab-pane hidden">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Storage Instructions</h2>
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-blue-50 rounded-xl p-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="bg-blue-100 rounded-full p-3">
+                                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 mb-2">Temperature</h3>
+                                        <p class="text-gray-700">Store at room temperature between 20-25°C (68-77°F)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-amber-50 rounded-xl p-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="bg-amber-100 rounded-full p-3">
+                                        <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 mb-2">Light Protection</h3>
+                                        <p class="text-gray-700">Keep in original packaging away from direct sunlight</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-teal-50 rounded-xl p-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="bg-teal-100 rounded-full p-3">
+                                        <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 mb-2">Moisture</h3>
+                                        <p class="text-gray-700">Store in a dry place; avoid moisture and humidity</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-50 rounded-xl p-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="bg-purple-100 rounded-full p-3">
+                                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800 mb-2">Child Safety</h3>
+                                        <p class="text-gray-700">Keep out of reach of children and pets</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-red-50 border-l-4 border-red-500 p-6">
+                            <h3 class="text-xl font-semibold text-red-900 mb-3">Important Storage Guidelines</h3>
+                            <ul class="space-y-2 text-red-800">
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <span>Do not use after the expiration date printed on the package</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <span>Do not store in the bathroom or near sinks</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <span>Do not freeze the medication</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="mr-2">•</span>
+                                    <span>Dispose of expired or unused medication properly</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-100 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Disposal Information</h3>
+                            <p class="text-gray-700">Do not flush medications down the toilet or pour into drains. Consult your pharmacist or local waste disposal company for proper medication disposal methods.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Products -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-light text-gray-800 mb-4">Related Products</h2>
+            <p class="text-gray-600">Other cardiovascular medications you might be interested in</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Related Product 1 -->
+            <div class="related-product bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
+                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-purple-600 uppercase">Cardiovascular</span>
+                    <h3 class="text-lg font-bold text-gray-800 my-2">HeartShield Pro</h3>
+                    <p class="text-gray-600 text-sm mb-4">Advanced cardiac protection formula</p>
+                    <a href="{% url "product_detail" id=5 %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
+                </div>
+            </div>
+
+            <!-- Related Product 2 -->
+            <div class="related-product bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-blue-600 uppercase">Cardiovascular</span>
+                    <h3 class="text-lg font-bold text-gray-800 my-2">VasculoCare Plus</h3>
+                    <p class="text-gray-600 text-sm mb-4">Vascular health and circulation support</p>
+                    <a href="{% url "product_detail" id=5 %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
+                </div>
+            </div>
+
+            <!-- Related Product 3 -->
+            <div class="related-product bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="h-48 bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center">
+                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+                        <svg class="w-12 h-12 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <span class="text-xs font-bold text-cyan-600 uppercase">Cardiovascular</span>
+                    <h3 class="text-lg font-bold text-gray-800 my-2">PressureBalance XR</h3>
+                    <p class="text-gray-600 text-sm mb-4">Extended-release blood pressure control</p>
+                    <a href="{% url "product_detail" id=5 %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<!-- Anime.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Page load animations
+        anime({
+            targets: '.product-image',
+            translateX: [-50, 0],
+            opacity: [0, 1],
+            duration: 800,
+            easing: 'easeOutQuart'
+        });
+
+        anime({
+            targets: '.product-info',
+            translateX: [50, 0],
+            opacity: [0, 1],
+            duration: 800,
+            easing: 'easeOutQuart',
+            delay: 200
+        });
+
+        anime({
+            targets: '.key-info-item',
+            translateY: [30, 0],
+            opacity: [0, 1],
+            duration: 600,
+            delay: anime.stagger(100, {start: 400}),
+            easing: 'easeOutQuart'
+        });
+
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+
+                // Remove active class from all buttons and add to clicked button
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active', 'text-blue-600', 'border-blue-600');
+                    btn.classList.add('text-gray-600', 'border-transparent');
+                });
+                this.classList.add('active', 'text-blue-600', 'border-blue-600');
+                this.classList.remove('text-gray-600', 'border-transparent');
+
+                // Hide all tab panes
+                tabPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                    pane.classList.remove('active');
+                });
+
+                // Show target tab pane with animation
+                const targetPane = document.getElementById(targetTab);
+                targetPane.classList.remove('hidden');
+                targetPane.classList.add('active');
+
+                // Animate tab content
+                anime({
+                    targets: `#${targetTab}`,
+                    translateY: [20, 0],
+                    opacity: [0, 1],
+                    duration: 500,
+                    easing: 'easeOutQuart'
+                });
+            });
+        });
+
+        // Related products animation
+        const relatedObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: '.related-product',
+                        translateY: [40, 0],
+                        opacity: [0, 1],
+                        duration: 600,
+                        delay: anime.stagger(150),
+                        easing: 'easeOutQuart'
+                    });
+                    relatedObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+
+        const relatedSection = document.querySelector('.related-product');
+        if (relatedSection) {
+            relatedObserver.observe(relatedSection.parentElement);
+        }
+
+        // Smooth scroll for breadcrumb links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
