@@ -2,20 +2,529 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative h-screen bg-cover bg-center bg-no-repeat overflow-hidden z-0" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
-    <div class="flex items-center justify-center h-full">
-        <div class="text-center text-white px-4">
-            <h1 id="hero-title" class="text-5xl md:text-7xl font-light mb-6">
-                Care beyond medicine
-            </h1>
+<section class="relative h-screen bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden z-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
+            <!-- Left Content -->
+            <div class="text-left">
+                <h1 id="hero-title" class="text-5xl md:text-7xl font-light mb-6 text-gray-800">
+                    The <span class="text-blue-600 font-semibold">future</span> of medicine
+                </h1>
+            </div>
+            
+            <!-- Right Image -->
+            <div class="flex justify-center items-center">
+                <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=800" alt="Medical Professional" class="rounded-lg max-w-lg w-full hero-image">
+            </div>
         </div>
     </div>
     
     <!-- Scroll Indicator -->
     <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
         </svg>
+    </div>
+</section>
+
+<!-- We Are Revolutionising Healthcare Section -->
+<section class="relative z-10 py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div class="revolution-content opacity-0">
+                <h2 class="text-4xl md:text-5xl font-light text-gray-800 mb-6">
+                    We are<br>revolutionising<br>healthcare
+                </h2>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                    Human 4 Health Pharma's mission is to develop, produce and market safe, effective & quality medicines & healthcare products that will improve the health and quality of life of men, women & children, globally.
+                </p>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-6 mb-8">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2" data-target="30">0</div>
+                        <div class="text-gray-600 text-sm">Years</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2" data-target="8000">0</div>
+                        <div class="text-gray-600 text-sm">Employees</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-blue-600 mb-2" data-target="45">0</div>
+                        <div class="text-gray-600 text-sm">Countries</div>
+                    </div>
+                </div>
+                
+                <a href="{% url 'about-us' %}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200">
+                    READ MORE
+                </a>
+            </div>
+            
+            <!-- Right Grid Images -->
+            <div class="grid grid-cols-2 gap-4 revolution-images opacity-0">
+                <div class="space-y-4">
+                    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600" alt="Healthcare" class="rounded-lg shadow-lg w-full h-48 object-cover">
+                    <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=600" alt="Team" class="rounded-lg shadow-lg w-full h-48 object-cover">
+                </div>
+                <div class="space-y-4 mt-8">
+                    <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=600" alt="Lab" class="rounded-lg shadow-lg w-full h-48 object-cover">
+                    <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=600" alt="Research" class="rounded-lg shadow-lg w-full h-48 object-cover">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quality Medicines Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Images -->
+            <div class="grid grid-cols-2 gap-4 quality-images opacity-0">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=600" alt="Healthcare Professional" class="rounded-lg shadow-lg w-full h-80 object-cover">
+                </div>
+                <div class="mt-12">
+                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=600" alt="Medical Research" class="rounded-lg shadow-lg w-full h-64 object-cover">
+                </div>
+            </div>
+            
+            <!-- Right Content -->
+            <div class="quality-content opacity-0">
+                <h2 class="text-4xl font-light text-gray-800 mb-6">
+                    At Human 4 Health Pharma, we strive to deliver <span class="text-blue-600 font-semibold">quality</span> medicines to patients around the world with <span class="text-blue-600 font-semibold">integrity</span>.
+                </h2>
+                <a href="{% url 'about-us' %}" class="inline-flex items-center px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-full hover:bg-gray-50 transition-colors duration-200">
+                    LEARN MORE
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Innovation in Therapeutic Areas Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 innovation-title opacity-0">
+            <h2 class="text-4xl md:text-5xl font-light text-gray-800 mb-4">
+                Innovation in therapeutic areas
+            </h2>
+            <p class="text-gray-600 text-lg max-w-3xl mx-auto">
+                We are committed to developing innovative medicines across key therapeutic areas to improve patient outcomes.
+            </p>
+        </div>
+        
+        <!-- Therapeutic Areas Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <!-- Cardiovascular -->
+            <div class="therapeutic-card text-center p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Cardiovascular</h3>
+            </div>
+            
+            <!-- Gastroenterology -->
+            <div class="therapeutic-card text-center p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Gastroenterology</h3>
+            </div>
+            
+            <!-- Hepatology -->
+            <div class="therapeutic-card text-center p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Hepatology</h3>
+            </div>
+            
+            <!-- Pulmonology -->
+            <div class="therapeutic-card text-center p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Pulmonology</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Global Presence Section -->
+<section class="py-20 bg-gradient-to-br from-blue-900 to-blue-700 text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 right-10 w-64 h-64 bg-blue-400 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 left-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-12 global-title opacity-0">
+            <div class="inline-block bg-blue-600 px-8 py-12 rounded-2xl shadow-2xl mb-8">
+                <div class="text-6xl font-bold mb-2">60+</div>
+                <div class="text-xl">countries</div>
+            </div>
+            <h2 class="text-4xl font-light mb-8">We currently operate in 60+ countries</h2>
+        </div>
+        
+        <!-- Countries List -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-center global-countries opacity-0">
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Sri Lanka</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Thailand</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Curacao</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Cuba</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Dominican</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Cambodia</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Uganda</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Angola</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Pakistan</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-white rounded-full"></span>
+                <span>Hong Kong</span>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12">
+            <a href="#" class="inline-flex items-center px-8 py-3 bg-white text-blue-900 rounded-full hover:bg-gray-100 transition-colors duration-200 font-semibold">
+                VIEW ALL
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Our Certifications Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 cert-title opacity-0">
+            <h2 class="text-4xl md:text-5xl font-light text-gray-800 mb-4">
+                Our certifications
+            </h2>
+            <p class="text-gray-600 text-lg">
+                We adhere to the highest global standards and hold multiple business accreditations.
+            </p>
+        </div>
+        
+        <!-- Certifications Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            <div class="cert-card text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-2xl font-bold text-blue-600">WHO</span>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-800">WHO Prequalified</h3>
+            </div>
+            
+            <div class="cert-card text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-2xl font-bold text-blue-600">ISO</span>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-800">ISO 9001:2015</h3>
+            </div>
+            
+            <div class="cert-card text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-xl font-bold text-blue-600">PIC/S</span>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-800">PIC/S GMP</h3>
+            </div>
+            
+            <div class="cert-card text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-xl font-bold text-blue-600">USFDA</span>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-800">USFDA Approved</h3>
+            </div>
+            
+            <div class="cert-card text-center p-6 bg-gray-50 rounded-lg hover:shadow-lg transition-shadow duration-300 opacity-0">
+                <div class="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-xl font-bold text-blue-600">GMP</span>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-800">EU GMP Certified</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Societal Impact Section -->
+<section class="py-20 bg-gradient-to-br from-blue-50 to-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Left Content -->
+            <div class="impact-content opacity-0">
+                <h2 class="text-4xl md:text-5xl font-light text-gray-800 mb-6">
+                    Our societal impact
+                </h2>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                    We leverage our footprint, scale, resources, products and skills to help address global challenges and support our communities in a meaningful way. By ensuring our business success so that we can continue providing medicines to millions of patients around the globe.
+                </p>
+                <a href="{% url 'impact' %}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200">
+                    LEARN MORE
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- Right Grid - Impact Cards -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Education -->
+                <div class="impact-card relative h-56 rounded-lg overflow-hidden group cursor-pointer opacity-0">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800" alt="Education" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-white">Education</h3>
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Environment -->
+                <div class="impact-card relative h-56 rounded-lg overflow-hidden group cursor-pointer opacity-0">
+                    <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800" alt="Environment" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-white">Environment</h3>
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Health -->
+                <div class="impact-card relative h-56 rounded-lg overflow-hidden group cursor-pointer opacity-0">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800" alt="Health" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-white">Health</h3>
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cultural Heritage -->
+                <div class="impact-card relative h-56 rounded-lg overflow-hidden group cursor-pointer opacity-0">
+                    <img src="https://images.unsplash.com/photo-1533854775446-95c4609da544?q=80&w=800" alt="Cultural Heritage" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 p-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-white">Cultural Heritage</h3>
+                            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Inside Getz Pharma Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 inside-title opacity-0">
+            <h2 class="text-4xl md:text-5xl font-light text-gray-800 mb-4">
+                Inside Human 4 Health Pharma
+            </h2>
+            <p class="text-gray-600 text-lg">
+                Discover what drives us forward – our commitment to health, innovation, and building a thriving workplace for our people.
+            </p>
+        </div>
+        
+        <!-- Inside Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Life @ Times Village -->
+            <div class="inside-card relative bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl overflow-hidden shadow-xl opacity-0 h-96">
+                <div class="absolute inset-0 opacity-20">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200" alt="Team" class="w-full h-full object-cover">
+                </div>
+                <div class="relative z-10 p-8 h-full flex flex-col justify-between text-white">
+                    <div>
+                        <h3 class="text-3xl font-bold mb-4">Life @ Times Village 1?</h3>
+                        <p class="text-lg mb-6">Human 4 Health Pharma offers a dynamic and growth-oriented environment that enables our people to excel in their professional endeavors in the service of global health.</p>
+                    </div>
+                    <div>
+                        <a href="#" class="inline-flex items-center text-white hover:underline font-semibold">
+                            READ MORE
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- THE WALL'AZ -->
+            <div class="inside-card relative bg-white rounded-2xl overflow-hidden shadow-xl border border-gray-200 opacity-0 h-96">
+                <div class="absolute right-0 top-0 w-1/2 h-full">
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800" alt="Healthcare" class="w-full h-full object-cover">
+                </div>
+                <div class="relative z-10 p-8 h-full flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4">THE WALL'AZ</h3>
+                        <p class="text-gray-600 text-lg mb-6 max-w-md">Human 4 Health Pharma continues to expand its global footprint by adding new markets to the roster every year.</p>
+                    </div>
+                    <div>
+                        <a href="#" class="inline-flex items-center text-blue-600 hover:underline font-semibold">
+                            READ MORE
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Make a Difference Section -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Image -->
+            <div class="difference-image opacity-0">
+                <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1200" alt="Team Collaboration" class="rounded-2xl shadow-2xl">
+            </div>
+            
+            <!-- Right Content -->
+            <div class="difference-content opacity-0">
+                <h2 class="text-4xl md:text-5xl font-light text-gray-800 mb-6">
+                    Make a difference in people's health, every day
+                </h2>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                    Join our team of dedicated professionals who are passionate about improving global health outcomes through innovative pharmaceutical solutions.
+                </p>
+                <a href="#" class="inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200 font-semibold">
+                    EXPLORE CAREERS
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- News & Events Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-12">
+            <div class="news-title opacity-0">
+                <h2 class="text-4xl md:text-5xl font-light text-gray-800">News & Events</h2>
+            </div>
+            <div class="flex space-x-2">
+                <button id="news-prev" class="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button id="news-next" class="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- News Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Event 1 -->
+            <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 opacity-0">
+                <div class="h-48 bg-gradient-to-br from-red-900 to-red-700 relative">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800" alt="Event" class="w-full h-full object-cover opacity-60">
+                </div>
+                <div class="p-6">
+                    <span class="text-sm text-blue-600 font-semibold">February 15, 2026</span>
+                    <h3 class="text-xl font-bold text-gray-800 mt-2 mb-3">Global Health Summit 2026</h3>
+                    <p class="text-gray-600 text-sm mb-4">Join us at the annual Global Health Summit to discuss innovations in pharmaceutical care.</p>
+                    <a href="#" class="text-blue-600 font-semibold hover:underline">Read more →</a>
+                </div>
+            </div>
+            
+            <!-- Event 2 -->
+            <div class="news-card bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 opacity-0">
+                <div class="p-8 text-white h-full flex flex-col justify-between">
+                    <div>
+                        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4">Cervical Cancer Awareness Month</h3>
+                        <p class="text-lg opacity-90">Supporting education and prevention initiatives worldwide.</p>
+                    </div>
+                    <div class="mt-6">
+                        <span class="text-sm font-semibold">January 2026</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event 3 -->
+            <div class="news-card bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 opacity-0">
+                <div class="p-8 text-white h-full flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block bg-yellow-400 text-blue-900 px-3 py-1 rounded-full text-xs font-bold mb-4">AWARD</span>
+                        <h3 class="text-2xl font-bold mb-4">Top 100 Global Pharma Companies</h3>
+                        <p class="text-lg opacity-90">Recognized for innovation and quality in pharmaceutical manufacturing.</p>
+                    </div>
+                    <div class="mt-6">
+                        <span class="text-sm font-semibold">December 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -28,7 +537,7 @@
                 Our purpose
             </h2>
             <p class="purpose-text text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
-                At Getz Pharma, our purpose is to foster growth and well-being for all, 
+                At Human 4 Health Pharma, our purpose is to foster growth and well-being for all, 
                 especially those most in need. We aim to successfully integrate corporate responsibility 
                 concerns into the company's values, culture, and business decisions.
             </p>
@@ -159,7 +668,7 @@
         
         <div class="text-center mb-16">
             <p class="commitments-text text-lg text-gray-600 max-w-3xl mx-auto opacity-0">
-                Getz Pharma's Corporate Social Responsibility (CSR) initiatives 
+                Human 4 Health Pharma's Corporate Social Responsibility (CSR) initiatives 
                 are divided into four broad categories.
             </p>
         </div>
@@ -248,13 +757,293 @@
     // GSAP Animations
     gsap.registerPlugin(ScrollTrigger);
     
-    // Hero title animation - simple fade in
+    // Hero animations
     gsap.from('#hero-title', {
         opacity: 0,
-        y: 30,
-        duration: 1.5,
+        y: 50,
+        duration: 1.2,
         ease: 'power3.out',
         delay: 0.3
+    });
+    
+    gsap.from('.hero-image', {
+        x: 50,
+        duration: 1.2,
+        ease: 'power3.out',
+        delay: 0.6
+    });
+    
+    // Revolution section
+    gsap.to('.revolution-content', {
+        scrollTrigger: {
+            trigger: '.revolution-content',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.to('.revolution-images', {
+        scrollTrigger: {
+            trigger: '.revolution-images',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        delay: 0.2,
+        ease: 'power2.out'
+    });
+    
+    // Counter Animation
+    function animateCounter(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        const duration = 2000;
+        const increment = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target.toLocaleString() + '+';
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current).toLocaleString();
+            }
+        }, 16);
+    }
+    
+    const counterElements = document.querySelectorAll('[data-target]');
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.target.textContent === '0') {
+                animateCounter(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counterElements.forEach(el => counterObserver.observe(el));
+    
+    // Quality section
+    gsap.to('.quality-images', {
+        scrollTrigger: {
+            trigger: '.quality-images',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.to('.quality-content', {
+        scrollTrigger: {
+            trigger: '.quality-content',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        delay: 0.2,
+        ease: 'power2.out'
+    });
+    
+    // Innovation section
+    gsap.to('.innovation-title', {
+        scrollTrigger: {
+            trigger: '.innovation-title',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.utils.toArray('.therapeutic-card').forEach((card, index) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: index * 0.1,
+            ease: 'power2.out'
+        });
+    });
+    
+    // Global presence
+    gsap.to('.global-title', {
+        scrollTrigger: {
+            trigger: '.global-title',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        ease: 'back.out(1.2)'
+    });
+    
+    gsap.to('.global-countries', {
+        scrollTrigger: {
+            trigger: '.global-countries',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.3,
+        ease: 'power2.out'
+    });
+    
+    // Certifications
+    gsap.to('.cert-title', {
+        scrollTrigger: {
+            trigger: '.cert-title',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.utils.toArray('.cert-card').forEach((card, index) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: index * 0.08,
+            ease: 'power2.out'
+        });
+    });
+    
+    // Impact section
+    gsap.to('.impact-content', {
+        scrollTrigger: {
+            trigger: '.impact-content',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.utils.toArray('.impact-card').forEach((card, index) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 1,
+            scale: 1,
+            duration: 0.5,
+            delay: index * 0.1,
+            ease: 'back.out(1.2)'
+        });
+    });
+    
+    // Inside section
+    gsap.to('.inside-title', {
+        scrollTrigger: {
+            trigger: '.inside-title',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.utils.toArray('.inside-card').forEach((card, index) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: index * 0.15,
+            ease: 'power2.out'
+        });
+    });
+    
+    // Difference section
+    gsap.to('.difference-image', {
+        scrollTrigger: {
+            trigger: '.difference-image',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.to('.difference-content', {
+        scrollTrigger: {
+            trigger: '.difference-content',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        delay: 0.2,
+        ease: 'power2.out'
+    });
+    
+    // News section
+    gsap.to('.news-title', {
+        scrollTrigger: {
+            trigger: '.news-title',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        },
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+    });
+    
+    gsap.utils.toArray('.news-card').forEach((card, index) => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            delay: index * 0.15,
+            ease: 'power2.out'
+        });
     });
     
     // Image grid items animation
@@ -325,3 +1114,4 @@
     });
 </script>
 {% endblock %}
+
