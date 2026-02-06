@@ -18,3 +18,7 @@ def about_us(request):
 
 def impact(request):
     return render(request, 'web/impact.html')
+
+
+def bmi_calculator(request):
+    return render(request, 'web/bmi_calculator.html')

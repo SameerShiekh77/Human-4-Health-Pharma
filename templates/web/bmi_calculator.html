@@ -1,0 +1,448 @@
+{% extends 'web/base.html' %}
+
+{% block title %}BMI Calculator - Health 4 Human Pharma{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="relative h-[400px] bg-cover bg-center" style="background-image: linear-gradient(rgba(37, 99, 235, 0.85), rgba(30, 64, 175, 0.9)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=2070');">
+    <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center text-white px-4">
+            <h1 class="text-5xl md:text-6xl font-bold mb-4 opacity-0 hero-title">BMI Calculator</h1>
+            <p class="text-xl md:text-2xl opacity-80 hero-subtitle opacity-0">Calculate your Body Mass Index and understand your health better</p>
+        </div>
+    </div>
+</section>
+
+<!-- BMI Calculator Section -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            
+            <!-- Calculator Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10 calculator-card opacity-0">
+                <div class="flex items-center mb-8">
+                    <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Calculate Your BMI</h2>
+                        <p class="text-gray-500">Enter your details below</p>
+                    </div>
+                </div>
+                
+                <form id="bmi-form" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Gender Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Gender</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="gender" value="male" class="peer sr-only" checked>
+                                <div class="flex items-center justify-center p-4 border-2 border-gray-200 rounded-xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:border-blue-300">
+                                    <svg class="w-8 h-8 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="font-medium text-gray-700">Male</span>
+                                </div>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="gender" value="female" class="peer sr-only">
+                                <div class="flex items-center justify-center p-4 border-2 border-gray-200 rounded-xl peer-checked:border-pink-500 peer-checked:bg-pink-50 transition-all duration-200 hover:border-pink-300">
+                                    <svg class="w-8 h-8 text-pink-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span class="font-medium text-gray-700">Female</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Age Input -->
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-gray-700 mb-2">Age (years)</label>
+                        <input type="number" id="age" name="age" min="1" max="120" placeholder="Enter your age" 
+                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg">
+                    </div>
+                    
+                    <!-- Height Input -->
+                    <div>
+                        <label for="height" class="block text-sm font-medium text-gray-700 mb-2">Height (cm)</label>
+                        <div class="relative">
+                            <input type="number" id="height" name="height" min="50" max="300" step="0.1" placeholder="Enter your height" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">cm</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Weight Input -->
+                    <div>
+                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (kg)</label>
+                        <div class="relative">
+                            <input type="number" id="weight" name="weight" min="1" max="500" step="0.1" placeholder="Enter your weight" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">kg</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Calculate Button -->
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold text-lg rounded-xl hover:from-blue-700 hover:to-blue-800 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl">
+                        Calculate BMI
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Result Card -->
+            <div class="space-y-6">
+                <!-- BMI Result -->
+                <div id="result-card" class="bg-white rounded-2xl shadow-xl p-8 md:p-10 result-card opacity-0 hidden">
+                    <div class="text-center mb-8">
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Your BMI Result</h3>
+                        <div id="bmi-value" class="text-7xl font-bold text-blue-600 mb-2">--</div>
+                        <div id="bmi-category" class="text-2xl font-semibold text-gray-700">--</div>
+                    </div>
+                    
+                    <!-- BMI Scale -->
+                    <div class="mb-8">
+                        <div class="relative h-4 rounded-full overflow-hidden bg-gradient-to-r from-blue-400 via-green-400 via-yellow-400 via-orange-400 to-red-500">
+                            <div id="bmi-indicator" class="absolute w-4 h-4 bg-white border-4 border-gray-800 rounded-full top-0 transform -translate-x-1/2 transition-all duration-500 shadow-lg" style="left: 0%"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-xs text-gray-500">
+                            <span>15</span>
+                            <span>18.5</span>
+                            <span>25</span>
+                            <span>30</span>
+                            <span>40</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Health Message -->
+                    <div id="health-message" class="bg-gray-50 rounded-xl p-6">
+                        <p class="text-gray-600 text-center">Enter your details to see your BMI result</p>
+                    </div>
+                </div>
+                
+                <!-- BMI Categories Info -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10 categories-card opacity-0">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        BMI Categories
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 rounded-lg bg-blue-50 border-l-4 border-blue-400">
+                            <span class="font-medium text-gray-700">Underweight</span>
+                            <span class="text-blue-600 font-semibold">&lt; 18.5</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg bg-green-50 border-l-4 border-green-400">
+                            <span class="font-medium text-gray-700">Normal weight</span>
+                            <span class="text-green-600 font-semibold">18.5 - 24.9</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg bg-yellow-50 border-l-4 border-yellow-400">
+                            <span class="font-medium text-gray-700">Overweight</span>
+                            <span class="text-yellow-600 font-semibold">25 - 29.9</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg bg-orange-50 border-l-4 border-orange-400">
+                            <span class="font-medium text-gray-700">Obese Class I</span>
+                            <span class="text-orange-600 font-semibold">30 - 34.9</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg bg-red-50 border-l-4 border-red-400">
+                            <span class="font-medium text-gray-700">Obese Class II & III</span>
+                            <span class="text-red-600 font-semibold">&ge; 35</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Health Tips Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4 tips-title opacity-0">Healthy Living Tips</h2>
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto tips-subtitle opacity-0">Maintain a healthy BMI with these simple lifestyle changes</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Tip 1 -->
+            <div class="tip-card bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 opacity-0">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Regular Exercise</h3>
+                <p class="text-gray-600 text-sm">Aim for at least 30 minutes of moderate exercise daily</p>
+            </div>
+            
+            <!-- Tip 2 -->
+            <div class="tip-card bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 opacity-0">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Balanced Diet</h3>
+                <p class="text-gray-600 text-sm">Eat plenty of fruits, vegetables, and whole grains</p>
+            </div>
+            
+            <!-- Tip 3 -->
+            <div class="tip-card bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 opacity-0">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Quality Sleep</h3>
+                <p class="text-gray-600 text-sm">Get 7-9 hours of quality sleep each night</p>
+            </div>
+            
+            <!-- Tip 4 -->
+            <div class="tip-card bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 opacity-0">
+                <div class="w-16 h-16 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-800 mb-2">Stay Hydrated</h3>
+                <p class="text-gray-600 text-sm">Drink at least 8 glasses of water daily</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Disclaimer Section -->
+<section class="py-12 bg-blue-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <h3 class="text-xl font-bold">Important Note</h3>
+        </div>
+        <p class="text-blue-100 leading-relaxed">
+            BMI is a screening tool and should not be used as a diagnostic measure. It does not account for muscle mass, bone density, or distribution of fat. For a comprehensive health assessment, please consult with a healthcare professional.
+        </p>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<style>
+    /* Animation Styles */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+    }
+    
+    .animate-fadeInUp {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+    
+    .result-animate {
+        animation: pulse 0.3s ease;
+    }
+    
+    /* Custom input styling */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<script>
+    // Wait for DOM to load
+    document.addEventListener('DOMContentLoaded', function() {
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero animations
+        gsap.to('.hero-title', {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.3
+        });
+        
+        gsap.to('.hero-subtitle', {
+            opacity: 0.8,
+            y: 0,
+            duration: 1,
+            delay: 0.5
+        });
+        
+        // Calculator card animation
+        gsap.to('.calculator-card', {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            scrollTrigger: {
+                trigger: '.calculator-card',
+                start: 'top 80%'
+            }
+        });
+        
+        // Result card initial state
+        gsap.set('.result-card', {
+            opacity: 0,
+            y: 30
+        });
+        
+        // Categories card animation
+        gsap.to('.categories-card', {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.2,
+            scrollTrigger: {
+                trigger: '.categories-card',
+                start: 'top 80%'
+            }
+        });
+        
+        // Tips section animations
+        gsap.to('.tips-title', {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            scrollTrigger: {
+                trigger: '.tips-title',
+                start: 'top 80%'
+            }
+        });
+        
+        gsap.to('.tips-subtitle', {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.2,
+            scrollTrigger: {
+                trigger: '.tips-subtitle',
+                start: 'top 80%'
+            }
+        });
+        
+        // Tip cards animation
+        gsap.utils.toArray('.tip-card').forEach((card, i) => {
+            gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                delay: i * 0.15,
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%'
+                }
+            });
+        });
+        
+        // BMI Calculator Logic
+        const form = document.getElementById('bmi-form');
+        const resultCard = document.getElementById('result-card');
+        const bmiValue = document.getElementById('bmi-value');
+        const bmiCategory = document.getElementById('bmi-category');
+        const bmiIndicator = document.getElementById('bmi-indicator');
+        const healthMessage = document.getElementById('health-message');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            if (height > 0 && weight > 0) {
+                // Calculate BMI
+                const heightInMeters = height / 100;
+                const bmi = weight / (heightInMeters * heightInMeters);
+                const roundedBMI = Math.round(bmi * 10) / 10;
+                
+                // Show result card
+                resultCard.classList.remove('hidden');
+                gsap.to('.result-card', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5
+                });
+                
+                // Animate BMI value
+                bmiValue.classList.add('result-animate');
+                setTimeout(() => bmiValue.classList.remove('result-animate'), 300);
+                
+                // Update BMI value
+                bmiValue.textContent = roundedBMI.toFixed(1);
+                
+                // Determine category and update UI
+                let category, color, message, indicatorPosition;
+                
+                if (bmi < 18.5) {
+                    category = 'Underweight';
+                    color = 'text-blue-600';
+                    message = `<div class="flex items-start"><svg class="w-6 h-6 text-blue-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><div><strong class="text-blue-700">Underweight</strong><p class="text-gray-600 mt-1">You may need to gain some weight. Consider consulting a nutritionist for a healthy weight gain plan.</p></div></div>`;
+                    indicatorPosition = ((bmi - 15) / (18.5 - 15)) * 14;
+                } else if (bmi < 25) {
+                    category = 'Normal Weight';
+                    color = 'text-green-600';
+                    message = `<div class="flex items-start"><svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><div><strong class="text-green-700">Healthy Weight</strong><p class="text-gray-600 mt-1">Great job! Your BMI is within the healthy range. Maintain your current lifestyle with regular exercise and balanced nutrition.</p></div></div>`;
+                    indicatorPosition = 14 + ((bmi - 18.5) / (25 - 18.5)) * 26;
+                } else if (bmi < 30) {
+                    category = 'Overweight';
+                    color = 'text-yellow-600';
+                    message = `<div class="flex items-start"><svg class="w-6 h-6 text-yellow-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><div><strong class="text-yellow-700">Above Healthy Range</strong><p class="text-gray-600 mt-1">You're slightly above the healthy weight range. Consider increasing physical activity and reviewing your diet.</p></div></div>`;
+                    indicatorPosition = 40 + ((bmi - 25) / (30 - 25)) * 20;
+                } else if (bmi < 35) {
+                    category = 'Obese Class I';
+                    color = 'text-orange-600';
+                    message = `<div class="flex items-start"><svg class="w-6 h-6 text-orange-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><div><strong class="text-orange-700">Health Risk Increased</strong><p class="text-gray-600 mt-1">Your BMI indicates obesity. We recommend consulting a healthcare professional for personalized guidance.</p></div></div>`;
+                    indicatorPosition = 60 + ((bmi - 30) / (35 - 30)) * 20;
+                } else {
+                    category = 'Obese Class II/III';
+                    color = 'text-red-600';
+                    message = `<div class="flex items-start"><svg class="w-6 h-6 text-red-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><div><strong class="text-red-700">Significant Health Risk</strong><p class="text-gray-600 mt-1">Your BMI is in a high-risk category. Please consult a healthcare professional as soon as possible for proper evaluation and support.</p></div></div>`;
+                    indicatorPosition = 80 + ((Math.min(bmi, 40) - 35) / (40 - 35)) * 20;
+                }
+                
+                // Update category
+                bmiCategory.textContent = category;
+                bmiCategory.className = `text-2xl font-semibold ${color}`;
+                
+                // Update indicator position
+                indicatorPosition = Math.max(0, Math.min(100, indicatorPosition));
+                bmiIndicator.style.left = `${indicatorPosition}%`;
+                
+                // Update health message
+                healthMessage.innerHTML = message;
+                
+                // Scroll to result
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    });
+</script>
+{% endblock %}

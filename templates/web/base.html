@@ -51,6 +51,7 @@
                     <a href="{% url "products" %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Products</a>
                     <a href="#news" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">News & Events</a>
                     <a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contact Us</a>
+                    <a href="{% url 'bmi-calculator' %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">BMI Calculator</a>
                 </div>
                 
                 <!-- Search Icon -->
@@ -80,6 +81,7 @@
                 <a href="{% url "products" %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Products</a>
                 <a href="#news" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">News & Events</a>
                 <a href="#contact" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Contact Us</a>
+                <a href="{% url 'bmi-calculator' %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">BMI Calculator</a>
             </div>
         </div>
     </nav>
@@ -168,9 +170,7 @@
             
             <!-- Bottom Footer -->
             <div class="mt-8 pt-8 border-t border-blue-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-                <div class="mb-4 md:mb-0">
-                    <a href="#terms" class="hover:text-white transition-colors duration-200">Terms of use</a>
-                </div>
+              
                 <div>
                     <p>Copyright © <span id="currentYear"></span> Health 4 Human Pharma Pharma. All rights reserved.</p>
                 </div>

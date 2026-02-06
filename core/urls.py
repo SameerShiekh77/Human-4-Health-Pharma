@@ -8,4 +8,5 @@ urlpatterns = [
     path('innovations/', views.innovations, name='innovations'),
     path('about-us/', views.about_us, name='about-us'),
     path('impact/', views.impact, name='impact'),
+    path('bmi-calculator/', views.bmi_calculator, name='bmi-calculator'),
 ]
