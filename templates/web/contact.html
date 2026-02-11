@@ -1,0 +1,456 @@
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block title %}Contact Us - Health 4 Human Pharma{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative h-48 md:h-64 bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden">
+    <div class="absolute inset-0 bg-black/30"></div>
+    <!-- Background Image -->
+    <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=1200&h=400&fit=crop" alt="Contact Us" class="absolute inset-0 w-full h-full object-cover opacity-50">
+    <div class="absolute inset-0 flex items-center justify-center">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white z-10">Contact us</h1>
+    </div>
+</section>
+
+<!-- Our Locations Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our locations</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Health 4 Human Pharma's global offices drive regional excellence, expanding market reach and ensuring access to quality pharmaceuticals worldwide.</p>
+        </div>
+
+        <!-- Head Office Card -->
+        <div class="bg-gray-100 rounded-2xl overflow-hidden mb-8">
+            <div class="flex flex-col lg:flex-row">
+                <div class="lg:w-1/2 p-8 lg:p-12">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Head Office</h3>
+                    <div class="space-y-3 text-gray-700">
+                        <p>29-30/27, Korangi Industrial Area,<br>Karachi, Sindh, Pakistan</p>
+                        <p><span class="font-semibold">UAN:</span> +92-21-111-111-511</p>
+                        <p><span class="font-semibold">Email:</span> <a href="mailto:info@health4humanpharma.com" class="text-blue-600 hover:underline">info@health4humanpharma.com</a></p>
+                    </div>
+                    
+                    <!-- Navigation Arrows -->
+                    <div class="flex gap-2 mt-8">
+                        <button class="w-10 h-10 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors duration-200">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <button class="w-10 h-10 border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors duration-200">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop" alt="Head Office Building" class="w-full h-64 lg:h-full object-cover">
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Careers Card -->
+            <div class="bg-gray-100 rounded-2xl p-8 hover:shadow-lg transition-shadow duration-300">
+                <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Careers</h3>
+                <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:careers@health4humanpharma.com" class="text-blue-600 hover:underline">careers@health4humanpharma.com</a></p>
+            </div>
+
+            <!-- Business Partnerships Card -->
+            <div class="bg-gray-100 rounded-2xl p-8 hover:shadow-lg transition-shadow duration-300">
+                <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Business Partnerships</h3>
+                <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:business.partnerships@health4humanpharma.com" class="text-blue-600 hover:underline">business.partnerships@health4humanpharma.com</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Regional Offices Section -->
+<section class="py-16 bg-white border-t border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-10">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Regional offices</h2>
+            <p class="text-gray-600">Our contact directory for Health 4 Human Pharma operations around the world.</p>
+        </div>
+
+        <!-- Accordion -->
+        <div class="space-y-0" id="regional-offices-accordion">
+            <!-- Dubai -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="dubai-content">
+                    <span class="text-lg font-medium text-gray-900">Dubai</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="dubai-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma International FZ LLC</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> Office No: 1307, 13th floor, Al-Thuraya Tower 1, Dubai Media city, United Arab Emirates</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+97144494031" class="text-blue-600 hover:underline">+971-4-4494031</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Philippines -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="philippines-content">
+                    <span class="text-lg font-medium text-gray-900">Philippines</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="philippines-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Philippines Inc.</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> Unit 1201, Antel Global Corporate Center, Julia Vargas Ave., Ortigas Center, Pasig City, Philippines</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+6328706247" class="text-blue-600 hover:underline">+632-870-6247</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nigeria -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="nigeria-content">
+                    <span class="text-lg font-medium text-gray-900">Nigeria</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="nigeria-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Nigeria Ltd.</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> Plot 1, Block A, Industrial Estate, Ogba, Lagos, Nigeria</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+2341234567" class="text-blue-600 hover:underline">+234-1-234-5678</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cambodia -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="cambodia-content">
+                    <span class="text-lg font-medium text-gray-900">Cambodia</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="cambodia-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Cambodia Co., Ltd.</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> No. 168, Street 598, Sangkat Boeung Kak II, Khan Toul Kork, Phnom Penh, Cambodia</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+85523456789" class="text-blue-600 hover:underline">+855-23-456-789</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kenya -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="kenya-content">
+                    <span class="text-lg font-medium text-gray-900">Kenya</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="kenya-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Kenya Ltd.</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> Westlands Commercial Centre, Waiyaki Way, Nairobi, Kenya</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+254201234567" class="text-blue-600 hover:underline">+254-20-123-4567</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Myanmar -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="myanmar-content">
+                    <span class="text-lg font-medium text-gray-900">Myanmar</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="myanmar-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Myanmar Co., Ltd.</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> No. 45, Pyay Road, Kamayut Township, Yangon, Myanmar</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+9519876543" class="text-blue-600 hover:underline">+95-1-987-6543</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sri Lanka -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="srilanka-content">
+                    <span class="text-lg font-medium text-gray-900">Sri Lanka</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="srilanka-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Sri Lanka (Pvt) Ltd.</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> No. 25, Bauddhaloka Mawatha, Colombo 04, Sri Lanka</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+94112345678" class="text-blue-600 hover:underline">+94-11-234-5678</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kazakhstan -->
+            <div class="border-b border-gray-200">
+                <button class="accordion-btn w-full flex items-center justify-between py-5 text-left" data-target="kazakhstan-content">
+                    <span class="text-lg font-medium text-gray-900">Kazakhstan</span>
+                    <span class="accordion-icon w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center transition-transform duration-300">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </span>
+                </button>
+                <div id="kazakhstan-content" class="accordion-content hidden pb-5">
+                    <div class="pl-0 text-gray-600 space-y-1">
+                        <p><span class="font-semibold text-gray-900">Name:</span> Health 4 Human Pharma Kazakhstan LLP</p>
+                        <p><span class="font-semibold text-gray-900">Address:</span> Al-Farabi Avenue 77/7, Almaty, Kazakhstan</p>
+                        <p><span class="font-semibold text-gray-900">Tel:</span> <a href="tel:+77272345678" class="text-blue-600 hover:underline">+7-727-234-5678</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- General Inquiry CTA Section -->
+<section class="py-16 bg-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative rounded-2xl overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&h=400&fit=crop" alt="Contact Us" class="w-full h-64 md:h-80 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center">
+                <div class="px-8 md:px-12 max-w-md">
+                    <p class="text-white text-lg mb-4">For comments and queries, contact us via this form</p>
+                    <a href="#inquiry-form" class="inline-flex items-center px-6 py-3 bg-white text-gray-900 font-medium rounded-full hover:bg-gray-100 transition-colors duration-300">
+                        GENERAL INQUIRY
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Need More Assistance Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-10">Need more assistance?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Report Side Effects -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Report side effects</h3>
+                <p class="text-gray-600 mb-6">Access our Adverse Event Report Form or contact us through our helpline.</p>
+                <a href="#" class="inline-flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-200">
+                    <span class="w-10 h-10 bg-gray-100 group-hover:bg-blue-600 group-hover:text-white rounded-full flex items-center justify-center transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Media Inquiries -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Media inquiries</h3>
+                <p class="text-gray-600 mb-6">Access our press releases, branding collateral and additional media resources.</p>
+                <a href="#" class="inline-flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-200">
+                    <span class="w-10 h-10 bg-gray-100 group-hover:bg-blue-600 group-hover:text-white rounded-full flex items-center justify-center transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Explore Careers -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 group">
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Explore careers</h3>
+                <p class="text-gray-600 mb-6">Join Health 4 Human Pharma & contribute to global health through innovative pharmaceutical solutions.</p>
+                <a href="#" class="inline-flex items-center text-blue-600 group-hover:text-blue-700 transition-colors duration-200">
+                    <span class="w-10 h-10 bg-gray-100 group-hover:bg-blue-600 group-hover:text-white rounded-full flex items-center justify-center transition-colors duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- General Inquiry Form Section -->
+<section id="inquiry-form" class="py-16 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">General Inquiry</h2>
+            <p class="text-gray-600">Have a question or feedback? Fill out the form below and we'll get back to you shortly.</p>
+        </div>
+
+        <form class="bg-white rounded-2xl shadow-lg p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- First Name -->
+                <div>
+                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                    <input type="text" id="first_name" name="first_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                    <input type="text" id="last_name" name="last_name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                </div>
+
+                <!-- Subject -->
+                <div class="md:col-span-2">
+                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                    <select id="subject" name="subject" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                        <option value="">Select a subject</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="products">Product Information</option>
+                        <option value="partnership">Business Partnership</option>
+                        <option value="careers">Careers</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Message -->
+                <div class="md:col-span-2">
+                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                    <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" placeholder="How can we help you?"></textarea>
+                </div>
+
+                <!-- Privacy Consent -->
+                <div class="md:col-span-2">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" required class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <span class="text-sm text-gray-600">I agree to the <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a> and consent to Health 4 Human Pharma processing my personal data for the purpose of responding to my inquiry.</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-8">
+                <button type="submit" class="w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300">
+                    Submit Inquiry
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Accordion functionality
+    document.querySelectorAll('.accordion-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const content = document.getElementById(targetId);
+            const icon = this.querySelector('.accordion-icon');
+            
+            // Toggle current accordion
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerHTML = '<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>';
+            } else {
+                content.classList.add('hidden');
+                icon.innerHTML = '<svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>';
+            }
+        });
+    });
+
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Animate cards on scroll
+    gsap.utils.toArray('.grid > div, .grid > a').forEach((card, i) => {
+        gsap.from(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            y: 50,
+            opacity: 0,
+            duration: 0.6,
+            delay: i * 0.1
+        });
+    });
+
+    // Animate accordion items
+    gsap.utils.toArray('#regional-offices-accordion > div').forEach((item, i) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 90%',
+                toggleActions: 'play none none reverse'
+            },
+            x: -30,
+            opacity: 0,
+            duration: 0.5,
+            delay: i * 0.05
+        });
+    });
+
+    // Animate section headers
+    gsap.utils.toArray('section h2').forEach(header => {
+        gsap.from(header, {
+            scrollTrigger: {
+                trigger: header,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            },
+            y: 30,
+            opacity: 0,
+            duration: 0.5
+        });
+    });
+</script>
+{% endblock %}
