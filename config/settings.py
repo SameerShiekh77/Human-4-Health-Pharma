@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -39,7 +40,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -111,6 +114,47 @@ USE_I18N = True
 USE_TZ = True
 
 
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+    "http://72.62.243.240"
+    
+    
+]
+
+
+CORS_ALLOW_HEADERS = (
+    "accept",
+    "authorization",
+    "content-type",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+)
+
+
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+    "http://72.62.243.240",
+    
+    
+    
+    
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -126,6 +170,7 @@ if DEBUG:
 else:
     # Directory where collectstatic will gather files (for production)
     STATIC_ROOT = BASE_DIR /  'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     
 MEDIA_URL = '/media/'
 
@@ -142,3 +187,9 @@ TAILWIND_APP_NAME = "theme"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+# increase file size limit to 2 gb
+DATA_UPLOAD_MAX_MEMORY_SIZE = 2147483648  # 2 GB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2147483648  # 2 GB
+# Maximum number of files that can be uploaded
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 1000
