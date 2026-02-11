@@ -1,0 +1,45 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ action }} Department{% endblock %}
+{% block page_title %}{{ action }} Department{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">{{ action }} Department</h2>
+        </div>
+        
+        <form method="POST" class="p-6 space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Department Name *</label>
+                <input type="text" id="name" name="name" value="{{ department.name|default:'' }}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                    placeholder="e.g., Human Resources">
+            </div>
+            
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea id="description" name="description" rows="4"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                    placeholder="Brief description of this department...">{{ department.description|default:'' }}</textarea>
+            </div>
+            
+            <div class="flex items-center">
+                <input type="checkbox" id="is_active" name="is_active" {% if department.is_active or not department %}checked{% endif %}
+                    class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                <label for="is_active" class="ml-2 text-sm text-gray-700">Active</label>
+            </div>
+            
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <a href="{% url 'department_list' %}" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Cancel</a>
+                <button type="submit" class="px-6 py-2 text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
+                    {% if action == 'Create' %}Create Department{% else %}Save Changes{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

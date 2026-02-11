@@ -1,0 +1,110 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Employee Details{% endblock %}
+{% block page_title %}Employee Details{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <!-- Header with Profile -->
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-8">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    {% if employee.profile_image %}
+                    <img class="h-24 w-24 rounded-full border-4 border-white object-cover" src="{{ employee.profile_image.url }}" alt="">
+                    {% else %}
+                    <div class="h-24 w-24 rounded-full border-4 border-white bg-white flex items-center justify-center">
+                        <span class="text-primary-700 font-bold text-2xl">{{ employee.user.first_name|slice:":1"|upper }}{{ employee.user.last_name|slice:":1"|upper }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="ml-6">
+                    <h1 class="text-2xl font-bold text-white">{{ employee.full_name }}</h1>
+                    <p class="text-primary-100">{{ employee.position.title|default:"No Position" }}</p>
+                    <p class="text-primary-200 text-sm mt-1">{{ employee.employee_id }}</p>
+                </div>
+                <div class="ml-auto">
+                    {% if employee.is_active %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Active</span>
+                    {% else %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Details Grid -->
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Personal Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 border-b pb-2">Personal Information</h3>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Email</span>
+                        <span class="text-gray-900">{{ employee.user.email }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Phone</span>
+                        <span class="text-gray-900">{{ employee.phone|default:"-" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Date of Birth</span>
+                        <span class="text-gray-900">{{ employee.date_of_birth|date:"F d, Y"|default:"-" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Address</span>
+                        <span class="text-gray-900 text-right max-w-xs">{{ employee.address|default:"-"|linebreaksbr }}</span>
+                    </div>
+                </div>
+                
+                <!-- Work Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 border-b pb-2">Work Information</h3>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Department</span>
+                        <span class="text-gray-900">{{ employee.department.name|default:"-" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Position</span>
+                        <span class="text-gray-900">{{ employee.position.title|default:"-" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Hire Date</span>
+                        <span class="text-gray-900">{{ employee.hire_date|date:"F d, Y"|default:"-" }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Created</span>
+                        <span class="text-gray-900">{{ employee.created_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="mt-8 pt-6 border-t border-gray-200 flex items-center justify-between">
+                <a href="{% url 'employee_list' %}" class="text-gray-600 hover:text-gray-800">
+                    <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Back to Employees
+                </a>
+                <div class="space-x-3">
+                    <a href="{% url 'employee_edit' employee.id %}" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit Employee
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

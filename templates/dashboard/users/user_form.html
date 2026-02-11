@@ -1,0 +1,97 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ action }} User{% endblock %}
+{% block page_title %}{{ action }} User{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">{{ action }} User</h2>
+        </div>
+        
+        <form method="POST" class="p-6 space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ user_obj.first_name|default:'' }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                        placeholder="John">
+                </div>
+                
+                <div>
+                    <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ user_obj.last_name|default:'' }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                        placeholder="Doe">
+                </div>
+            </div>
+            
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username *</label>
+                <input type="text" id="username" name="username" value="{{ user_obj.username|default:'' }}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                    placeholder="johndoe">
+            </div>
+            
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                <input type="email" id="email" name="email" value="{{ user_obj.email|default:'' }}" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                    placeholder="john@example.com">
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                    Password {% if action == 'Create' %}*{% endif %}
+                </label>
+                <input type="password" id="password" name="password" {% if action == 'Create' %}required{% endif %}
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                    placeholder="{% if action == 'Edit' %}Leave blank to keep current password{% else %}Enter password{% endif %}">
+                {% if action == 'Edit' %}
+                <p class="mt-1 text-sm text-gray-500">Leave blank to keep the current password.</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Groups/Roles</label>
+                <div class="space-y-2 max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3">
+                    {% for group in groups %}
+                    <label class="flex items-center">
+                        <input type="checkbox" name="groups" value="{{ group.id }}"
+                            {% if group in user_obj.groups.all %}checked{% endif %}
+                            class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                        <span class="ml-2 text-sm text-gray-700">{{ group.name }}</span>
+                    </label>
+                    {% empty %}
+                    <p class="text-sm text-gray-500">No groups available. <a href="{% url 'group_create' %}" class="text-primary-600 hover:underline">Create one</a></p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <label class="flex items-center">
+                    <input type="checkbox" id="is_staff" name="is_staff" {% if user_obj.is_staff %}checked{% endif %}
+                        class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                    <span class="ml-2 text-sm text-gray-700">Staff status (can access dashboard)</span>
+                </label>
+                
+                <label class="flex items-center">
+                    <input type="checkbox" id="is_active" name="is_active" {% if user_obj.is_active or not user_obj %}checked{% endif %}
+                        class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                    <span class="ml-2 text-sm text-gray-700">Active (can login)</span>
+                </label>
+            </div>
+            
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-gray-200">
+                <a href="{% url 'user_list' %}" class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Cancel</a>
+                <button type="submit" class="px-6 py-2 text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
+                    {% if action == 'Create' %}Create User{% else %}Save Changes{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

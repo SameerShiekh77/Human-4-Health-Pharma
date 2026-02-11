@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} | Human 4 Health Pharma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link.active {
+            background-color: #16a34a;
+            color: white;
+        }
+        .sidebar-link:hover:not(.active) {
+            background-color: #f0fdf4;
+        }
+        /* Submenu toggle */
+        .submenu { display: none; }
+        .submenu.show { display: block; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-100 font-inter">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out">
+            <!-- Logo -->
+            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+                <a href="{% url 'dashboard' %}" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">H4H</span>
+                    </div>
+                    <span class="font-semibold text-gray-800">Dashboard</span>
+                </a>
+                <button id="closeSidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="px-4 py-6 space-y-2 overflow-y-auto h-[calc(100vh-4rem)]">
+                <!-- Dashboard -->
+                <a href="{% url 'dashboard' %}" class="sidebar-link flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg transition-colors {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </a>
+
+                <!-- HR Module -->
+                <div class="space-y-1">
+                    <button onclick="toggleSubmenu('hr-menu')" class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            HR Module
+                        </span>
+                        <svg class="w-4 h-4 transform transition-transform" id="hr-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div id="hr-menu" class="submenu pl-12 space-y-1 {% if 'hr/' in request.path %}show{% endif %}">
+                        <a href="{% url 'department_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if 'department' in request.path %}active{% endif %}">Departments</a>
+                        <a href="{% url 'position_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if 'positions' in request.path %}active{% endif %}">Positions</a>
+                        <a href="{% url 'employee_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if 'employees' in request.path %}active{% endif %}">Employees</a>
+                    </div>
+                </div>
+
+                <!-- Users Module -->
+                <div class="space-y-1">
+                    <button onclick="toggleSubmenu('users-menu')" class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                            Users
+                        </span>
+                        <svg class="w-4 h-4 transform transition-transform" id="users-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div id="users-menu" class="submenu pl-12 space-y-1 {% if 'users' in request.path and 'dashboard' in request.path %}show{% endif %}">
+                        <a href="{% url 'user_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_create' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}">All Users</a>
+                        <a href="{% url 'group_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if 'groups' in request.path %}active{% endif %}">Groups/Roles</a>
+                    </div>
+                </div>
+
+                <!-- News Module -->
+                <div class="space-y-1">
+                    <button onclick="toggleSubmenu('news-menu')" class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                            </svg>
+                            News
+                        </span>
+                        <svg class="w-4 h-4 transform transition-transform" id="news-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div id="news-menu" class="submenu pl-12 space-y-1 {% if 'news' in request.path and 'dashboard' in request.path %}show{% endif %}">
+                        <a href="{% url 'news_list_dashboard' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if request.resolver_match.url_name == 'news_list_dashboard' or request.resolver_match.url_name == 'news_create' or request.resolver_match.url_name == 'news_edit' %}active{% endif %}">All News</a>
+                        <a href="{% url 'news_category_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if 'categories' in request.path and 'news' in request.path %}active{% endif %}">Categories</a>
+                    </div>
+                </div>
+
+                <!-- Products Module -->
+                <div class="space-y-1">
+                    <button onclick="toggleSubmenu('products-menu')" class="w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span class="flex items-center">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                            Products
+                        </span>
+                        <svg class="w-4 h-4 transform transition-transform" id="products-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div id="products-menu" class="submenu pl-12 space-y-1 {% if 'products' in request.path and 'dashboard' in request.path %}show{% endif %}">
+                        <a href="{% url 'product_list_dashboard' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if request.resolver_match.url_name == 'product_list_dashboard' or request.resolver_match.url_name == 'product_create' or request.resolver_match.url_name == 'product_edit' %}active{% endif %}">All Products</a>
+                        <a href="{% url 'product_category_list' %}" class="sidebar-link block px-4 py-2 text-sm text-gray-600 rounded-lg {% if 'categories' in request.path and 'products' in request.path %}active{% endif %}">Categories</a>
+                    </div>
+                </div>
+
+                <!-- Contacts -->
+                <a href="{% url 'contact_list' %}" class="sidebar-link flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg transition-colors {% if 'contacts' in request.path %}active{% endif %}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Contact Messages
+                </a>
+
+                <!-- Divider -->
+                <div class="border-t border-gray-200 my-4"></div>
+
+                <!-- Back to Website -->
+                <a href="{% url 'home' %}" class="sidebar-link flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg transition-colors" target="_blank">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                    View Website
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
+                <div class="flex items-center">
+                    <button id="openSidebar" class="lg:hidden text-gray-500 hover:text-gray-700 mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-lg font-semibold text-gray-800">{% block page_title %}Dashboard{% endblock %}</h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- User Menu -->
+                    <div class="relative" id="userDropdown">
+                        <button onclick="toggleUserMenu()" class="flex items-center space-x-2 text-gray-700 hover:text-gray-900">
+                            <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                                <span class="text-primary-700 font-medium text-sm">{{ request.user.first_name|slice:":1"|upper }}{{ request.user.last_name|slice:":1"|upper }}</span>
+                            </div>
+                            <span class="hidden md:block text-sm font-medium">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                            <a href="{% url 'home' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View Website</a>
+                            <hr class="my-1">
+                            <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+                <!-- Flash Messages -->
+                {% if messages %}
+                <div class="mb-6 space-y-2">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-100 text-red-800 border border-red-200{% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800 border border-yellow-200{% else %}bg-blue-100 text-blue-800 border border-blue-200{% endif %}">
+                        <div class="flex items-center">
+                            {% if message.tags == 'success' %}
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            {% elif message.tags == 'error' %}
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <script>
+        // Sidebar toggle
+        function openSidebar() {
+            document.getElementById('sidebar').classList.remove('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.remove('hidden');
+        }
+        
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.add('-translate-x-full');
+            document.getElementById('sidebarOverlay').classList.add('hidden');
+        }
+        
+        document.getElementById('openSidebar').addEventListener('click', openSidebar);
+        document.getElementById('closeSidebar').addEventListener('click', closeSidebar);
+        
+        // Submenu toggle
+        function toggleSubmenu(menuId) {
+            const menu = document.getElementById(menuId);
+            const arrow = document.getElementById(menuId + '-arrow');
+            menu.classList.toggle('show');
+            if (arrow) {
+                arrow.classList.toggle('rotate-180');
+            }
+        }
+        
+        // User menu toggle
+        function toggleUserMenu() {
+            document.getElementById('userMenu').classList.toggle('hidden');
+        }
+        
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const menu = document.getElementById('userMenu');
+            if (!dropdown.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

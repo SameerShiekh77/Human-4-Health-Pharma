@@ -56,20 +56,22 @@
                 
                 <!-- Search Icon -->
                 <div class="hidden md:flex items-center gap-4">
-                    <button class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </button>
+                  
                     
                     <!-- User Menu -->
                     {% if user.is_authenticated %}
                         <div class="flex items-center gap-3">
-                            <span class="text-gray-700">Hi, {{ user.first_name|default:user.username }}</span>
                             <a href="{% url 'logout' %}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors duration-200">
                                 Logout
                             </a>
                         </div>
+                        {% if user.is_superuser %}
+                         <div class="flex items-center gap-3">
+                            <a href="{% url 'dashboard' %}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors duration-200">
+                                Dashboard
+                            </a>
+                        </div>
+                        {% endif %}
                     {% else %}
                         <div class="flex items-center gap-2">
                             <a href="{% url 'login' %}" class="px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors duration-200">
@@ -105,7 +107,6 @@
                 <!-- Auth Links -->
                 <div class="border-t pt-2 mt-2">
                     {% if user.is_authenticated %}
-                        <div class="px-3 py-2 text-gray-600 text-sm">Hi, {{ user.first_name|default:user.username }}</div>
                         <a href="{% url 'logout' %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Logout</a>
                     {% else %}
                         <a href="{% url 'login' %}" class="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">Login</a>
