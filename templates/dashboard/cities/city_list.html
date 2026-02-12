@@ -1,0 +1,117 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Cities - Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Cities</h1>
+            <p class="text-gray-600 text-sm mt-1">Manage cities for your operations</p>
+        </div>
+        <a href="{% url 'city_create' %}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg inline-flex items-center transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add New City
+        </a>
+    </div>
+
+    <!-- Cities Table -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Updated</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for city in cities %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+                                    <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">{{ city.name }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ city.created_at|date:"M d, Y" }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ city.updated_at|date:"M d, Y" }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{% url 'city_edit' city.id %}" class="text-blue-600 hover:text-blue-900 mr-3">
+                                <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </a>
+                            <button onclick="showDeleteModal{{ city.id }}()" class="text-red-600 hover:text-red-900">
+                                <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- Delete Modal -->
+                    <div id="deleteModal{{ city.id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) hideDeleteModal{{ city.id }}()">
+                        <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm Delete</h3>
+                                <p class="text-gray-600 mb-1">Are you sure you want to delete <strong>{{ city.name }}</strong>?</p>
+                                <p class="text-red-600 text-sm">This action cannot be undone.</p>
+                            </div>
+                            <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end rounded-b-xl">
+                                <button onclick="hideDeleteModal{{ city.id }}()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-colors">
+                                    Cancel
+                                </button>
+                                <form method="POST" action="{% url 'city_delete' city.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function showDeleteModal{{ city.id }}() {
+                            document.getElementById('deleteModal{{ city.id }}').classList.remove('hidden');
+                            document.getElementById('deleteModal{{ city.id }}').classList.add('flex');
+                        }
+                        function hideDeleteModal{{ city.id }}() {
+                            document.getElementById('deleteModal{{ city.id }}').classList.add('hidden');
+                            document.getElementById('deleteModal{{ city.id }}').classList.remove('flex');
+                        }
+                    </script>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-6 py-12 text-center">
+                            <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <p class="text-gray-600 mb-2">No cities found.</p>
+                            <a href="{% url 'city_create' %}" class="text-primary-600 hover:text-primary-800 font-medium">Add your first city</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

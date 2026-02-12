@@ -53,4 +53,16 @@ urlpatterns = [
     path('dashboard/contacts/<int:id>/', views.contact_detail, name='contact_detail'),
     path('dashboard/contacts/<int:id>/mark-responded/', views.contact_mark_responded, name='contact_mark_responded'),
     path('dashboard/contacts/<int:id>/delete/', views.contact_delete, name='contact_delete'),
+    
+    # Teams Module
+    path('dashboard/teams/', views.team_list, name='team_list'),
+    path('dashboard/teams/create/', views.team_create, name='team_create'),
+    path('dashboard/teams/<int:id>/edit/', views.team_edit, name='team_edit'),
+    path('dashboard/teams/<int:id>/delete/', views.team_delete, name='team_delete'),
+    
+    # Cities Module
+    path('dashboard/cities/', views.city_list, name='city_list'),
+    path('dashboard/cities/create/', views.city_create, name='city_create'),
+    path('dashboard/cities/<int:id>/edit/', views.city_edit, name='city_edit'),
+    path('dashboard/cities/<int:id>/delete/', views.city_delete, name='city_delete'),
 ]

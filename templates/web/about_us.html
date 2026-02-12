@@ -44,21 +44,7 @@ We are dedicated to improving the quality of life and lifestyle of our employees
 
 
                 
-                <!-- Stats -->
-                <div class="grid grid-cols-3 gap-8">
-                    <div class="text-center counter-item">
-                        <div class="text-4xl font-bold text-blue-600 mb-2" data-target="30">0</div>
-                        <div class="text-gray-600">Years</div>
-                    </div>
-                    <div class="text-center counter-item">
-                        <div class="text-4xl font-bold text-blue-600 mb-2" data-target="8000">0</div>
-                        <div class="text-gray-600">Employees</div>
-                    </div>
-                    <div class="text-center counter-item">
-                        <div class="text-4xl font-bold text-blue-600 mb-2" data-target="45">0</div>
-                        <div class="text-gray-600">Countries</div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -87,41 +73,18 @@ We are dedicated to improving the quality of life and lifestyle of our employees
             
             <!-- Leaders Grid -->
             <div id="leaders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Leader 1 -->
-                <div class="text-center leader-card opacity-0">
-                    <div class="mb-4 overflow-hidden rounded-lg">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600" alt="Khalid Mahmood" class="w-full h-80 object-cover hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900">Khalid Mahmood</h3>
-                    <p class="text-gray-600">Executive Chairman</p>
+                <!-- Leader -->
+                 {% for team in teams %}
+                 <div class="text-center leader-card opacity-0">
+                     <div class="mb-4 overflow-hidden rounded-lg">
+                         <img src="{{ team.picture.url }}" alt="{{ team.name }}" class="w-full h-80 object-cover hover:scale-110 transition-transform duration-500">
+                        </div>
+                    <h3 class="text-xl font-semibold text-gray-900">{{ team.name }}</h3>
+                    <p class="text-gray-600">{{ team.designation }}</p>
                 </div>
+                {% endfor %}
                 
-                <!-- Leader 2 -->
-                <div class="text-center leader-card opacity-0">
-                    <div class="mb-4 overflow-hidden rounded-lg">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600" alt="Zeeshan Ahmed" class="w-full h-80 object-cover hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900">Zeeshan Ahmed</h3>
-                    <p class="text-gray-600">Deputy Managing Director</p>
-                </div>
-                
-                <!-- Leader 3 -->
-                <div class="text-center leader-card opacity-0">
-                    <div class="mb-4 overflow-hidden rounded-lg">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600" alt="Adnan Siddiqui" class="w-full h-80 object-cover hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900">Adnan Siddiqui</h3>
-                    <p class="text-gray-600">VP, Plant Operations</p>
-                </div>
-                
-                <!-- Leader 4 -->
-                <div class="text-center leader-card opacity-0">
-                    <div class="mb-4 overflow-hidden rounded-lg">
-                        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600" alt="Azhar Zuberi" class="w-full h-80 object-cover hover:scale-110 transition-transform duration-500">
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900">Azhar Zuberi</h3>
-                    <p class="text-gray-600">Director Information Technology</p>
-                </div>
+               
             </div>
         </div>
     </div>

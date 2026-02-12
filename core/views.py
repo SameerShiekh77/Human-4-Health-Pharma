@@ -11,7 +11,7 @@ from django.http import JsonResponse
 
 from core.models import (
     NewsCategory, News,
-    Contact
+    Contact, Teams, Cities
 )
 from hr.models import (
     Department, Position, Employee,
@@ -26,9 +26,12 @@ from products.models import Product, ProductCategory, ProductImage
 def home(request):
     featured_products = Product.objects.filter(is_active=True, is_featured=True)[:6]
     latest_news = News.objects.filter(is_published=True)[:3]
+    cities = Cities.objects.all()[:10]
     context = {
         'featured_products': featured_products,
         'latest_news': latest_news,
+        'cities': cities,
+        'cities_length': cities.count(),
     }
     return render(request, 'web/index.html', context)
 
@@ -83,7 +86,11 @@ def innovations(request):
 
 
 def about_us(request):
-    return render(request, 'web/about_us.html')
+    teams = Teams.objects.filter(is_active=True)
+    context = {
+        'teams': teams,
+    }
+    return render(request, 'web/about_us.html',context)
 
 
 def impact(request):
@@ -132,7 +139,9 @@ def news_detail(request, id):
 
 def contact(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        name = f"{first_name} {last_name}".strip()
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         subject = request.POST.get('subject')
@@ -654,3 +663,117 @@ def contact_delete(request, id):
         contact_item.delete()
         messages.success(request, 'Contact deleted successfully.')
     return redirect('contact_list')
+
+# ============================================
+# TEAM MODULE - DASHBOARD VIEWS
+# ============================================
+
+
+@staff_member_required(login_url='login')
+def team_list(request):
+    teams = Teams.objects.all()
+    return render(request, 'dashboard/teams/team_list.html', {'teams': teams})
+
+@staff_member_required(login_url='login')
+def team_create(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        designation = request.POST.get('designation')
+        picture = request.FILES.get('picture')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        Teams.objects.create(
+            name=name,
+            picture=picture,
+            designation=designation if designation else None,
+            is_active=is_active
+        )
+        messages.success(request, 'Team created successfully.')
+        return redirect('team_list')
+    
+    return render(request, 'dashboard/teams/team_form.html', {
+        'action': 'Create'
+    })
+    
+
+@staff_member_required(login_url='login')
+def team_edit(request, id):
+    team = get_object_or_404(Teams, id=id)
+    
+    if request.method == 'POST':
+        team.name = request.POST.get('name')
+        team.designation = request.POST.get('designation') or None
+        team.is_active = request.POST.get('is_active') == 'on'
+        
+        # Update picture if a new one is uploaded
+        if request.FILES.get('picture'):
+            team.picture = request.FILES.get('picture')
+        
+        team.save()
+        messages.success(request, 'Team updated successfully.')
+        return redirect('team_list')
+    
+    return render(request, 'dashboard/teams/team_form.html', {
+        'team': team,
+        'action': 'Edit'
+    })
+    
+
+@staff_member_required(login_url='login')
+def team_delete(request, id):
+    team = get_object_or_404(Teams, id=id)
+    if request.method == 'POST':
+        team.delete()
+        messages.success(request, 'Team deleted successfully.')
+    return redirect('team_list')
+
+
+# ============================================
+# CITIES MODULE - DASHBOARD VIEWS
+# ============================================
+
+@staff_member_required(login_url='login')
+def city_list(request):
+    cities = Cities.objects.all()
+    return render(request, 'dashboard/cities/city_list.html', {'cities': cities})
+
+
+@staff_member_required(login_url='login')
+def city_create(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        
+        if Cities.objects.filter(name=name).exists():
+            messages.error(request, 'City with this name already exists.')
+            return render(request, 'dashboard/cities/city_form.html', {'action': 'Create'})
+        
+        Cities.objects.create(name=name)
+        messages.success(request, 'City created successfully.')
+        return redirect('city_list')
+    
+    return render(request, 'dashboard/cities/city_form.html', {'action': 'Create'})
+
+
+@staff_member_required(login_url='login')
+def city_edit(request, id):
+    city = get_object_or_404(Cities, id=id)
+    
+    if request.method == 'POST':
+        city.name = request.POST.get('name')
+        city.save()
+        messages.success(request, 'City updated successfully.')
+        return redirect('city_list')
+    
+    return render(request, 'dashboard/cities/city_form.html', {
+        'city': city,
+        'action': 'Edit'
+    })
+
+
+@staff_member_required(login_url='login')
+def city_delete(request, id):
+    city = get_object_or_404(Cities, id=id)
+    if request.method == 'POST':
+        city.delete()
+        messages.success(request, 'City deleted successfully.')
+    return redirect('city_list')

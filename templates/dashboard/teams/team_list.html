@@ -1,0 +1,131 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block title %}Team Members - Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Team Members</h1>
+            <p class="text-gray-600 text-sm mt-1">Manage your team members and their profiles</p>
+        </div>
+        <a href="{% url 'team_create' %}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg inline-flex items-center transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add New Member
+        </a>
+    </div>
+
+    <!-- Team Members Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for team in teams %}
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+            <div class="p-6 text-center">
+                <!-- Profile Picture -->
+                <div class="mb-4">
+                    {% if team.picture %}
+                        <img src="{{ team.picture.url }}" alt="{{ team.name }}" 
+                             class="w-32 h-32 rounded-full object-cover mx-auto border-4 border-gray-100">
+                    {% else %}
+                        <div class="w-32 h-32 rounded-full bg-primary-600 text-white flex items-center justify-center mx-auto text-5xl font-bold">
+                            {{ team.name|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Name -->
+                <h3 class="text-lg font-semibold text-gray-800 mb-1">{{ team.name }}</h3>
+                
+                <!-- Designation -->
+                {% if team.designation %}
+                    <p class="text-gray-600 text-sm mb-3">{{ team.designation }}</p>
+                {% else %}
+                    <p class="text-gray-400 text-sm mb-3">No designation</p>
+                {% endif %}
+
+                <!-- Status Badge -->
+                <div class="mb-4">
+                    {% if team.is_active %}
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">Active</span>
+                    {% else %}
+                        <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">Inactive</span>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2 justify-center">
+                    <a href="{% url 'team_edit' team.id %}" 
+                       class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Edit
+                    </a>
+                    <button onclick="showDeleteModal{{ team.id }}()" 
+                            class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timestamps -->
+            <div class="bg-gray-50 px-6 py-3 text-xs text-gray-500 rounded-b-xl">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Added: {{ team.created_at|date:"M d, Y" }}
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="deleteModal{{ team.id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" onclick="if(event.target === this) hideDeleteModal{{ team.id }}()">
+                <div class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Confirm Delete</h3>
+                        <p class="text-gray-600 mb-1">Are you sure you want to delete <strong>{{ team.name }}</strong>?</p>
+                        <p class="text-red-600 text-sm">This action cannot be undone.</p>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end rounded-b-xl">
+                        <button onclick="hideDeleteModal{{ team.id }}()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <form method="POST" action="{% url 'team_delete' team.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function showDeleteModal{{ team.id }}() {
+                    document.getElementById('deleteModal{{ team.id }}').classList.remove('hidden');
+                    document.getElementById('deleteModal{{ team.id }}').classList.add('flex');
+                }
+                function hideDeleteModal{{ team.id }}() {
+                    document.getElementById('deleteModal{{ team.id }}').classList.add('hidden');
+                    document.getElementById('deleteModal{{ team.id }}').classList.remove('flex');
+                }
+            </script>
+        </div>
+        {% empty %}
+        <div class="col-span-full">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                <svg class="w-12 h-12 text-blue-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <p class="text-blue-800 mb-2">No team members found.</p>
+                <a href="{% url 'team_create' %}" class="text-blue-600 hover:text-blue-800 font-medium">Add your first team member</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

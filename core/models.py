@@ -123,3 +123,35 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
+
+
+class Teams(models.Model):
+    """Teams Model"""
+    name = models.CharField(max_length=100)
+    designation = models.TextField(blank=True, null=True)
+    picture = models.ImageField(upload_to='teams/')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'Team'
+        verbose_name_plural = 'Teams'
+
+    def __str__(self):
+        return self.name
+    
+
+class Cities(models.Model):
+    """Cities Model"""
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = 'City'
+        verbose_name_plural = 'Cities'
+
+    def __str__(self):
+        return self.name

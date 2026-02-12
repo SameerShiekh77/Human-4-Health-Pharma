@@ -1,5 +1,5 @@
 {% extends 'web/base.html' %}
-
+{% load static %}
 {% block title %}BMI Calculator - Health 4 Human Pharma{% endblock %}
 
 {% block content %}
@@ -61,6 +61,25 @@
                         </div>
                     </div>
                     
+                    <!-- Unit Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Unit System</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="unit" value="metric" class="peer sr-only unit-toggle" checked>
+                                <div class="flex items-center justify-center p-4 border-2 border-gray-200 rounded-xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:border-blue-300">
+                                    <span class="font-medium text-gray-700">Metric (cm/kg)</span>
+                                </div>
+                            </label>
+                            <label class="relative cursor-pointer">
+                                <input type="radio" name="unit" value="imperial" class="peer sr-only unit-toggle">
+                                <div class="flex items-center justify-center p-4 border-2 border-gray-200 rounded-xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-200 hover:border-blue-300">
+                                    <span class="font-medium text-gray-700">Imperial (ft/lbs)</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <!-- Age Input -->
                     <div>
                         <label for="age" class="block text-sm font-medium text-gray-700 mb-2">Age (years)</label>
@@ -68,23 +87,50 @@
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg">
                     </div>
                     
-                    <!-- Height Input -->
-                    <div>
-                        <label for="height" class="block text-sm font-medium text-gray-700 mb-2">Height (cm)</label>
+                    <!-- Height Input - Metric -->
+                    <div id="height-metric" class="height-input">
+                        <label for="height-cm" class="block text-sm font-medium text-gray-700 mb-2">Height</label>
                         <div class="relative">
-                            <input type="number" id="height" name="height" min="50" max="300" step="0.1" placeholder="Enter your height" required
+                            <input type="number" id="height-cm" name="height-cm" min="50" max="300" step="0.1" placeholder="Enter height in cm" required
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">cm</span>
                         </div>
                     </div>
+
+                    <!-- Height Input - Imperial -->
+                    <div id="height-imperial" class="height-input hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Height</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input type="number" id="height-ft" name="height-ft" min="1" max="8" placeholder="Feet" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">ft</span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="height-in" name="height-in" min="0" max="11" placeholder="Inches" required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">in</span>
+                            </div>
+                        </div>
+                    </div>
                     
-                    <!-- Weight Input -->
-                    <div>
-                        <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (kg)</label>
+                    <!-- Weight Input - Metric -->
+                    <div id="weight-metric" class="weight-input">
+                        <label for="weight-kg" class="block text-sm font-medium text-gray-700 mb-2">Weight</label>
                         <div class="relative">
-                            <input type="number" id="weight" name="weight" min="1" max="500" step="0.1" placeholder="Enter your weight" required
+                            <input type="number" id="weight-kg" name="weight-kg" min="1" max="500" step="0.1" placeholder="Enter weight in kg" required
                                 class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">kg</span>
+                        </div>
+                    </div>
+
+                    <!-- Weight Input - Imperial -->
+                    <div id="weight-imperial" class="weight-input hidden">
+                        <label for="weight-lbs" class="block text-sm font-medium text-gray-700 mb-2">Weight</label>
+                        <div class="relative">
+                            <input type="number" id="weight-lbs" name="weight-lbs" min="1" max="1100" step="0.1" placeholder="Enter weight in pounds" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-colors duration-200 text-lg pr-12">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">lbs</span>
                         </div>
                     </div>
                     
@@ -153,6 +199,34 @@
                         <div class="flex items-center justify-between p-3 rounded-lg bg-red-50 border-l-4 border-red-400">
                             <span class="font-medium text-gray-700">Obese Class II & III</span>
                             <span class="text-red-600 font-semibold">&ge; 35</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BMI Reference PDF Download -->
+                <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-xl p-8 text-white pdf-card opacity-0">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-3">
+                                <svg class="w-8 h-8 text-blue-200 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                                <h3 class="text-xl font-bold">BMI Reference Guide</h3>
+                            </div>
+                            <p class="text-blue-100 mb-4 text-sm leading-relaxed">
+                                Download our comprehensive BMI table with detailed categories, health recommendations, and wellness tips for all age groups.
+                            </p>
+                            <a href="{% static 'files/BMI Table PDF.pdf' %}" download class="inline-flex items-center px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Download PDF Guide
+                            </a>
+                        </div>
+                        <div class="hidden md:block ml-4">
+                            <svg class="w-24 h-24 text-blue-400 opacity-50" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -326,6 +400,18 @@
                 start: 'top 80%'
             }
         });
+
+        // PDF card animation
+        gsap.to('.pdf-card', {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.4,
+            scrollTrigger: {
+                trigger: '.pdf-card',
+                start: 'top 80%'
+            }
+        });
         
         // Tips section animations
         gsap.to('.tips-title', {
@@ -371,16 +457,67 @@
         const bmiIndicator = document.getElementById('bmi-indicator');
         const healthMessage = document.getElementById('health-message');
         
+        // Unit toggle functionality
+        const unitToggles = document.querySelectorAll('.unit-toggle');
+        const heightMetric = document.getElementById('height-metric');
+        const heightImperial = document.getElementById('height-imperial');
+        const weightMetric = document.getElementById('weight-metric');
+        const weightImperial = document.getElementById('weight-imperial');
+        
+        unitToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                if (this.value === 'metric') {
+                    heightMetric.classList.remove('hidden');
+                    heightImperial.classList.add('hidden');
+                    weightMetric.classList.remove('hidden');
+                    weightImperial.classList.add('hidden');
+                    // Remove required from imperial inputs
+                    document.getElementById('height-ft').removeAttribute('required');
+                    document.getElementById('height-in').removeAttribute('required');
+                    document.getElementById('weight-lbs').removeAttribute('required');
+                    // Add required to metric inputs
+                    document.getElementById('height-cm').setAttribute('required', 'required');
+                    document.getElementById('weight-kg').setAttribute('required', 'required');
+                } else {
+                    heightMetric.classList.add('hidden');
+                    heightImperial.classList.remove('hidden');
+                    weightMetric.classList.add('hidden');
+                    weightImperial.classList.remove('hidden');
+                    // Remove required from metric inputs
+                    document.getElementById('height-cm').removeAttribute('required');
+                    document.getElementById('weight-kg').removeAttribute('required');
+                    // Add required to imperial inputs
+                    document.getElementById('height-ft').setAttribute('required', 'required');
+                    document.getElementById('height-in').setAttribute('required', 'required');
+                    document.getElementById('weight-lbs').setAttribute('required', 'required');
+                }
+            });
+        });
+        
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const height = parseFloat(document.getElementById('height').value);
-            const weight = parseFloat(document.getElementById('weight').value);
+            const unitSystem = document.querySelector('input[name="unit"]:checked').value;
+            let heightInMeters, weightInKg;
             
-            if (height > 0 && weight > 0) {
+            if (unitSystem === 'metric') {
+                const heightCm = parseFloat(document.getElementById('height-cm').value);
+                weightInKg = parseFloat(document.getElementById('weight-kg').value);
+                heightInMeters = heightCm / 100;
+            } else {
+                const feet = parseFloat(document.getElementById('height-ft').value) || 0;
+                const inches = parseFloat(document.getElementById('height-in').value) || 0;
+                const pounds = parseFloat(document.getElementById('weight-lbs').value);
+                
+                // Convert imperial to metric
+                const totalInches = (feet * 12) + inches;
+                heightInMeters = totalInches * 0.0254;
+                weightInKg = pounds * 0.453592;
+            }
+            
+            if (heightInMeters > 0 && weightInKg > 0) {
                 // Calculate BMI
-                const heightInMeters = height / 100;
-                const bmi = weight / (heightInMeters * heightInMeters);
+                const bmi = weightInKg / (heightInMeters * heightInMeters);
                 const roundedBMI = Math.round(bmi * 10) / 10;
                 
                 // Show result card
