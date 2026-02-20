@@ -68,16 +68,17 @@ def products(request):
 
 
 def product_detail(request, id):
-    product = get_object_or_404(Product, id=id, is_active=True)
-    related_products = Product.objects.filter(
-        category=product.category, 
-        is_active=True
-    ).exclude(id=product.id)[:4]
+    # product = get_object_or_404(Product, id=id, is_active=True)
+    # related_products = Product.objects.filter(
+    #     category=product.category, 
+    #     is_active=True
+    # ).exclude(id=product.id)[:4]
     
-    context = {
-        'product': product,
-        'related_products': related_products,
-    }
+    # context = {
+    #     'product': product,
+    #     'related_products': related_products,
+    # }
+    context = {}
     return render(request, 'web/product_detail.html', context)
 
 
