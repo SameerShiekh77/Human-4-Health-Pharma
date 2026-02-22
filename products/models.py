@@ -43,11 +43,7 @@ class Product(models.Model):
         null=True, 
         related_name='products'
     )
-    sku = models.CharField(
-        max_length=50, 
-        unique=True,
-        help_text='Stock Keeping Unit'
-    )
+   
     featured_image = models.ImageField(upload_to='products/featured/')
     short_description = models.TextField(
         max_length=500,
@@ -55,20 +51,7 @@ class Product(models.Model):
     )
     description = models.TextField(help_text='Full product description')
     
-    # Pricing
-    price = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2,
-        help_text='Regular price'
-    )
-    discount_price = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        blank=True, 
-        null=True,
-        help_text='Discounted price (leave empty if no discount)'
-    )
-    
+  
     # Product Details
     ingredients = models.TextField(
         blank=True, 
@@ -86,12 +69,28 @@ class Product(models.Model):
         null=True,
         help_text='Recommended dosage'
     )
+    pack_size = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text='Pack size or quantity (e.g., 30 tablets, 100ml)'
+    )
+    key_benefits = models.TextField(
+        blank=True, 
+        null=True,
+        help_text='Key benefits or features of the product'
+    )
     warnings = models.TextField(
         blank=True, 
         null=True,
         help_text='Safety warnings and precautions'
     )
-    
+    video = models.FileField(
+        upload_to='products/videos/',
+        blank=True,
+        null=True,
+        help_text='Optional product video (e.g., usage demonstration)'
+    )
     # Status
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

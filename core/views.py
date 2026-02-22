@@ -11,7 +11,7 @@ from django.http import JsonResponse
 
 from core.models import (
     NewsCategory, News,
-    Contact, Teams, Cities
+    Contact, Teams, Cities, Subscribers
 )
 from hr.models import (
     Department, Position, Employee,
@@ -38,7 +38,9 @@ def home(request):
 
 def products(request):
     products_list = Product.objects.filter(is_active=True)
-    categories = ProductCategory.objects.filter(is_active=True)
+    categories = ProductCategory.objects.filter(is_active=True)[:6]
+    
+    featured_products = products_list.filter(is_featured=True)[:6]
     
     # Filter by category
     category_slug = request.GET.get('category')
@@ -63,22 +65,22 @@ def products(request):
         'categories': categories,
         'current_category': category_slug,
         'search_query': search_query,
+        'featured_products':featured_products
     }
     return render(request, 'web/products.html', context)
 
 
-def product_detail(request, id):
-    # product = get_object_or_404(Product, id=id, is_active=True)
-    # related_products = Product.objects.filter(
-    #     category=product.category, 
-    #     is_active=True
-    # ).exclude(id=product.id)[:4]
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug, is_active=True)
+    related_products = Product.objects.filter(
+        category=product.category, 
+        is_active=True
+    ).exclude(id=product.id)[:4]
     
-    # context = {
-    #     'product': product,
-    #     'related_products': related_products,
-    # }
-    context = {}
+    context = {
+        'product': product,
+        'related_products': related_products,
+    }
     return render(request, 'web/product_detail.html', context)
 
 
@@ -160,9 +162,13 @@ def contact(request):
     return render(request, 'web/contact.html')
 
 
-def newsletter(request):
+def subscribers(request):
     if request.method == 'POST':
         email = request.POST.get('email')
+        if Subscribers.objects.filter(email=email).exists():
+            messages.info(request, 'This email is already subscribed to our newsletter.')
+            return redirect('home')
+        Subscribers.objects.create(email=email)
         # Here you would typically add the email to your newsletter list
         # For this example, we'll just return a success message
         messages.success(request, 'Thank you for subscribing to our newsletter!')
@@ -787,3 +793,9 @@ def city_delete(request, id):
         city.delete()
         messages.success(request, 'City deleted successfully.')
     return redirect('city_list')
+
+
+@staff_member_required(login_url='login')
+def subscriber_list(request):
+    subscribers = Subscribers.objects.all().order_by('-subscribed_at')
+    return render(request, 'dashboard/subscribers/subscriber_list.html', {'subscribers': subscribers})

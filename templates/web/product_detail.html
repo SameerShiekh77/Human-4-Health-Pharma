@@ -1,4 +1,5 @@
 {% extends 'web/base.html' %}
+{% load product_filters %}
 
 {% block title %}CardioGuard Plus - Product Details | Health 4 Human Pharma{% endblock %}
 
@@ -15,7 +16,7 @@
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
             </svg>
-            <span class="text-gray-800 font-medium">CardioGuard Plus</span>
+            <span class="text-gray-800 font-medium">{{product.name}}</span>
         </nav>
     </div>
 </section>
@@ -35,7 +36,7 @@
                             </svg>
                         </div>
                     </div>
-                    <span class="absolute top-6 right-6 bg-green-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg">In Stock</span>
+                   
                 </div>
             </div>
 
@@ -43,34 +44,28 @@
             <div class="product-info">
                 <div class="mb-6">
                     <span class="inline-block bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-4">
-                        Cardiovascular
+                        {{product.category.name}}
                     </span>
                     <h1 class="product-title text-4xl md:text-5xl font-light text-gray-900 mb-4">
-                        CardioGuard Plus
+                        {{product.name}}
                     </h1>
                     <p class="text-xl text-gray-600 leading-relaxed">
-                        Advanced cardiovascular support medication designed for comprehensive blood pressure management and heart health optimization.
+                       {{product.short_description}}
                     </p>
                 </div>
 
                 <!-- Key Information -->
                 <div class="grid grid-cols-2 gap-4 mb-8 p-6 bg-gray-50 rounded-xl border border-gray-200">
-                    <div class="key-info-item">
-                        <span class="block text-xs text-gray-500 font-medium mb-1">Prescription Required</span>
-                        <span class="block text-lg font-bold text-gray-800">Yes (Rx)</span>
-                    </div>
+                    
                     <div class="key-info-item">
                         <span class="block text-xs text-gray-500 font-medium mb-1">Available Dosages</span>
-                        <span class="block text-lg font-bold text-gray-800">10mg, 20mg, 40mg</span>
+                        <span class="block text-lg font-bold text-gray-800">{{product.dosage}}</span>
                     </div>
                     <div class="key-info-item">
                         <span class="block text-xs text-gray-500 font-medium mb-1">Pack Size</span>
-                        <span class="block text-lg font-bold text-gray-800">30 Tablets</span>
+                        <span class="block text-lg font-bold text-gray-800">{{product.pack_size}}</span>
                     </div>
-                    <div class="key-info-item">
-                        <span class="block text-xs text-gray-500 font-medium mb-1">Form</span>
-                        <span class="block text-lg font-bold text-gray-800">Film-Coated Tablets</span>
-                    </div>
+                   
                 </div>
 
                 <!-- Certifications -->
@@ -132,23 +127,15 @@
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Product Description</h2>
                     <div class="prose prose-lg max-w-none text-gray-700">
                         <p class="mb-4">
-                            CardioGuard Plus is a cutting-edge pharmaceutical solution specifically formulated to address cardiovascular health concerns. This advanced medication combines proven therapeutic agents to provide comprehensive support for patients managing hypertension and related cardiac conditions.
-                        </p>
-                        <p class="mb-4">
-                            Developed through rigorous clinical research and testing, CardioGuard Plus has demonstrated exceptional efficacy in maintaining healthy blood pressure levels and promoting overall cardiovascular wellness. The medication works by targeting multiple pathways involved in blood pressure regulation, ensuring optimal therapeutic outcomes.
+                            {{product.description}}
                         </p>
                         <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3">Key Benefits:</h3>
                         <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li>Effective blood pressure management and stabilization</li>
-                            <li>Enhanced cardiovascular protection and support</li>
-                            <li>Reduced risk of heart-related complications</li>
-                            <li>Improved overall cardiac function and health</li>
-                            <li>Long-lasting therapeutic effects with once-daily dosing</li>
-                            <li>Well-tolerated with minimal side effects</li>
+                            {% for benefit in product.key_benefits|split:"," %}
+                            <li>{{ benefit }}</li>
+                            {% endfor %}
                         </ul>
-                        <p class="mb-4">
-                            CardioGuard Plus is manufactured in state-of-the-art facilities following strict quality control standards and Good Manufacturing Practices (GMP). Each batch undergoes comprehensive testing to ensure purity, potency, and safety.
-                        </p>
+                      
                     </div>
                 </div>
             </div>
@@ -516,6 +503,7 @@
 </section>
 
 <!-- Related Products -->
+ {% if related_products %}
 <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
@@ -524,7 +512,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Related Product 1 -->
+            <!-- Related Product -->
+             {% for related_product in related_products %}
             <div class="related-product bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
                 <div class="h-48 bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center">
                     <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
@@ -534,49 +523,19 @@
                     </div>
                 </div>
                 <div class="p-6">
-                    <span class="text-xs font-bold text-purple-600 uppercase">Cardiovascular</span>
-                    <h3 class="text-lg font-bold text-gray-800 my-2">HeartShield Pro</h3>
-                    <p class="text-gray-600 text-sm mb-4">Advanced cardiac protection formula</p>
-                    <a href="{% url "product_detail" id=5 %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
+                    <span class="text-xs font-bold text-purple-600 uppercase">{{ related_product.category.name }}</span>
+                    <h3 class="text-lg font-bold text-gray-800 my-2">{{ related_product.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4">{{ related_product.short_description }}</p>
+                    <a href="{% url "product_detail" slug=related_product.slug %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
                 </div>
             </div>
+             {% endfor %}
 
-            <!-- Related Product 2 -->
-            <div class="related-product bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
-                        <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <span class="text-xs font-bold text-blue-600 uppercase">Cardiovascular</span>
-                    <h3 class="text-lg font-bold text-gray-800 my-2">VasculoCare Plus</h3>
-                    <p class="text-gray-600 text-sm mb-4">Vascular health and circulation support</p>
-                    <a href="{% url "product_detail" id=5 %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
-                </div>
-            </div>
-
-            <!-- Related Product 3 -->
-            <div class="related-product bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <div class="h-48 bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center">
-                    <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
-                        <svg class="w-12 h-12 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <span class="text-xs font-bold text-cyan-600 uppercase">Cardiovascular</span>
-                    <h3 class="text-lg font-bold text-gray-800 my-2">PressureBalance XR</h3>
-                    <p class="text-gray-600 text-sm mb-4">Extended-release blood pressure control</p>
-                    <a href="{% url "product_detail" id=5 %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm">View Details →</a>
-                </div>
-            </div>
+           
         </div>
     </div>
 </section>
+ {% endif %}
 
 {% endblock %}
 

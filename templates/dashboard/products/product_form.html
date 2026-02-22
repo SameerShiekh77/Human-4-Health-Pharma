@@ -44,7 +44,7 @@
             
             <div>
                 <label for="short_description" class="block text-sm font-medium text-gray-700 mb-1">Short Description *</label>
-                <textarea id="short_description" name="short_description" rows="2" required maxlength="255"
+                <textarea id="short_description" name="short_description" rows="2" required maxlength="500"
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     placeholder="Brief product summary for listing cards...">{{ product.short_description|default:'' }}</textarea>
             </div>
@@ -55,67 +55,41 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                     placeholder="Detailed product description...">{{ product.description|default:'' }}</textarea>
             </div>
-            
-            <!-- Pricing -->
-            <div class="border-t border-gray-200 pt-6">
-                <h3 class="text-md font-semibold text-gray-800 mb-4">Pricing & Inventory</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
-                            <input type="number" id="price" name="price" value="{{ product.price|default:'' }}" required step="0.01" min="0"
-                                class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                                placeholder="0.00">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label for="compare_price" class="block text-sm font-medium text-gray-700 mb-1">Compare at Price</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
-                            <input type="number" id="compare_price" name="compare_price" value="{{ product.compare_price|default:'' }}" step="0.01" min="0"
-                                class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                                placeholder="0.00">
-                        </div>
-                        <p class="mt-1 text-sm text-gray-500">Original price for showing discounts.</p>
-                    </div>
-                    
-                    <div>
-                        <label for="stock_quantity" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
-                        <input type="number" id="stock_quantity" name="stock_quantity" value="{{ product.stock_quantity|default:'' }}" min="0"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                            placeholder="Leave blank for unlimited">
-                    </div>
-                </div>
-            </div>
-            
+   
             <!-- Images -->
             <div class="border-t border-gray-200 pt-6">
                 <h3 class="text-md font-semibold text-gray-800 mb-4">Images</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="main_image" class="block text-sm font-medium text-gray-700 mb-1">Main Image {% if not product %}*{% endif %}</label>
-                        {% if product.main_image %}
+                        <label for="featured_image" class="block text-sm font-medium text-gray-700 mb-1">Featured Image {% if not product %}*{% endif %}</label>
+                        {% if product.featured_image %}
                         <div class="mb-3">
-                            <img src="{{ product.main_image.url }}" alt="" class="h-32 w-32 object-cover rounded">
+                            <img src="{{ product.featured_image.url }}" alt="" class="h-32 w-32 object-cover rounded">
                             <span class="text-sm text-gray-500">Current image</span>
                         </div>
                         {% endif %}
-                        <input type="file" id="main_image" name="main_image" accept="image/*" {% if not product %}required{% endif %}
+                        <input type="file" id="featured_image" name="featured_image" accept="image/*" {% if not product %}required{% endif %}
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
                     </div>
                     
                     <div>
-                        <label for="additional_images" class="block text-sm font-medium text-gray-700 mb-1">Additional Images</label>
+                        <label for="gallery_images" class="block text-sm font-medium text-gray-700 mb-1">Gallery Images</label>
                         {% if product.images.exists %}
                         <div class="mb-3 flex flex-wrap gap-2">
                             {% for img in product.images.all %}
-                            <img src="{{ img.image.url }}" alt="" class="h-16 w-16 object-cover rounded">
+                            <div class="relative group">
+                                <img src="{{ img.image.url }}" alt="" class="h-16 w-16 object-cover rounded">
+                                {% if action == 'Edit' %}
+                                <form method="POST" action="{% url 'product_image_delete' img.id %}" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 rounded">
+                                    {% csrf_token %}
+                                    <button type="submit" class="text-white text-xs font-medium">Delete</button>
+                                </form>
+                                {% endif %}
+                            </div>
                             {% endfor %}
                         </div>
                         {% endif %}
-                        <input type="file" id="additional_images" name="additional_images" accept="image/*" multiple
+                        <input type="file" id="gallery_images" name="gallery_images" accept="image/*" multiple
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
                         <p class="mt-1 text-sm text-gray-500">Select multiple images for gallery.</p>
                     </div>
@@ -134,11 +108,53 @@
                     </div>
                     
                     <div>
+                        <label for="key_benefits" class="block text-sm font-medium text-gray-700 mb-1">Key Benefits</label>
+                        <textarea id="key_benefits" name="key_benefits" rows="3"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                            placeholder="Key benefits or features... write benefits comma separated">{{ product.key_benefits|default:'' }}</textarea>
+                    </div>
+                    
+                    <div>
                         <label for="usage_instructions" class="block text-sm font-medium text-gray-700 mb-1">Usage Instructions</label>
                         <textarea id="usage_instructions" name="usage_instructions" rows="3"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
                             placeholder="How to use this product...">{{ product.usage_instructions|default:'' }}</textarea>
                     </div>
+                    
+                    <div>
+                        <label for="warnings" class="block text-sm font-medium text-gray-700 mb-1">Warnings</label>
+                        <textarea id="warnings" name="warnings" rows="3"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                            placeholder="Safety warnings and precautions...">{{ product.warnings|default:'' }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="dosage" class="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
+                        <input type="text" id="dosage" name="dosage" value="{{ product.dosage|default:'' }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                            placeholder="Recommended dosage...">
+                    </div>
+                    
+                    <div>
+                        <label for="pack_size" class="block text-sm font-medium text-gray-700 mb-1">Pack Size</label>
+                        <input type="text" id="pack_size" name="pack_size" value="{{ product.pack_size|default:'' }}"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                            placeholder="e.g. 30 tablets, 100ml...">
+                    </div>
+                </div>
+                
+                <!-- Video -->
+                <div class="mt-6">
+                    <label for="video" class="block text-sm font-medium text-gray-700 mb-1">Product Video</label>
+                    {% if product.video %}
+                    <div class="mb-3">
+                        <video src="{{ product.video.url }}" controls class="h-32 rounded"></video>
+                        <span class="block text-sm text-gray-500 mt-1">Current video</span>
+                    </div>
+                    {% endif %}
+                    <input type="file" id="video" name="video" accept="video/*"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                    <p class="mt-1 text-sm text-gray-500">Optional usage demonstration video.</p>
                 </div>
             </div>
             
@@ -177,11 +193,7 @@
                         <span class="ml-2 text-sm text-gray-700">Featured Product</span>
                     </label>
                     
-                    <label class="flex items-center">
-                        <input type="checkbox" id="is_new" name="is_new" {% if product.is_new or not product %}checked{% endif %}
-                            class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
-                        <span class="ml-2 text-sm text-gray-700">New Product</span>
-                    </label>
+                    
                 </div>
             </div>
             

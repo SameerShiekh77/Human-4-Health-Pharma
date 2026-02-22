@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     NewsCategory, News,
-    Contact
+    Contact, Subscribers
 )
 
 
@@ -41,3 +41,13 @@ class ContactAdmin(admin.ModelAdmin):
     search_fields = ['name', 'email', 'subject', 'message']
     ordering = ['-created_at']
     readonly_fields = ['name', 'email', 'phone', 'subject', 'message', 'created_at']
+
+# ============================================
+# SUBSCRIBERS ADMIN
+# ============================================
+
+@admin.register(Subscribers)
+class SubscribersAdmin(admin.ModelAdmin):
+    list_display = ['email', 'subscribed_at']
+    search_fields = ['email']
+    ordering = ['-subscribed_at']

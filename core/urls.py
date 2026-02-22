@@ -6,14 +6,14 @@ urlpatterns = [
     # Frontend URLs
     path('', views.home, name='home'),
     path('products/', views.products, name='products'),
-    path('product/<int:id>/', views.product_detail, name='product_detail'),
+    path('product/<slug:slug>/', views.product_detail, name='product_detail'),
     path('innovations/', views.innovations, name='innovations'),
     path('about-us/', views.about_us, name='about-us'),
     path('impact/', views.impact, name='impact'),
     path('news/', views.news, name='news'),
     path('news-detail/<slug:slug>/', views.news_detail, name='news-detail'),
     path('contact/', views.contact, name='contact'),
-    path('newsletter/', views.newsletter, name='newsletter'),
+    path('subscribers/', views.subscribers, name='subscribers'),
     path('bmi-calculator/', views.bmi_calculator, name='bmi-calculator'),
     
     # Authentication
@@ -66,4 +66,7 @@ urlpatterns = [
     path('dashboard/cities/create/', views.city_create, name='city_create'),
     path('dashboard/cities/<int:id>/edit/', views.city_edit, name='city_edit'),
     path('dashboard/cities/<int:id>/delete/', views.city_delete, name='city_delete'),
+    
+    path('dashboard/subscribers/', views.subscriber_list, name='subscriber_list'),
+    
 ]

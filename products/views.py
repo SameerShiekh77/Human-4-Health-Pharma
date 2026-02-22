@@ -37,12 +37,12 @@ def product_create(request):
         name = request.POST.get('name')
         slug = request.POST.get('slug') or None
         category_id = request.POST.get('category')
-        sku = request.POST.get('sku')
         short_description = request.POST.get('short_description')
         description = request.POST.get('description')
         price = request.POST.get('price')
         discount_price = request.POST.get('discount_price') or None
         ingredients = request.POST.get('ingredients')
+        pack_size = request.POST.get('pack_size')
         usage_instructions = request.POST.get('usage_instructions')
         dosage = request.POST.get('dosage')
         warnings = request.POST.get('warnings')
@@ -51,12 +51,12 @@ def product_create(request):
         in_stock = request.POST.get('in_stock') == 'on'
         meta_title = request.POST.get('meta_title')
         meta_description = request.POST.get('meta_description')
+        key_benefits= request.POST.get('key_benefits')
         
         product = Product.objects.create(
             name=name,
             slug=slug,
             category_id=category_id if category_id else None,
-            sku=sku,
             short_description=short_description,
             description=description,
             price=price,
@@ -65,8 +65,10 @@ def product_create(request):
             usage_instructions=usage_instructions,
             dosage=dosage,
             warnings=warnings,
+            pack_size=pack_size,
             is_featured=is_featured,
             is_active=is_active,
+            key_benefits=key_benefits,
             in_stock=in_stock,
             meta_title=meta_title,
             meta_description=meta_description
@@ -103,7 +105,6 @@ def product_edit(request, id):
         product.name = request.POST.get('name')
         product.slug = request.POST.get('slug') or product.slug
         product.category_id = request.POST.get('category') or None
-        product.sku = request.POST.get('sku')
         product.short_description = request.POST.get('short_description')
         product.description = request.POST.get('description')
         product.price = request.POST.get('price')
@@ -112,9 +113,11 @@ def product_edit(request, id):
         product.usage_instructions = request.POST.get('usage_instructions')
         product.dosage = request.POST.get('dosage')
         product.warnings = request.POST.get('warnings')
+        product.pack_size = request.POST.get('pack_size')
         product.is_featured = request.POST.get('is_featured') == 'on'
         product.is_active = request.POST.get('is_active') == 'on'
         product.in_stock = request.POST.get('in_stock') == 'on'
+        product.key_benefits = request.POST.get('key_benefits')
         product.meta_title = request.POST.get('meta_title')
         product.meta_description = request.POST.get('meta_description')
         

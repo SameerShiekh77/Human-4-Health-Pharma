@@ -26,21 +26,12 @@
                 <button class="filter-btn active px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-blue-600 text-white hover:bg-blue-700" data-filter="all">
                     All Products
                 </button>
+                {% for category in categories %}
                 <button class="filter-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-gray-100 text-gray-700 hover:bg-gray-200" data-filter="cardiovascular">
-                    Cardiovascular
+                    {{category.name}}
                 </button>
-                <button class="filter-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-gray-100 text-gray-700 hover:bg-gray-200" data-filter="antibiotics">
-                    Antibiotics
-                </button>
-                <button class="filter-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-gray-100 text-gray-700 hover:bg-gray-200" data-filter="diabetes">
-                    Diabetes Care
-                </button>
-                <button class="filter-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-gray-100 text-gray-700 hover:bg-gray-200" data-filter="pain-relief">
-                    Pain Relief
-                </button>
-                <button class="filter-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-gray-100 text-gray-700 hover:bg-gray-200" data-filter="vitamins">
-                    Vitamins
-                </button>
+                {% endfor %}
+   
             </div>
             
             <!-- Search -->
@@ -65,7 +56,8 @@
 
         <!-- Products Grid -->
         <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Product Card 1 -->
+            <!-- Product Card -->
+             {% for featured_product in featured_products %}
             <div class="product-card bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-xl border border-gray-100" data-category="cardiovascular">
                 <div class="relative h-56 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 flex items-center justify-center overflow-hidden">
                     <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
@@ -80,206 +72,27 @@
                 </div>
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Cardiovascular</span>
-                        <span class="text-xs text-gray-400 font-medium">Rx Required</span>
+                        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">{{featured_product.category.name}}</span>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">CardioGuard Plus</h3>
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">Advanced cardiovascular support medication for blood pressure and heart health management.</p>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{featured_product.name}}</h3>
+                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">{{featured_product.short_description}}</p>
                     <div class="flex items-center justify-between mb-4 py-3 border-t border-gray-100">
                         <div>
                             <span class="text-xs text-gray-400 block">Dosage</span>
-                            <span class="text-sm font-semibold text-gray-700">10mg, 20mg, 40mg</span>
+                            <span class="text-sm font-semibold text-gray-700">{{featured_product.dosage}}</span>
                         </div>
                         <div class="text-right">
                             <span class="text-xs text-gray-400 block">Pack Size</span>
-                            <span class="text-sm font-semibold text-gray-700">30 Tablets</span>
+                            <span class="text-sm font-semibold text-gray-700">{{featured_product.pack_size}}</span>
                         </div>
                     </div>
-                    <a href="{% url "product_detail" id=1 %}" class="w-full block text-center  bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                    <a href="{% url "product_detail" featured_product.slug %}" class="w-full block text-center  bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
                         View Details
                     </a>
                 </div>
             </div>
+             {% endfor %}
 
-            <!-- Product Card 2 -->
-            <div class="product-card bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-xl border border-gray-100" data-category="antibiotics">
-                <div class="relative h-56 bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-600 flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-28 h-28 bg-white rounded-full mx-auto flex items-center justify-center shadow-lg transform transition-transform duration-500 hover:scale-110">
-                            <svg class="w-14 h-14 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="absolute top-4 right-4 bg-green-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">In Stock</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Antibiotics</span>
-                        <span class="text-xs text-gray-400 font-medium">Rx Required</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">BioShield Antibiotic</h3>
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">Broad-spectrum antibiotic for bacterial infections. Fast-acting formula with proven efficacy.</p>
-                    <div class="flex items-center justify-between mb-4 py-3 border-t border-gray-100">
-                        <div>
-                            <span class="text-xs text-gray-400 block">Dosage</span>
-                            <span class="text-sm font-semibold text-gray-700">250mg, 500mg</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-gray-400 block">Pack Size</span>
-                            <span class="text-sm font-semibold text-gray-700">10 Capsules</span>
-                        </div>
-                    </div>
-                    <a href="{% url "product_detail" id=6 %}" class="block text-center w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
-                        View Details
-                    </a>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-xl border border-gray-100" data-category="diabetes">
-                <div class="relative h-56 bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-28 h-28 bg-white rounded-full mx-auto flex items-center justify-center shadow-lg transform transition-transform duration-500 hover:scale-110">
-                            <svg class="w-14 h-14 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="absolute top-4 right-4 bg-green-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">In Stock</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">Diabetes Care</span>
-                        <span class="text-xs text-gray-400 font-medium">Rx Required</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">GlucoBalance XR</h3>
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">Extended-release diabetes management medication for stable blood sugar control throughout the day.</p>
-                    <div class="flex items-center justify-between mb-4 py-3 border-t border-gray-100">
-                        <div>
-                            <span class="text-xs text-gray-400 block">Dosage</span>
-                            <span class="text-sm font-semibold text-gray-700">500mg, 850mg</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-gray-400 block">Pack Size</span>
-                            <span class="text-sm font-semibold text-gray-700">60 Tablets</span>
-                        </div>
-                    </div>
-                    <a href="{% url "product_detail" id=2 %}" class="w-full block text-center  bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
-                        View Details
-                    </a>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-xl border border-gray-100" data-category="pain-relief">
-                <div class="relative h-56 bg-gradient-to-br from-rose-400 via-rose-500 to-rose-600 flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-28 h-28 bg-white rounded-full mx-auto flex items-center justify-center shadow-lg transform transition-transform duration-500 hover:scale-110">
-                            <svg class="w-14 h-14 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="absolute top-4 right-4 bg-amber-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">Low Stock</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Pain Relief</span>
-                        <span class="text-xs text-gray-400 font-medium">OTC</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">PainAway Rapid</h3>
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">Fast-acting pain relief for headaches, muscle pain, and fever. Gentle on stomach.</p>
-                    <div class="flex items-center justify-between mb-4 py-3 border-t border-gray-100">
-                        <div>
-                            <span class="text-xs text-gray-400 block">Dosage</span>
-                            <span class="text-sm font-semibold text-gray-700">400mg, 600mg</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-gray-400 block">Pack Size</span>
-                            <span class="text-sm font-semibold text-gray-700">20 Tablets</span>
-                        </div>
-                    </div>
-                    <a href="{% url "product_detail" id=3 %}" class="w-full block text-center  bg-rose-600 hover:bg-rose-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
-                        View Details
-                    </a>
-                </div>
-            </div>
-
-            <!-- Product Card 5 -->
-            <div class="product-card bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-xl border border-gray-100" data-category="vitamins">
-                <div class="relative h-56 bg-gradient-to-br from-amber-400 via-amber-500 to-orange-500 flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-28 h-28 bg-white rounded-full mx-auto flex items-center justify-center shadow-lg transform transition-transform duration-500 hover:scale-110">
-                            <svg class="w-14 h-14 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="absolute top-4 right-4 bg-green-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">In Stock</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Vitamins</span>
-                        <span class="text-xs text-gray-400 font-medium">OTC</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">VitaBoost Complete</h3>
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">Comprehensive multivitamin supplement with essential nutrients for daily wellness and immune support.</p>
-                    <div class="flex items-center justify-between mb-4 py-3 border-t border-gray-100">
-                        <div>
-                            <span class="text-xs text-gray-400 block">Form</span>
-                            <span class="text-sm font-semibold text-gray-700">Tablets</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-gray-400 block">Pack Size</span>
-                            <span class="text-sm font-semibold text-gray-700">90 Tablets</span>
-                        </div>
-                    </div>
-                    <a href="{% url "product_detail" id=4 %}" class="w-full block text-center  bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
-                        View Details
-                    </a>
-                </div>
-            </div>
-
-            <!-- Product Card 6 -->
-            <div class="product-card bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-500 hover:shadow-xl border border-gray-100" data-category="mental-health">
-                <div class="relative h-56 bg-gradient-to-br from-teal-400 via-teal-500 to-cyan-600 flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                    <div class="relative z-10 text-center">
-                        <div class="w-28 h-28 bg-white rounded-full mx-auto flex items-center justify-center shadow-lg transform transition-transform duration-500 hover:scale-110">
-                            <svg class="w-14 h-14 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span class="absolute top-4 right-4 bg-blue-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">New</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold text-teal-600 uppercase tracking-wider">Mental Health</span>
-                        <span class="text-xs text-gray-400 font-medium">Rx Required</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">CalmaZen Plus</h3>
-                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">Anxiety and stress management medication for mental wellness and emotional balance support.</p>
-                    <div class="flex items-center justify-between mb-4 py-3 border-t border-gray-100">
-                        <div>
-                            <span class="text-xs text-gray-400 block">Dosage</span>
-                            <span class="text-sm font-semibold text-gray-700">5mg, 10mg</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-xs text-gray-400 block">Pack Size</span>
-                            <span class="text-sm font-semibold text-gray-700">30 Tablets</span>
-                        </div>
-                    </div>
-                    <a href="{% url "product_detail" id=5 %}" class="w-full block text-center  bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
-                        View Details
-                    </a>
-                </div>
-            </div>
         </div>
 
         <!-- Load More Button -->
