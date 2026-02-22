@@ -101,7 +101,7 @@ def impact(request):
 def news(request):
     news_list = News.objects.filter(is_published=True)
     categories = NewsCategory.objects.filter(is_active=True)
-    featured_news = news_list.filter(is_featured=True).first()
+    featured_news = news_list.filter(is_featured=True)
     
     # Filter by category
     category_slug = request.GET.get('category')
@@ -112,7 +112,6 @@ def news(request):
     paginator = Paginator(news_list, 9)
     page = request.GET.get('page')
     news_page = paginator.get_page(page)
-    
     context = {
         'news_list': news_page,
         'categories': categories,
@@ -122,8 +121,8 @@ def news(request):
     return render(request, 'web/news.html', context)
 
 
-def news_detail(request, id):
-    news_item = get_object_or_404(News, id=id, is_published=True)
+def news_detail(request, slug):
+    news_item = get_object_or_404(News, slug=slug, is_published=True)
     news_item.increment_views()
     
     related_news = News.objects.filter(
@@ -160,6 +159,16 @@ def contact(request):
     
     return render(request, 'web/contact.html')
 
+
+def newsletter(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # Here you would typically add the email to your newsletter list
+        # For this example, we'll just return a success message
+        messages.success(request, 'Thank you for subscribing to our newsletter!')
+        return redirect('home')
+    
+    return redirect('home')
 
 def bmi_calculator(request):
     return render(request, 'web/bmi_calculator.html')

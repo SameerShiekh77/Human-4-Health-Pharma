@@ -11,8 +11,9 @@ urlpatterns = [
     path('about-us/', views.about_us, name='about-us'),
     path('impact/', views.impact, name='impact'),
     path('news/', views.news, name='news'),
-    path('news-detail/<int:id>/', views.news_detail, name='news-detail'),
+    path('news-detail/<slug:slug>/', views.news_detail, name='news-detail'),
     path('contact/', views.contact, name='contact'),
+    path('newsletter/', views.newsletter, name='newsletter'),
     path('bmi-calculator/', views.bmi_calculator, name='bmi-calculator'),
     
     # Authentication

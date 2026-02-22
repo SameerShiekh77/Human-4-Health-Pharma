@@ -155,12 +155,13 @@
 </section>
 
 <!-- Related Articles Section -->
+ {% if related_news %}
 <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Related Articles</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {% for article in related_articles %}
+            {% for article in related_news %}
             <!-- Related Article Card -->
             <a href="{% url 'news-detail' article.slug %}" class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group">
                 <div class="relative h-48 bg-gray-200">
@@ -187,71 +188,7 @@
                 </div>
             </a>
             {% empty %}
-            <!-- Placeholder Related Article 1 -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                <div class="relative h-48 bg-gradient-to-br from-teal-400 to-teal-600">
-                    <div class="absolute inset-0 flex items-center justify-center text-white">
-                        <div class="text-center p-4">
-                            <svg class="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
-                            <span class="font-bold">Health Awareness</span>
-                        </div>
-                    </div>
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-sm text-gray-500 mb-2">January 10, 2026</p>
-                    <h3 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors duration-200">Health & Wellness: A Public Service Initiative</h3>
-                </div>
-            </div>
-            
-            <!-- Placeholder Related Article 2 -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                <div class="relative h-48 bg-gradient-to-br from-blue-500 to-blue-700">
-                    <div class="absolute inset-0 flex items-center justify-center text-white">
-                        <div class="text-center">
-                            <span class="text-3xl font-bold">#REWIND</span>
-                            <span class="block text-4xl font-bold">2025</span>
-                        </div>
-                    </div>
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-sm text-gray-500 mb-2">December 31, 2025</p>
-                    <h3 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors duration-200">The Year Built Around You: Rewind 2025</h3>
-                </div>
-            </div>
-            
-            <!-- Placeholder Related Article 3 -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                <div class="relative h-48 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop" alt="World Diabetes Day" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-sm text-gray-500 mb-2">November 14, 2025</p>
-                    <h3 class="text-gray-900 font-medium group-hover:text-blue-600 transition-colors duration-200">World Diabetes Day: Commitment to Awareness</h3>
-                </div>
-            </div>
+ 
             {% endfor %}
         </div>
         
@@ -266,6 +203,7 @@
         </div>
     </div>
 </section>
+ {% endif %}
 
 <!-- Newsletter CTA Section -->
 <section class="py-16 bg-blue-600">

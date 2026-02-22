@@ -34,128 +34,29 @@
         <!-- News Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- News Card 1 - Cervical Cancer -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-48 bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center p-6">
-                    <div class="text-center">
-                        <div class="text-teal-500 mb-2">
-                            <a href="{% url 'news-detail' id=1 %}">
-                                <svg class="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-800">Cervical Cancer</h3>
-                        <p class="text-gray-600 text-sm">What Every Woman Should Know</p>
-                    </div>
-                    <div class="absolute bottom-4 left-4">
-                        <span class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 font-medium">Cervical Cancer: What Every Woman Should Know</p>
-                </div>
-            </div>
-
-            <!-- News Card 2 - REWIND 2025 -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-48 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-6">
-                    <div class="text-center text-white">
-                        <h3 class="text-3xl font-bold">#REWIND</h3>
-                        <p class="text-5xl font-bold">2025</p>
-                        <p class="text-sm mt-2">The Year Built Around You</p>
-                    </div>
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-colors duration-300 text-white">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 font-medium">The Year Built Around You: Rewind 2025</p>
-                </div>
-            </div>
-
+             {% for news in news_list %}
+           
             <!-- News Card 3 - World Diabetes Day -->
             <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
                 <div class="relative h-48 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=250&fit=crop" alt="World Diabetes Day" class="w-full h-full object-cover">
+                    <img src="{{news.thumbnail.url}}" alt="World Diabetes Day" class="w-full h-full object-cover">
                     <div class="absolute bottom-4 right-4">
                         <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
+                            <a href="{% url 'news-detail' news.slug %}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
                         </span>
                     </div>
                 </div>
                 <div class="p-4">
-                    <p class="text-gray-700 font-medium">World Diabetes Day 2025: Health 4 Human Pharma's Commitment to Awareness, Prevention...</p>
+                    <p class="text-gray-700 font-medium">{{news.title}}</p>
                 </div>
             </div>
 
-            <!-- News Card 4 - Health & Fitness -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-48 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-6">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                            <span class="text-xl font-bold">Health</span>
-                            <span class="block text-lg">&Fitness</span>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-xl">H</span>
-                        </div>
-                    </div>
-                    <div class="absolute bottom-4 left-4">
-                        <span class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 font-medium">Health & Fitness: A Public Service Initiative by Health 4 Human Pharma</p>
-                </div>
-            </div>
-
-            <!-- News Card 5 - Mental Health -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-48 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=250&fit=crop" alt="Mental Health through Art" class="w-full h-full object-cover">
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 font-medium">Prioritizing Mental Health through Art Therapy</p>
-                </div>
-            </div>
-
-            <!-- News Card 6 - Pinktober -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-48 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=250&fit=crop" alt="Pinktober 2025" class="w-full h-full object-cover">
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 font-medium">Closer Than You Think – Pinktober 2025</p>
-                </div>
-            </div>
+            {% endfor %}
+       
         </div>
 
         <!-- Mobile View All Button -->
@@ -236,56 +137,27 @@
         <!-- Stories Carousel -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="storiesCarousel">
             <!-- Story Card 1 -->
+
+            {% for featured_new in featured_news %}
             <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
                 <div class="relative h-56 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=400&h=300&fit=crop" alt="Antimicrobial Summit" class="w-full h-full object-cover">
+                    <img src="{{featured_new.thumbnail.url}}" alt="Antimicrobial Summit" class="w-full h-full object-cover">
                     <div class="absolute bottom-4 left-4">
                         <span class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
+                            <a href="{% url 'news-detail' featured_new.slug %}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
                         </span>
                     </div>
                 </div>
                 <div class="p-4">
-                    <p class="text-gray-700 font-medium">National Antimicrobial Stewardship (AMS) Summit</p>
+                    <p class="text-gray-700 font-medium">{{ featured_new.title }}</p>
                 </div>
             </div>
+            {% endfor %}
 
-            <!-- Story Card 2 -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-56 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=300&fit=crop" alt="Critical Futures Conference" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <h3 class="font-bold">Critical Futures Conference: Designing Sustainable Ecologies</h3>
-                    </div>
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/20 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-blue-600 transition-colors duration-300 text-white">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Story Card 3 -->
-            <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-                <div class="relative h-56 bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=300&fit=crop" alt="Takes the LEED" class="w-full h-full object-cover">
-                    <div class="absolute bottom-4 right-4">
-                        <span class="w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 font-medium">Health 4 Human Pharma Takes the LEED</p>
-                </div>
-            </div>
         </div>
     </div>
 </section>
