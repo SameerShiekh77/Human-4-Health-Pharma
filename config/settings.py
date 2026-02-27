@@ -35,7 +35,13 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'core',
     'hr',
-    'products'
+    'products',
+    'crm_products',
+    'crm_distributors',
+    'crm_sales',
+    'crm_analytics',
+    'crm_stores',
+    'crm_doctors'
 ]
 
 MIDDLEWARE = [
