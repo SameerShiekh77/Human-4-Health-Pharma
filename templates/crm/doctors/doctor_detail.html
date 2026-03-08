@@ -1,0 +1,352 @@
+{% extends 'crm/base.html' %}
+{% block title %}Dr. {{ doctor.doctor_name }} — CRM{% endblock %}
+{% block nav_doctors %}active{% endblock %}
+{% block topbar_title %}Doctor Profile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_doctors:doctor_list' %}">Doctors</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Dr. {{ doctor.doctor_name }}</span>
+    </div>
+    <h1>Dr. {{ doctor.doctor_name }}</h1>
+    <p>{{ doctor.specialty }}{% if doctor.qualification %} &mdash; {{ doctor.qualification }}{% endif %}</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="badge {% if doctor.status == 'active' %}badge-green{% else %}badge-gray{% endif %}" style="font-size:13px;padding:6px 14px">
+      {{ doctor.get_status_display }}
+    </span>
+    <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost">
+      <i class="fa-solid fa-plus"></i> Log Visit
+    </a>
+    <a href="{% url 'crm_doctors:doctor_edit' doctor.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_doctors:doctor_delete' doctor.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<!-- KPI Strip -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-route"></i></div>
+    <div class="stat-value">{{ total_visits }}</div>
+    <div class="stat-label">Total Visits</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--danger)">
+    <div class="stat-icon" style="background:rgba(255,77,109,.1);color:var(--danger)">
+      <i class="fa-solid fa-arrow-trend-down"></i>
+    </div>
+    <div class="stat-value" style="color:var(--danger)">PKR {{ total_investment|floatformat:0 }}</div>
+    <div class="stat-label">Total Invested</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+    </div>
+    <div class="stat-value" style="color:var(--accent2)">PKR {{ total_value|floatformat:0 }}</div>
+    <div class="stat-label">Est. Value Generated</div>
+  </div>
+  <div class="stat-card" style="--accent-color:{% if roi >= 0 %}var(--accent){% else %}var(--danger){% endif %}">
+    <div class="stat-icon" style="background:{% if roi >= 0 %}rgba(0,212,170,.1){% else %}rgba(255,77,109,.1){% endif %};color:{% if roi >= 0 %}var(--accent){% else %}var(--danger){% endif %}">
+      <i class="fa-solid fa-scale-balanced"></i>
+    </div>
+    <div class="stat-value" style="color:{% if roi >= 0 %}var(--accent){% else %}var(--danger){% endif %}">
+      {% if roi >= 0 %}+{% endif %}PKR {{ roi|floatformat:0 }}
+    </div>
+    <div class="stat-label">Net ROI</div>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left Column -->
+  <div>
+
+    <!-- Doctor Profile -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-user-doctor" style="color:var(--accent);margin-right:8px"></i>Doctor Profile
+        </span>
+        <code style="font-size:11px;color:var(--muted)">{{ doctor.doctor_id }}</code>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Full Name</div>
+            <div style="font-weight:600">Dr. {{ doctor.doctor_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Specialty</div>
+            <div><span class="badge badge-blue">{{ doctor.specialty }}</span></div>
+          </div>
+          {% if doctor.qualification %}
+          <div class="kv-row">
+            <div class="kv-key">Qualification</div>
+            <div style="color:var(--muted)">{{ doctor.qualification }}</div>
+          </div>
+          {% endif %}
+          {% if doctor.hospital_name %}
+          <div class="kv-row">
+            <div class="kv-key">Hospital</div>
+            <div>{{ doctor.hospital_name }}</div>
+          </div>
+          {% endif %}
+          {% if doctor.clinic_name %}
+          <div class="kv-row">
+            <div class="kv-key">Clinic</div>
+            <div>{{ doctor.clinic_name }}</div>
+          </div>
+          {% endif %}
+          <div class="kv-row">
+            <div class="kv-key">City / Area</div>
+            <div>
+              {{ doctor.city }}
+              {% if doctor.area %}<span style="color:var(--muted);font-size:12px"> — {{ doctor.area.area_name }}</span>{% endif %}
+            </div>
+          </div>
+          {% if doctor.contact_number %}
+          <div class="kv-row">
+            <div class="kv-key">Contact</div>
+            <div>{{ doctor.contact_number }}</div>
+          </div>
+          {% endif %}
+          {% if doctor.email %}
+          <div class="kv-row">
+            <div class="kv-key">Email</div>
+            <div style="color:var(--muted)">{{ doctor.email }}</div>
+          </div>
+          {% endif %}
+          <div class="kv-row">
+            <div class="kv-key">Patients / Day</div>
+            <div style="font-weight:600">{{ doctor.estimated_patients_per_day }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Prescription Potential</div>
+            <div style="font-weight:700;color:var(--accent2)">PKR {{ doctor.estimated_prescription_potential|floatformat:0 }} / mo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visit History Table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);margin-right:8px"></i>Visit History
+        </span>
+        <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost btn-sm">
+          <i class="fa-solid fa-plus"></i> Log Visit
+        </a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>MR</th>
+              <th>Type</th>
+              <th>Invested</th>
+              <th>Est. Value</th>
+              <th>GPS</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for visit in visits_page %}
+            <tr>
+              <td style="white-space:nowrap;font-size:12px;color:var(--muted)">
+                {{ visit.visit_date|date:"d M Y" }}<br>
+                <span style="font-size:11px">{{ visit.visit_time|time:"H:i" }}</span>
+              </td>
+              <td style="font-size:13px;font-weight:500">{{ visit.mr.name }}</td>
+              <td>
+                <span class="badge badge-blue" style="font-size:11px">{{ visit.get_visit_type_display }}</span>
+              </td>
+              <td style="color:var(--danger);font-weight:600;font-size:13px">
+                {% if visit.total_investment > 0 %}PKR {{ visit.total_investment|floatformat:0 }}{% else %}<span style="color:var(--muted);font-weight:400">—</span>{% endif %}
+              </td>
+              <td style="color:var(--accent2);font-weight:600;font-size:13px">
+                {% if visit.total_estimated_value > 0 %}PKR {{ visit.total_estimated_value|floatformat:0 }}{% else %}<span style="color:var(--muted);font-weight:400">—</span>{% endif %}
+              </td>
+              <td>
+                {% if visit.is_gps_verified %}
+                <span class="gps-dot gps-ok" title="GPS Verified"></span>
+                {% else %}
+                <span class="gps-dot gps-off" title="Not Verified"></span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'crm_doctors:visit_detail' visit.pk %}" class="btn btn-ghost btn-sm">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" style="text-align:center;color:var(--muted);padding:24px">
+                No visits logged yet.
+                <a href="{% url 'crm_doctors:visit_create' %}" style="color:var(--accent)">Log the first visit</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if visits_page.has_other_pages %}
+      <div class="pagination">
+        {% if visits_page.has_previous %}
+        <a class="page-link" href="?page={{ visits_page.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>
+        {% endif %}
+        {% for n in visits_page.paginator.page_range %}
+          {% if n == visits_page.number %}<a class="page-link active">{{ n }}</a>
+          {% elif n >= visits_page.number|add:"-2" and n <= visits_page.number|add:"2" %}
+          <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+          {% endif %}
+        {% endfor %}
+        {% if visits_page.has_next %}
+        <a class="page-link" href="?page={{ visits_page.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Right Column -->
+  <div>
+
+    <!-- ROI Summary Card -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-scale-balanced" style="color:var(--accent);margin-right:8px"></i>Investment vs Return</span>
+      </div>
+      <div class="card-body">
+        <!-- Visual bar -->
+        {% if total_investment > 0 or total_value > 0 %}
+        {% with grand_total=total_investment|add:total_value %}
+        <div style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px">
+            <span>Invested</span>
+            <span>Est. Value</span>
+          </div>
+          <div style="height:12px;background:var(--border);border-radius:6px;overflow:hidden;display:flex">
+            <div style="background:var(--danger);width:{% if grand_total > 0 %}{% widthratio total_investment grand_total 100 %}{% else %}0{% endif %}%;transition:width .5s"></div>
+            <div style="background:var(--accent2);flex:1;transition:width .5s"></div>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--muted)">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--danger);margin-right:4px"></span>Invested</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent2);margin-right:4px"></span>Est. Value</span>
+          </div>
+        </div>
+        {% endwith %}
+        {% endif %}
+
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Total Invested</div>
+            <div style="color:var(--danger);font-weight:700">PKR {{ total_investment|floatformat:0 }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Est. Value Generated</div>
+            <div style="color:var(--accent2);font-weight:700">PKR {{ total_value|floatformat:0 }}</div>
+          </div>
+          <div class="kv-row" style="border-top:2px solid var(--border);padding-top:12px">
+            <div class="kv-key" style="font-weight:700;color:var(--text)">Net ROI</div>
+            <div style="font-size:18px;font-weight:800;color:{% if roi >= 0 %}var(--accent){% else %}var(--danger){% endif %}">
+              {% if roi >= 0 %}+{% endif %}PKR {{ roi|floatformat:0 }}
+            </div>
+          </div>
+        </div>
+
+        <!-- ROI badge -->
+        <div style="margin-top:14px;text-align:center">
+          {% if roi > 0 %}
+          <span style="background:rgba(0,212,170,.12);color:var(--accent);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600">
+            <i class="fa-solid fa-circle-check"></i> Positive ROI — Profitable Doctor
+          </span>
+          {% elif roi == 0 %}
+          <span style="background:rgba(255,184,48,.12);color:var(--warn);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600">
+            <i class="fa-solid fa-equals"></i> Break Even
+          </span>
+          {% else %}
+          <span style="background:rgba(255,77,109,.12);color:var(--danger);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600">
+            <i class="fa-solid fa-triangle-exclamation"></i> Negative ROI — Review Investment
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Assigned MRs -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-user-tie" style="color:var(--accent);margin-right:8px"></i>Assigned MRs
+        </span>
+        <span class="badge badge-blue">{{ doctor.assigned_mrs.count }}</span>
+      </div>
+      <div>
+        {% for mr in doctor.assigned_mrs.all %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px">
+            {% if mr.profile_image %}
+            <img src="{{ mr.profile_image.url }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
+            {% else %}
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0d0f14">
+              {{ mr.name|slice:":1"|upper }}
+            </div>
+            {% endif %}
+            <div>
+              <a href="{% url 'crm_sales:mr_detail' mr.pk %}" style="color:var(--text);text-decoration:none;font-size:13px;font-weight:500">
+                {{ mr.name }}
+              </a><br>
+              <span style="font-size:11px;color:var(--muted)">{{ mr.mr_id }}</span>
+            </div>
+          </div>
+          <span class="badge {% if mr.status == 'active' %}badge-green{% else %}badge-gray{% endif %}">
+            {{ mr.get_status_display }}
+          </span>
+        </div>
+        {% empty %}
+        <div style="padding:16px 20px;color:var(--muted);font-size:13px;text-align:center">
+          No MRs assigned yet.
+          <a href="{% url 'crm_doctors:doctor_edit' doctor.pk %}" style="color:var(--accent)">Assign now</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> Log New Visit
+        </a>
+        <a href="{% url 'crm_doctors:visit_list' %}?doctor={{ doctor.pk }}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-list"></i> All Visits for this Doctor
+        </a>
+        <a href="{% url 'crm_doctors:doctor_edit' doctor.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Profile
+        </a>
+        <a href="{% url 'crm_analytics:doctor_performance' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-chart-line"></i> Performance Report
+        </a>
+        <a href="{% url 'crm_doctors:doctor_delete' doctor.pk %}" class="btn btn-danger" style="justify-content:center">
+          <i class="fa-solid fa-trash"></i> Delete Doctor
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
