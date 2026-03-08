@@ -1,0 +1,188 @@
+{% extends 'crm/base.html' %}
+{% block title %}Batches — CRM{% endblock %}
+{% block nav_batches %}active{% endblock %}
+{% block topbar_title %}Batch Management{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_products:batch_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Add Batch
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:product_list' %}">Products</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Batches</span>
+    </div>
+    <h1>Batch Management</h1>
+    <p>{{ total }} batch(es) tracked across all products</p>
+  </div>
+</div>
+
+<!-- KPI Strip -->
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);max-width:440px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ active }}</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--warn);padding:14px">
+    <div class="stat-value" style="font-size:22px;color:var(--warn)">{{ near_expiry }}</div>
+    <div class="stat-label">Near Expiry</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--danger);padding:14px">
+    <div class="stat-value" style="font-size:22px;color:var(--danger)">{{ expired }}</div>
+    <div class="stat-label">Expired</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Batch number or product name...">
+  </div>
+  <select name="product" style="width:200px">
+    <option value="">All Products</option>
+    {% for p in products %}
+    <option value="{{ p.pk }}" {% if request.GET.product == p.pk|stringformat:"s" %}selected{% endif %}>
+      {{ p.product_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <select name="status" style="width:150px">
+    <option value="">All Status</option>
+    <option value="active"      {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="near_expiry" {% if request.GET.status == 'near_expiry' %}selected{% endif %}>Near Expiry</option>
+    <option value="expired"     {% if request.GET.status == 'expired' %}selected{% endif %}>Expired</option>
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.product or request.GET.status %}
+  <a href="{% url 'crm_products:batch_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Batch Number</th>
+          <th>Product</th>
+          <th>Mfg Date</th>
+          <th>Expiry Date</th>
+          <th>Days to Expiry</th>
+          <th>Manufactured</th>
+          <th>Sent to Dist.</th>
+          <th>Available</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for batch in page_obj %}
+        <tr>
+          <td>
+            <a href="{% url 'crm_products:batch_detail' batch.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              {{ batch.batch_number }}
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'crm_products:product_detail' batch.product.pk %}" style="color:var(--accent);text-decoration:none;font-size:13px">
+              {{ batch.product.product_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ batch.product.strength }}</span>
+          </td>
+          <td style="color:var(--muted)">{{ batch.manufacturing_date|date:"d M Y" }}</td>
+          <td style="
+            {% if batch.batch_status == 'expired' %}color:var(--danger);font-weight:600
+            {% elif batch.batch_status == 'near_expiry' %}color:var(--warn);font-weight:600
+            {% else %}color:var(--text){% endif %}">
+            {{ batch.expiry_date|date:"d M Y" }}
+          </td>
+          <td>
+            {% if batch.batch_status == 'expired' %}
+              <span style="color:var(--danger);font-weight:600;font-size:12px">
+                <i class="fa-solid fa-circle-xmark"></i> Expired
+              </span>
+            {% elif batch.days_to_expiry <= 90 %}
+              <span style="color:var(--warn);font-size:12px">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ batch.days_to_expiry }} days
+              </span>
+            {% else %}
+              <span style="color:var(--muted);font-size:12px">{{ batch.days_to_expiry }} days</span>
+            {% endif %}
+          </td>
+          <td style="text-align:center">{{ batch.quantity_manufactured }}</td>
+          <td style="text-align:center;color:var(--muted)">{{ batch.quantity_sent_to_distributors }}</td>
+          <td style="text-align:center;font-weight:600;color:var(--accent)">
+            {{ batch.quantity_available_in_company }}
+          </td>
+          <td>
+            <span class="badge
+              {% if batch.batch_status == 'active' %}badge-green
+              {% elif batch.batch_status == 'near_expiry' %}badge-yellow
+              {% else %}badge-red{% endif %}">
+              {{ batch.get_batch_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_products:batch_detail' batch.pk %}" class="btn btn-ghost btn-sm" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="{% url 'crm_products:batch_edit' batch.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_products:batch_delete' batch.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="10">
+            <div class="empty-state">
+              <i class="fa-solid fa-boxes-stacked"></i>
+              <h3>No batches found</h3>
+              <p>Create a batch or adjust your search filters.</p>
+              <a href="{% url 'crm_products:batch_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Batch
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&status={{ request.GET.status }}&product={{ request.GET.product }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&q={{ query }}&status={{ request.GET.status }}&product={{ request.GET.product }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&status={{ request.GET.status }}&product={{ request.GET.product }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

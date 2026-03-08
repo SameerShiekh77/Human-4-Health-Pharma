@@ -1,0 +1,91 @@
+{% extends "crm/base.html" %}
+{% comment %}FILE: templates/crm/analytics/expiry_alerts.html{% endcomment %}
+{% block title %}Expiry Alerts — CRM{% endblock %}
+{% block nav_alerts %}active{% endblock %}
+{% block topbar_title %}Expiry Alert System{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb"><a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px"></i> <span>Expiry Alerts</span></div>
+    <h1>Expiry Alerts</h1>
+    <p>{{ pending }} unacknowledged alert(s) require attention</p>
+  </div>
+</div>
+<div class="stats-grid" style="grid-template-columns:repeat(2,1fr);max-width:300px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--danger);padding:14px">
+    <div class="stat-value" style="font-size:22px;color:var(--danger)">{{ pending }}</div>
+    <div class="stat-label">Pending</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total }}</div>
+    <div class="stat-label">Total</div>
+  </div>
+</div>
+<form method="get" class="search-bar">
+  <select name="ack" style="width:160px">
+    <option value="">All Alerts</option>
+    <option value="0" {% if request.GET.ack == "0" %}selected{% endif %}>Pending Only</option>
+    <option value="1" {% if request.GET.ack == "1" %}selected{% endif %}>Acknowledged</option>
+  </select>
+  <select name="type" style="width:180px"><option value="">All Types</option>
+    {% for val, label in alert_types %}<option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <select name="source" style="width:160px"><option value="">All Sources</option>
+    {% for val, label in sources %}<option value="{{ val }}" {% if request.GET.source == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <button type="submit" class="btn btn-ghost">Filter</button>
+</form>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Product</th><th>Batch</th><th>Expiry Date</th><th>Alert Type</th><th>Source</th><th>Distributor</th><th>Qty at Risk</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        {% for a in page_obj %}
+        <tr>
+          <td style="font-weight:500">{{ a.product.product_name }}<br><span style="font-size:11px;color:var(--muted)">{{ a.product.strength }}</span></td>
+          <td><code style="font-size:11px;color:var(--muted)">{{ a.batch_number }}</code></td>
+          <td style="{% if a.alert_type == 'expired' %}color:var(--danger);font-weight:600{% else %}color:var(--warn){% endif %}">
+            {{ a.expiry_date|date:"d M Y" }}
+          </td>
+          <td><span class="badge {% if a.alert_type == 'expired' %}badge-red{% elif a.alert_type == '1_month' %}badge-red{% else %}badge-yellow{% endif %}">{{ a.get_alert_type_display }}</span></td>
+          <td><span class="badge badge-blue">{{ a.get_source_display }}</span></td>
+          <td style="color:var(--muted)">{{ a.distributor.distributor_name|default:"—" }}</td>
+          <td style="font-weight:600">{{ a.quantity_at_risk }}</td>
+          <td>
+            {% if a.is_acknowledged %}
+              <span class="badge badge-green"><i class="fa-solid fa-check"></i> Done</span>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px">{{ a.acknowledged_by }}</div>
+            {% else %}
+              <span class="badge badge-red">Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if not a.is_acknowledged %}
+            <form method="post" action="{% url 'crm_analytics:acknowledge_alert' a.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-ghost btn-sm"><i class="fa-solid fa-check"></i> Acknowledge</button>
+            </form>
+            {% else %}
+            <span style="font-size:11px;color:var(--muted)">{{ a.acknowledged_at|date:"d M" }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9"><div class="empty-state">
+          <i class="fa-solid fa-shield-check" style="color:var(--accent)"></i>
+          <h3>All clear!</h3><p>No expiry alerts matching your filters.</p>
+        </div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>{% endif %}
+    {% for n in page_obj.paginator.page_range %}{% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>{% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}<a class="page-link" href="?page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+    {% if page_obj.has_next %}<a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>{% endif %}
+  </div>{% endif %}
+</div>
+{% endblock %}

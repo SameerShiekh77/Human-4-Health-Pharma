@@ -1,0 +1,249 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ dist.distributor_name }} — CRM{% endblock %}
+{% block nav_distributors %}active{% endblock %}
+{% block topbar_title %}Distributor Detail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:distributor_list' %}">Distributors</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ dist.distributor_name }}</span>
+    </div>
+    <h1>{{ dist.distributor_name }}</h1>
+    <p>{{ dist.owner_name }} &mdash; {{ dist.city }}{% if dist.region %}, {{ dist.region }}{% endif %}</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="badge
+      {% if dist.status == 'active' %}badge-green
+      {% elif dist.status == 'suspended' %}badge-red
+      {% else %}badge-gray{% endif %}" style="font-size:13px;padding:6px 14px">
+      {{ dist.get_status_display }}
+    </span>
+    <a href="{% url 'crm_distributors:stock_entry_create' %}" class="btn btn-ghost">
+      <i class="fa-solid fa-plus"></i> Add Stock Entry
+    </a>
+    <a href="{% url 'crm_distributors:distributor_edit' dist.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_distributors:distributor_delete' dist.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
+    <div class="stat-value">PKR {{ total_sales|floatformat:0 }}</div>
+    <div class="stat-label">Total Sales Value</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)"><i class="fa-solid fa-file-invoice"></i></div>
+    <div class="stat-value" style="color:var(--accent2)">{{ entries|length }}</div>
+    <div class="stat-label">Stock Reports</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--warn)">
+    <div class="stat-icon" style="background:rgba(255,184,48,.1);color:var(--warn)"><i class="fa-solid fa-receipt"></i></div>
+    <div class="stat-value" style="color:var(--warn)">{{ sales|length }}</div>
+    <div class="stat-label">Sales Records</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--muted)">
+    <div class="stat-icon" style="background:var(--bg);color:var(--muted)"><i class="fa-solid fa-credit-card"></i></div>
+    <div class="stat-value" style="color:var(--muted)">PKR {{ dist.credit_limit|floatformat:0 }}</div>
+    <div class="stat-label">Credit Limit</div>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left Column -->
+  <div>
+
+    <!-- Distributor Info -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-building" style="color:var(--accent);margin-right:8px"></i>Distributor Profile
+        </span>
+        <code style="font-size:11px;color:var(--muted)">{{ dist.distributor_id }}</code>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Company Name</div>
+            <div style="font-weight:600">{{ dist.distributor_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Owner Name</div>
+            <div>{{ dist.owner_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Contact</div>
+            <div>{{ dist.contact_number }}</div>
+          </div>
+          {% if dist.email %}
+          <div class="kv-row">
+            <div class="kv-key">Email</div>
+            <div style="color:var(--muted)">{{ dist.email }}</div>
+          </div>
+          {% endif %}
+          <div class="kv-row">
+            <div class="kv-key">City / Region</div>
+            <div>{{ dist.city }}{% if dist.region %}, {{ dist.region }}{% endif %}</div>
+          </div>
+          {% if dist.address %}
+          <div class="kv-row">
+            <div class="kv-key">Address</div>
+            <div style="color:var(--muted)">{{ dist.address }}</div>
+          </div>
+          {% endif %}
+          <div class="kv-row">
+            <div class="kv-key">Drug License</div>
+            <div><code style="font-size:12px;color:var(--muted)">{{ dist.license_number|default:"—" }}</code></div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">NTN Number</div>
+            <div><code style="font-size:12px;color:var(--muted)">{{ dist.ntn_number|default:"—" }}</code></div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Credit Limit</div>
+            <div style="font-weight:600">PKR {{ dist.credit_limit|floatformat:0 }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Stock Entries -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-boxes-stacked" style="color:var(--accent);margin-right:8px"></i>Recent Stock Entries
+        </span>
+        <a href="{% url 'crm_distributors:stock_entry_list' %}?distributor={{ dist.pk }}" class="btn btn-ghost btn-sm">
+          View All
+        </a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Period</th>
+              <th>Sold</th>
+              <th>Closing Stock</th>
+              <th>Expired</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in entries %}
+            <tr>
+              <td>
+                <span style="font-weight:500">{{ entry.product.product_name }}</span><br>
+                <span style="font-size:11px;color:var(--muted)">{{ entry.product.strength }}</span>
+              </td>
+              <td style="font-size:11px;color:var(--muted)">
+                {{ entry.report_period_start|date:"d M" }} → {{ entry.report_period_end|date:"d M Y" }}
+              </td>
+              <td style="font-weight:600">{{ entry.sold_quantity }}</td>
+              <td style="color:var(--accent);font-weight:700">{{ entry.closing_stock }}</td>
+              <td style="{% if entry.expired_quantity > 0 %}color:var(--danger);font-weight:600{% else %}color:var(--muted){% endif %}">
+                {{ entry.expired_quantity }}
+              </td>
+              <td>
+                <a href="{% url 'crm_distributors:stock_entry_detail' entry.pk %}" class="btn btn-ghost btn-sm">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" style="text-align:center;color:var(--muted);padding:20px">
+                No stock entries submitted yet.
+                <a href="{% url 'crm_distributors:stock_entry_create' %}" style="color:var(--accent)">Submit first entry</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column -->
+  <div>
+
+    <!-- Sales Value Records -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-chart-line" style="color:var(--accent);margin-right:8px"></i>Recent Sales
+        </span>
+        <a href="{% url 'crm_distributors:sales_value_list' %}?distributor={{ dist.pk }}" class="btn btn-ghost btn-sm">
+          View All
+        </a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Date</th>
+              <th>Qty</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sale in sales %}
+            <tr>
+              <td style="font-size:13px;font-weight:500">{{ sale.product.product_name }}</td>
+              <td style="font-size:12px;color:var(--muted)">{{ sale.sale_date|date:"d M Y" }}</td>
+              <td style="text-align:center">{{ sale.quantity_sold }}</td>
+              <td style="font-weight:600;color:var(--accent)">PKR {{ sale.total_sales_value|floatformat:0 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" style="text-align:center;color:var(--muted);padding:16px">No sales records yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- Total Sales Footer -->
+      <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600">Total Sales Value</span>
+        <span style="font-size:18px;font-weight:800;color:var(--accent)">PKR {{ total_sales|floatformat:0 }}</span>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_distributors:stock_entry_create' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> Submit Stock Entry
+        </a>
+        <a href="{% url 'crm_distributors:sales_value_create' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> Add Sales Record
+        </a>
+        <a href="{% url 'crm_distributors:distributor_edit' dist.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Distributor
+        </a>
+        <a href="{% url 'crm_distributors:stock_entry_list' %}?distributor={{ dist.pk }}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-list"></i> All Stock Entries
+        </a>
+        <a href="{% url 'crm_distributors:distributor_delete' dist.pk %}" class="btn btn-danger" style="justify-content:center">
+          <i class="fa-solid fa-trash"></i> Delete Distributor
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

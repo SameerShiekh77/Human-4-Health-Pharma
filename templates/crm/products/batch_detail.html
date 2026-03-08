@@ -1,0 +1,187 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ batch.batch_number }} — CRM{% endblock %}
+{% block nav_batches %}active{% endblock %}
+{% block topbar_title %}Batch Detail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:batch_list' %}">Batches</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ batch.batch_number }}</span>
+    </div>
+    <h1>{{ batch.batch_number }}</h1>
+    <p>
+      <a href="{% url 'crm_products:product_detail' batch.product.pk %}" style="color:var(--accent);text-decoration:none">
+        {{ batch.product.product_name }}
+      </a>
+      &mdash; {{ batch.product.strength }}
+    </p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="badge
+      {% if batch.batch_status == 'active' %}badge-green
+      {% elif batch.batch_status == 'near_expiry' %}badge-yellow
+      {% else %}badge-red{% endif %}" style="font-size:13px;padding:6px 14px">
+      {{ batch.get_batch_status_display }}
+    </span>
+    <a href="{% url 'crm_products:batch_edit' batch.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_products:batch_delete' batch.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<!-- Quantity Summary Cards -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-industry"></i></div>
+    <div class="stat-value">{{ batch.quantity_manufactured }}</div>
+    <div class="stat-label">Manufactured</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)"><i class="fa-solid fa-truck"></i></div>
+    <div class="stat-value" style="color:var(--accent2)">{{ batch.quantity_sent_to_distributors }}</div>
+    <div class="stat-label">Sent to Distributors</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-warehouse"></i></div>
+    <div class="stat-value">{{ batch.quantity_available_in_company }}</div>
+    <div class="stat-label">Available in Company</div>
+  </div>
+  <div class="stat-card" style="--accent-color:{% if batch.days_to_expiry <= 0 %}var(--danger){% elif batch.days_to_expiry <= 90 %}var(--warn){% else %}var(--accent){% endif %}">
+    <div class="stat-icon" style="background:rgba(255,184,48,.1);color:var(--warn)"><i class="fa-solid fa-clock"></i></div>
+    <div class="stat-value" style="{% if batch.days_to_expiry <= 0 %}color:var(--danger){% elif batch.days_to_expiry <= 90 %}color:var(--warn){% endif %}">
+      {% if batch.days_to_expiry <= 0 %}Expired{% else %}{{ batch.days_to_expiry }}d{% endif %}
+    </div>
+    <div class="stat-label">Days to Expiry</div>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left: Batch Details -->
+  <div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-boxes-stacked" style="color:var(--accent);margin-right:8px"></i>Batch Details</span>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Batch Number</div>
+            <div style="font-weight:600">{{ batch.batch_number }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Product</div>
+            <div>
+              <a href="{% url 'crm_products:product_detail' batch.product.pk %}" style="color:var(--accent);text-decoration:none">
+                {{ batch.product.product_name }}
+              </a>
+              <span style="color:var(--muted);font-size:12px"> ({{ batch.product.strength }})</span>
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Category</div>
+            <div><span class="badge badge-blue">{{ batch.product.get_category_display }}</span></div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Manufacturing Date</div>
+            <div>{{ batch.manufacturing_date|date:"d F Y" }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Expiry Date</div>
+            <div style="font-weight:600;
+              {% if batch.batch_status == 'expired' %}color:var(--danger)
+              {% elif batch.batch_status == 'near_expiry' %}color:var(--warn)
+              {% else %}color:var(--text){% endif %}">
+              {{ batch.expiry_date|date:"d F Y" }}
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Qty Manufactured</div>
+            <div style="font-weight:600">{{ batch.quantity_manufactured }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Sent to Distributors</div>
+            <div>{{ batch.quantity_sent_to_distributors }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Available in Co.</div>
+            <div style="font-weight:700;color:var(--accent);font-size:16px">
+              {{ batch.quantity_available_in_company }}
+            </div>
+          </div>
+          {% if batch.notes %}
+          <div class="kv-row">
+            <div class="kv-key">Notes</div>
+            <div style="color:var(--muted)">{{ batch.notes }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Status & Actions -->
+  <div>
+
+    <!-- Expiry Progress Bar -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title">Shelf Life</span></div>
+      <div class="card-body">
+        {% with total_life=batch.expiry_date|timeuntil:batch.manufacturing_date %}
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between">
+          <span>Mfg: {{ batch.manufacturing_date|date:"d M Y" }}</span>
+          <span>Exp: {{ batch.expiry_date|date:"d M Y" }}</span>
+        </div>
+        {% endwith %}
+
+        {% if batch.batch_status == 'active' %}
+        <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden">
+          <div style="height:100%;background:var(--accent);border-radius:5px;width:60%"></div>
+        </div>
+        <div style="font-size:12px;color:var(--accent);margin-top:8px;text-align:center">{{ batch.days_to_expiry }} days remaining</div>
+        {% elif batch.batch_status == 'near_expiry' %}
+        <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden">
+          <div style="height:100%;background:var(--warn);border-radius:5px;width:15%"></div>
+        </div>
+        <div style="font-size:12px;color:var(--warn);margin-top:8px;text-align:center">
+          <i class="fa-solid fa-triangle-exclamation"></i> Only {{ batch.days_to_expiry }} days left!
+        </div>
+        {% else %}
+        <div style="height:10px;background:var(--danger);border-radius:5px"></div>
+        <div style="font-size:12px;color:var(--danger);margin-top:8px;text-align:center;font-weight:600">
+          <i class="fa-solid fa-circle-xmark"></i> This batch has expired
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_products:batch_edit' batch.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Batch
+        </a>
+        <a href="{% url 'crm_products:product_detail' batch.product.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pills"></i> View Product
+        </a>
+        <a href="{% url 'crm_products:stock_list' %}?q={{ batch.batch_number }}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-warehouse"></i> View in Stock
+        </a>
+        <a href="{% url 'crm_products:batch_delete' batch.pk %}" class="btn btn-danger" style="justify-content:center">
+          <i class="fa-solid fa-trash"></i> Delete Batch
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

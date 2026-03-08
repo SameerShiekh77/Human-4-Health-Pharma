@@ -1,0 +1,120 @@
+{% extends "crm/base.html" %}
+{% block title %}Products — CRM{% endblock %}
+{% block nav_products %}active{% endblock %}
+{% block topbar_title %}Product Master{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_products:product_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Add Product
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb"><a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px"></i> <span>Products</span></div>
+    <h1>Products</h1>
+    <p>{{ total }} product(s) in catalogue</p>
+  </div>
+</div>
+
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);max-width:500px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total }}</div>
+    <div class="stat-label">Total</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ active_count }}</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--muted);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ inactive_count }}</div>
+    <div class="stat-label">Inactive</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Search product name, generic, brand...">
+  </div>
+  <select name="category" style="width:160px">
+    <option value="">All Categories</option>
+    {% for val, label in categories %}
+    <option value="{{ val }}" {% if request.GET.category == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <select name="division" style="width:160px">
+    <option value="">All Divisions</option>
+    {% for div in divisions %}
+    <option value="{{ div.pk }}" {% if request.GET.division == div.pk|stringformat:"s" %}selected{% endif %}>{{ div.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="status" style="width:130px">
+    <option value="">All Status</option>
+    <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+  </select>
+  <button type="submit" class="btn btn-ghost">Filter</button>
+  {% if query or request.GET.category or request.GET.status or request.GET.division %}
+  <a href="{% url 'crm_products:product_list' %}" class="btn btn-ghost">Clear</a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Product ID</th><th>Name</th><th>Generic</th><th>Category</th>
+          <th>Strength</th><th>Retail Price</th><th>Division</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ p.product_id }}</code></td>
+          <td>
+            <a href="{% url 'crm_products:product_detail' p.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              {{ p.product_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ p.brand_name }}</span>
+          </td>
+          <td style="color:var(--muted)">{{ p.generic_name }}</td>
+          <td><span class="badge badge-blue">{{ p.get_category_display }}</span></td>
+          <td>{{ p.strength }}</td>
+          <td style="font-weight:600">PKR {{ p.retail_price }}</td>
+          <td style="color:var(--muted)">{{ p.division.name|default:"—" }}</td>
+          <td>
+            <span class="badge {% if p.status == 'active' %}badge-green{% else %}badge-gray{% endif %}">
+              {{ p.get_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_products:product_detail' p.pk %}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye"></i></a>
+              <a href="{% url 'crm_products:product_edit' p.pk %}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></a>
+              <a href="{% url 'crm_products:product_delete' p.pk %}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9">
+          <div class="empty-state"><i class="fa-solid fa-pills"></i><h3>No products found</h3><p>Try adjusting your search filters</p></div>
+        </td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}"><i class="fa-solid fa-chevron-left"></i></a>{% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}<a class="page-link" href="?page={{ n }}&q={{ query }}">{{ n }}</a>{% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}<a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}"><i class="fa-solid fa-chevron-right"></i></a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

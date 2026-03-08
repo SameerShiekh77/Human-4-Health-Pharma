@@ -1,0 +1,121 @@
+{% extends 'crm/base.html' %}
+{% block title %}Doctor ROI — CRM{% endblock %}
+{% block nav_doc_perf %}active{% endblock %}
+{% block topbar_title %}Doctor ROI Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Doctor Performance</span>
+    </div>
+    <h1>Doctor ROI Dashboard</h1>
+    <p>Monthly investment vs prescription revenue per doctor — {{ total }} record(s)</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <select name="doctor" style="width:220px">
+    <option value="">All Doctors</option>
+    {% for doc in doctors %}
+    <option value="{{ doc.pk }}" {% if request.GET.doctor == doc.pk|stringformat:"s" %}selected{% endif %}>
+      Dr. {{ doc.doctor_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <input type="month" name="month" value="{{ request.GET.month }}" style="width:160px" placeholder="Filter by month">
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if request.GET.doctor or request.GET.month %}
+  <a href="{% url 'crm_analytics:doctor_performance' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Specialty</th>
+          <th>Month</th>
+          <th>Visits Received</th>
+          <th>Est. Prescription Value</th>
+          <th>Investment Given</th>
+          <th>ROI</th>
+          <th>ROI Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in page_obj %}
+        <tr>
+          <td>
+            <a href="{% url 'crm_doctors:doctor_detail' s.doctor.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              Dr. {{ s.doctor.doctor_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ s.doctor.doctor_id }}</span>
+          </td>
+          <td>
+            <span class="badge badge-blue">{{ s.doctor.specialty }}</span>
+          </td>
+          <td style="color:var(--muted)">{{ s.snapshot_month|date:"M Y" }}</td>
+          <td style="font-weight:600;text-align:center">{{ s.total_visits_received }}</td>
+          <td style="color:var(--accent);font-weight:600">
+            PKR {{ s.estimated_prescription_per_month|floatformat:0 }}
+          </td>
+          <td style="color:var(--danger)">
+            PKR {{ s.total_investment_given|floatformat:0 }}
+          </td>
+          <td style="font-weight:700;font-size:15px;{% if s.roi >= 0 %}color:var(--accent){% else %}color:var(--danger){% endif %}">
+            PKR {{ s.roi|floatformat:0 }}
+          </td>
+          <td>
+            {% if s.roi >= 0 %}
+              <span class="badge badge-green"><i class="fa-solid fa-arrow-trend-up"></i> Positive</span>
+            {% else %}
+              <span class="badge badge-red"><i class="fa-solid fa-arrow-trend-down"></i> Negative</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <i class="fa-solid fa-stethoscope"></i>
+              <h3>No performance data yet</h3>
+              <p>Snapshots are generated monthly by scheduled tasks or management commands.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&month={{ request.GET.month }}&doctor={{ request.GET.doctor }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&month={{ request.GET.month }}&doctor={{ request.GET.doctor }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&month={{ request.GET.month }}&doctor={{ request.GET.doctor }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

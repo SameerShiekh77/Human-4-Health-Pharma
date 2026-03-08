@@ -1,0 +1,70 @@
+{% extends "crm/base.html" %}
+{% comment %}FILE: templates/crm/analytics/mr_performance.html{% endcomment %}
+{% block title %}MR Performance — CRM{% endblock %}
+{% block nav_mr_perf %}active{% endblock %}
+{% block topbar_title %}MR Performance Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb"><a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px"></i> <span>MR Performance</span></div>
+    <h1>Medical Rep Performance</h1>
+    <p>Monthly performance snapshots for all Medical Representatives</p>
+  </div>
+</div>
+<form method="get" class="search-bar">
+  <select name="mr" style="width:200px"><option value="">All MRs</option>
+    {% for mr in mrs %}<option value="{{ mr.pk }}" {% if request.GET.mr == mr.pk|stringformat:"s" %}selected{% endif %}>{{ mr.name }}</option>{% endfor %}
+  </select>
+  <input type="month" name="month" value="{{ request.GET.month }}" style="width:160px">
+  <button type="submit" class="btn btn-ghost">Filter</button>
+  {% if request.GET.mr or request.GET.month %}<a href="{% url 'crm_analytics:mr_performance' %}" class="btn btn-ghost">Clear</a>{% endif %}
+</form>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>MR</th><th>Month</th><th>Total Visits</th><th>GPS %</th>
+          <th>Doctors Covered</th><th>Prescription Value</th><th>Investment</th><th>ROI</th><th>Efficiency</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in page_obj %}
+        <tr>
+          <td style="font-weight:500">{{ s.mr.name }}<br><span style="font-size:11px;color:var(--muted)">{{ s.mr.mr_id }}</span></td>
+          <td style="color:var(--muted)">{{ s.snapshot_month|date:"M Y" }}</td>
+          <td style="font-weight:600">{{ s.total_visits }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px">
+                <div style="width:{{ s.gps_verified_percentage }}%;height:100%;background:var(--accent);border-radius:3px"></div>
+              </div>
+              <span style="font-size:12px;color:var(--accent);white-space:nowrap">{{ s.gps_verified_percentage }}%</span>
+            </div>
+          </td>
+          <td>{{ s.total_doctors_covered }}</td>
+          <td style="color:var(--accent);font-weight:600">PKR {{ s.total_prescription_value_generated|floatformat:0 }}</td>
+          <td style="color:var(--danger)">PKR {{ s.total_investment_given|floatformat:0 }}</td>
+          <td style="font-weight:700;{% if s.roi >= 0 %}color:var(--accent){% else %}color:var(--danger){% endif %}">
+            PKR {{ s.roi|floatformat:0 }}
+          </td>
+          <td>
+            <span class="badge {% if s.working_efficiency_score >= 75 %}badge-green{% elif s.working_efficiency_score >= 50 %}badge-yellow{% else %}badge-red{% endif %}">
+              {{ s.working_efficiency_score }}%
+            </span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9"><div class="empty-state"><i class="fa-solid fa-ranking-star"></i><h3>No performance data</h3><p>Snapshots are generated monthly by scheduled tasks.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>{% endif %}
+    {% for n in page_obj.paginator.page_range %}{% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>{% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}<a class="page-link" href="?page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+    {% if page_obj.has_next %}<a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>{% endif %}
+  </div>{% endif %}
+</div>
+{% endblock %}

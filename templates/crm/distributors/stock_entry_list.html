@@ -1,0 +1,143 @@
+{% extends 'crm/base.html' %}
+{% block title %}Stock Entries — CRM{% endblock %}
+{% block nav_stock_entries %}active{% endblock %}
+{% block topbar_title %}Distributor Stock Entries{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'crm_distributors:stock_entry_create' %}" class="btn btn-primary btn-sm">
+  <i class="fa-solid fa-plus"></i> Submit Entry
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:distributor_list' %}">Distributors</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Stock Entries</span>
+    </div>
+    <h1>Distributor Stock Entries</h1>
+    <p>{{ total }} stock report(s) submitted by distributors</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Distributor or product name...">
+  </div>
+  <select name="distributor" style="width:220px">
+    <option value="">All Distributors</option>
+    {% for dist in distributors %}
+    <option value="{{ dist.pk }}" {% if request.GET.distributor == dist.pk|stringformat:"s" %}selected{% endif %}>
+      {{ dist.distributor_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.distributor %}
+  <a href="{% url 'crm_distributors:stock_entry_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Distributor</th>
+          <th>Product</th>
+          <th>Period</th>
+          <th>Opening</th>
+          <th>Received</th>
+          <th>Sold</th>
+          <th>Expired</th>
+          <th>Closing Stock</th>
+          <th>Submitted</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in page_obj %}
+        <tr>
+          <td>
+            <a href="{% url 'crm_distributors:distributor_detail' entry.distributor.pk %}" style="color:var(--accent);text-decoration:none;font-size:13px">
+              {{ entry.distributor.distributor_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ entry.distributor.city }}</span>
+          </td>
+          <td>
+            <span style="font-weight:500">{{ entry.product.product_name }}</span><br>
+            <span style="font-size:11px;color:var(--muted)">{{ entry.product.strength }}</span>
+          </td>
+          <td style="font-size:12px;color:var(--muted);white-space:nowrap">
+            {{ entry.report_period_start|date:"d M Y" }}<br>
+            <span style="color:var(--muted)">→ {{ entry.report_period_end|date:"d M Y" }}</span>
+          </td>
+          <td style="text-align:center">{{ entry.opening_stock }}</td>
+          <td style="text-align:center;color:var(--accent)">+{{ entry.received_quantity }}</td>
+          <td style="text-align:center;font-weight:600">{{ entry.sold_quantity }}</td>
+          <td style="text-align:center;
+            {% if entry.expired_quantity > 0 %}color:var(--danger);font-weight:600{% else %}color:var(--muted){% endif %}">
+            {{ entry.expired_quantity }}
+          </td>
+          <td style="text-align:center;font-weight:700;
+            {% if entry.closing_stock == 0 %}color:var(--muted){% else %}color:var(--accent){% endif %}">
+            {{ entry.closing_stock }}
+          </td>
+          <td style="font-size:11px;color:var(--muted)">{{ entry.date_submitted|date:"d M Y" }}</td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_distributors:stock_entry_detail' entry.pk %}" class="btn btn-ghost btn-sm" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="{% url 'crm_distributors:stock_entry_edit' entry.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_distributors:stock_entry_delete' entry.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="10">
+            <div class="empty-state">
+              <i class="fa-solid fa-file-invoice"></i>
+              <h3>No stock entries found</h3>
+              <p>No distributor stock reports have been submitted yet.</p>
+              <a href="{% url 'crm_distributors:stock_entry_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Submit Entry
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&distributor={{ request.GET.distributor }}"><i class="fa-solid fa-chevron-left"></i></a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+      <a class="page-link" href="?page={{ n }}&q={{ query }}&distributor={{ request.GET.distributor }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&distributor={{ request.GET.distributor }}"><i class="fa-solid fa-chevron-right"></i></a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

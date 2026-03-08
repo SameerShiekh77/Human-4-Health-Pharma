@@ -1,0 +1,91 @@
+{% extends "crm/base.html" %}
+{% comment %}FILE: templates/crm/doctors/visit_list.html{% endcomment %}
+{% block title %}Visit Log — CRM{% endblock %}
+{% block nav_visits %}active{% endblock %}
+{% block topbar_title %}Doctor Visit Log{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Log Visit
+  </a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb"><a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a> <i class="fa-solid fa-chevron-right" style="font-size:9px"></i> <span>Visit Log</span></div>
+    <h1>Visit Log</h1>
+    <p>All doctor field visits by Medical Representatives</p>
+  </div>
+</div>
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);max-width:420px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total }}</div><div class="stat-label">Total</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent2);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ gps_total }}</div><div class="stat-label">GPS Verified</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--warn);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ today_count }}</div><div class="stat-label">Today</div>
+  </div>
+</div>
+<form method="get" class="search-bar">
+  <div class="search-input-wrap"><i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Doctor or MR name...">
+  </div>
+  <select name="mr" style="width:180px"><option value="">All MRs</option>
+    {% for mr in mrs %}<option value="{{ mr.pk }}" {% if request.GET.mr == mr.pk|stringformat:"s" %}selected{% endif %}>{{ mr.name }}</option>{% endfor %}
+  </select>
+  <select name="type" style="width:140px"><option value="">All Types</option>
+    {% for val, label in visit_types %}<option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <select name="gps" style="width:140px">
+    <option value="">GPS: All</option>
+    <option value="1" {% if request.GET.gps == "1" %}selected{% endif %}>Verified</option>
+    <option value="0" {% if request.GET.gps == "0" %}selected{% endif %}>Not Verified</option>
+  </select>
+  <input type="date" name="date_from" value="{{ request.GET.date_from }}" style="width:145px">
+  <input type="date" name="date_to"   value="{{ request.GET.date_to }}"   style="width:145px">
+  <button type="submit" class="btn btn-ghost">Filter</button>
+  {% if query or request.GET.mr or request.GET.gps or request.GET.date_from %}
+  <a href="{% url 'crm_doctors:visit_list' %}" class="btn btn-ghost">Clear</a>{% endif %}
+</form>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>MR</th><th>Doctor</th><th>Date / Time</th><th>Type</th><th>GPS</th><th>Products</th><th>Investment</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for v in page_obj %}
+        <tr>
+          <td style="color:var(--muted);font-size:12px">{{ v.pk }}</td>
+          <td style="font-weight:500">{{ v.mr.name }}</td>
+          <td>
+            <a href="{% url 'crm_doctors:doctor_detail' v.doctor.pk %}" style="color:var(--accent);text-decoration:none">Dr. {{ v.doctor.doctor_name }}</a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ v.doctor.specialty }}</span>
+          </td>
+          <td>{{ v.visit_date|date:"d M Y" }}<br><span style="font-size:11px;color:var(--muted)">{{ v.visit_time|time:"H:i" }}</span></td>
+          <td><span class="badge badge-blue">{{ v.get_visit_type_display }}</span></td>
+          <td>
+            {% if v.is_gps_verified %}<span class="gps-dot gps-ok"></span><span style="font-size:11px;color:var(--accent)">OK</span>
+            {% else %}<span class="gps-dot gps-fail"></span><span style="font-size:11px;color:var(--muted)">None</span>{% endif %}
+          </td>
+          <td style="color:var(--muted)">{{ v.product_details.count }}</td>
+          <td style="font-weight:600">PKR {{ v.total_investment|floatformat:0 }}</td>
+          <td><div style="display:flex;gap:5px">
+            <a href="{% url 'crm_doctors:visit_detail' v.pk %}" class="btn btn-ghost btn-sm"><i class="fa-solid fa-eye"></i></a>
+            <a href="{% url 'crm_doctors:visit_edit' v.pk %}"   class="btn btn-ghost btn-sm"><i class="fa-solid fa-pen"></i></a>
+            <a href="{% url 'crm_doctors:visit_delete' v.pk %}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+          </div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9"><div class="empty-state"><i class="fa-solid fa-clipboard-list"></i><h3>No visits recorded</h3></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}<a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i class="fa-solid fa-chevron-left"></i></a>{% endif %}
+    {% for n in page_obj.paginator.page_range %}{% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>{% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}<a class="page-link" href="?page={{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+    {% if page_obj.has_next %}<a class="page-link" href="?page={{ page_obj.next_page_number }}"><i class="fa-solid fa-chevron-right"></i></a>{% endif %}
+  </div>{% endif %}
+</div>
+{% endblock %}

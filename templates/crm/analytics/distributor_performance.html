@@ -1,0 +1,137 @@
+{% extends 'crm/base.html' %}
+{% block title %}Distributor Performance — CRM{% endblock %}
+{% block nav_dist_perf %}active{% endblock %}
+{% block topbar_title %}Distributor Performance{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Distributor Performance</span>
+    </div>
+    <h1>Distributor Performance</h1>
+    <p>Monthly sales, unsold stock and efficiency per distributor — {{ total }} record(s)</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <select name="distributor" style="width:220px">
+    <option value="">All Distributors</option>
+    {% for dist in distributors %}
+    <option value="{{ dist.pk }}" {% if request.GET.distributor == dist.pk|stringformat:"s" %}selected{% endif %}>
+      {{ dist.distributor_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <input type="month" name="month" value="{{ request.GET.month }}" style="width:160px">
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if request.GET.distributor or request.GET.month %}
+  <a href="{% url 'crm_analytics:distributor_performance' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Distributor</th>
+          <th>Month</th>
+          <th>Units Sold</th>
+          <th>Total Sales Value</th>
+          <th>Unsold Stock</th>
+          <th>Expired Stock</th>
+          <th>Efficiency %</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in page_obj %}
+        <tr>
+          <td>
+            <a href="{% url 'crm_distributors:distributor_detail' s.distributor.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              {{ s.distributor.distributor_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ s.distributor.city }}</span>
+          </td>
+          <td style="color:var(--muted)">{{ s.snapshot_month|date:"M Y" }}</td>
+          <td style="font-weight:600;text-align:center">{{ s.total_units_sold }}</td>
+          <td style="color:var(--accent);font-weight:600">
+            PKR {{ s.total_sales_value|floatformat:0 }}
+          </td>
+          <td>
+            <span style="{% if s.total_unsold_stock > 0 %}color:var(--warn){% else %}color:var(--muted){% endif %}">
+              {{ s.total_unsold_stock }}
+            </span>
+          </td>
+          <td>
+            <span style="{% if s.total_expired_stock > 0 %}color:var(--danger);font-weight:600{% else %}color:var(--muted){% endif %}">
+              {{ s.total_expired_stock }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;min-width:120px">
+              <div style="flex:1;height:6px;background:var(--border);border-radius:3px">
+                <div style="width:{{ s.efficiency_percentage }}%;height:100%;border-radius:3px;background:{% if s.efficiency_percentage >= 75 %}var(--accent){% elif s.efficiency_percentage >= 50 %}var(--warn){% else %}var(--danger){% endif %}"></div>
+              </div>
+              <span style="font-size:12px;white-space:nowrap;font-weight:600;
+                {% if s.efficiency_percentage >= 75 %}color:var(--accent)
+                {% elif s.efficiency_percentage >= 50 %}color:var(--warn)
+                {% else %}color:var(--danger){% endif %}">
+                {{ s.efficiency_percentage }}%
+              </span>
+            </div>
+          </td>
+          <td>
+            {% if s.efficiency_percentage >= 75 %}
+              <span class="badge badge-green">Excellent</span>
+            {% elif s.efficiency_percentage >= 50 %}
+              <span class="badge badge-yellow">Average</span>
+            {% else %}
+              <span class="badge badge-red">Poor</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <i class="fa-solid fa-chart-bar"></i>
+              <h3>No performance data yet</h3>
+              <p>Distributor snapshots are generated monthly by scheduled tasks.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&month={{ request.GET.month }}&distributor={{ request.GET.distributor }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&month={{ request.GET.month }}&distributor={{ request.GET.distributor }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&month={{ request.GET.month }}&distributor={{ request.GET.distributor }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

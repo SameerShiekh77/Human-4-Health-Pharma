@@ -1,0 +1,157 @@
+{% extends 'crm/base.html' %}
+{% block title %}Distributors — CRM{% endblock %}
+{% block nav_distributors %}active{% endblock %}
+{% block topbar_title %}Distributors{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'crm_distributors:distributor_create' %}" class="btn btn-primary btn-sm">
+  <i class="fa-solid fa-plus"></i> Add Distributor
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Distributors</span>
+    </div>
+    <h1>Distributors</h1>
+    <p>{{ total }} distributor(s) in the network</p>
+  </div>
+</div>
+
+<!-- KPI Strip -->
+<div class="stats-grid" style="grid-template-columns:repeat(2,1fr);max-width:300px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ active }}</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--muted);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total }}</div>
+    <div class="stat-label">Total</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Name, owner, ID, license...">
+  </div>
+  <select name="city" style="width:170px">
+    <option value="">All Cities</option>
+    {% for city in cities %}
+    <option value="{{ city }}" {% if request.GET.city == city %}selected{% endif %}>{{ city }}</option>
+    {% endfor %}
+  </select>
+  <select name="status" style="width:150px">
+    <option value="">All Status</option>
+    <option value="active"    {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="inactive"  {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+    <option value="suspended" {% if request.GET.status == 'suspended' %}selected{% endif %}>Suspended</option>
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.city or request.GET.status %}
+  <a href="{% url 'crm_distributors:distributor_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Distributor ID</th>
+          <th>Name</th>
+          <th>Owner</th>
+          <th>City / Region</th>
+          <th>Contact</th>
+          <th>License No.</th>
+          <th>Credit Limit</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dist in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ dist.distributor_id }}</code></td>
+          <td>
+            <a href="{% url 'crm_distributors:distributor_detail' dist.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              {{ dist.distributor_name }}
+            </a>
+          </td>
+          <td style="color:var(--muted)">{{ dist.owner_name }}</td>
+          <td>
+            {{ dist.city }}<br>
+            <span style="font-size:11px;color:var(--muted)">{{ dist.region }}</span>
+          </td>
+          <td>
+            <span style="font-size:13px">{{ dist.contact_number }}</span><br>
+            {% if dist.email %}
+            <span style="font-size:11px;color:var(--muted)">{{ dist.email }}</span>
+            {% endif %}
+          </td>
+          <td><code style="font-size:11px;color:var(--muted)">{{ dist.license_number }}</code></td>
+          <td style="font-weight:600">PKR {{ dist.credit_limit|floatformat:0 }}</td>
+          <td>
+            <span class="badge
+              {% if dist.status == 'active' %}badge-green
+              {% elif dist.status == 'suspended' %}badge-red
+              {% else %}badge-gray{% endif %}">
+              {{ dist.get_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_distributors:distributor_detail' dist.pk %}" class="btn btn-ghost btn-sm" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="{% url 'crm_distributors:distributor_edit' dist.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_distributors:distributor_delete' dist.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">
+            <div class="empty-state">
+              <i class="fa-solid fa-truck"></i>
+              <h3>No distributors found</h3>
+              <p>Add your first distributor or adjust your filters.</p>
+              <a href="{% url 'crm_distributors:distributor_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Distributor
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&city={{ request.GET.city }}&status={{ request.GET.status }}"><i class="fa-solid fa-chevron-left"></i></a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+      <a class="page-link" href="?page={{ n }}&q={{ query }}&city={{ request.GET.city }}&status={{ request.GET.status }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&city={{ request.GET.city }}&status={{ request.GET.status }}"><i class="fa-solid fa-chevron-right"></i></a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

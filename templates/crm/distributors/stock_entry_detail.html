@@ -1,0 +1,256 @@
+{% extends 'crm/base.html' %}
+{% block title %}Stock Entry #{{ entry.pk }} — CRM{% endblock %}
+{% block nav_stock_entries %}active{% endblock %}
+{% block topbar_title %}Stock Entry Detail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:stock_entry_list' %}">Stock Entries</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Entry #{{ entry.pk }}</span>
+    </div>
+    <h1>{{ entry.distributor.distributor_name }}</h1>
+    <p>{{ entry.product.product_name }} &mdash; {{ entry.report_period_start|date:"d M Y" }} to {{ entry.report_period_end|date:"d M Y" }}</p>
+  </div>
+  <div style="display:flex;gap:8px">
+    <a href="{% url 'crm_distributors:stock_entry_edit' entry.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_distributors:stock_entry_delete' entry.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<!-- Stock Flow Cards -->
+<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:24px">
+  <div class="stat-card" style="--accent-color:var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)">
+      <i class="fa-solid fa-box-open"></i>
+    </div>
+    <div class="stat-value" style="color:var(--accent2)">{{ entry.opening_stock }}</div>
+    <div class="stat-label">Opening Stock</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+    <div class="stat-value">+{{ entry.received_quantity }}</div>
+    <div class="stat-label">Received</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--warn)">
+    <div class="stat-icon" style="background:rgba(255,184,48,.1);color:var(--warn)">
+      <i class="fa-solid fa-cart-shopping"></i>
+    </div>
+    <div class="stat-value" style="color:var(--warn)">{{ entry.sold_quantity }}</div>
+    <div class="stat-label">Sold</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--danger)">
+    <div class="stat-icon" style="background:rgba(255,77,109,.1);color:var(--danger)">
+      <i class="fa-solid fa-ban"></i>
+    </div>
+    <div class="stat-value" style="color:var(--danger)">{{ entry.expired_quantity }}</div>
+    <div class="stat-label">Expired</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-equals"></i></div>
+    <div class="stat-value">{{ entry.closing_stock }}</div>
+    <div class="stat-label">Closing Stock</div>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left: Entry Details -->
+  <div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-file-invoice" style="color:var(--accent);margin-right:8px"></i>Entry Details
+        </span>
+        <code style="font-size:11px;color:var(--muted)">#{{ entry.pk }}</code>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Distributor</div>
+            <div>
+              <a href="{% url 'crm_distributors:distributor_detail' entry.distributor.pk %}" style="color:var(--accent);text-decoration:none;font-weight:500">
+                {{ entry.distributor.distributor_name }}
+              </a>
+              <span style="color:var(--muted);font-size:12px"> — {{ entry.distributor.city }}</span>
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Product</div>
+            <div>
+              <a href="{% url 'crm_products:product_detail' entry.product.pk %}" style="color:var(--accent);text-decoration:none;font-weight:500">
+                {{ entry.product.product_name }}
+              </a>
+              <span style="color:var(--muted);font-size:12px"> {{ entry.product.strength }}</span>
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Batch</div>
+            <div>
+              <a href="{% url 'crm_products:batch_detail' entry.batch.pk %}" style="color:var(--accent);text-decoration:none">
+                {{ entry.batch.batch_number }}
+              </a>
+              <span style="margin-left:8px">
+                <span class="badge {% if entry.batch.batch_status == 'active' %}badge-green{% elif entry.batch.batch_status == 'near_expiry' %}badge-yellow{% else %}badge-red{% endif %}">
+                  {{ entry.batch.get_batch_status_display }}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Report Period</div>
+            <div>{{ entry.report_period_start|date:"d M Y" }} → {{ entry.report_period_end|date:"d M Y" }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Date Submitted</div>
+            <div style="color:var(--muted)">{{ entry.date_submitted|date:"d M Y" }}</div>
+          </div>
+          {% if entry.notes %}
+          <div class="kv-row">
+            <div class="kv-key">Notes</div>
+            <div style="color:var(--muted)">{{ entry.notes }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock Flow Breakdown -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-chart-waterfall" style="color:var(--accent);margin-right:8px"></i>Stock Flow</span>
+      </div>
+      <div class="card-body">
+
+        <!-- Visual flow bar -->
+        <div style="margin-bottom:20px">
+          {% with total=entry.opening_stock|add:entry.received_quantity %}
+          {% if total > 0 %}
+          <div style="height:12px;border-radius:6px;overflow:hidden;display:flex;background:var(--border)">
+            <div style="width:{% widthratio entry.sold_quantity total 100 %}%;background:var(--warn);transition:width .4s"></div>
+            <div style="width:{% widthratio entry.expired_quantity total 100 %}%;background:var(--danger);transition:width .4s"></div>
+            <div style="flex:1;background:var(--accent);opacity:.3"></div>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--muted)">
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--warn);display:inline-block"></span>Sold</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--danger);display:inline-block"></span>Expired</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:var(--accent);opacity:.4;display:inline-block"></span>Remaining</span>
+          </div>
+          {% endif %}
+          {% endwith %}
+        </div>
+
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Opening Stock</div>
+            <div style="font-weight:600">{{ entry.opening_stock }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">+ Received</div>
+            <div style="color:var(--accent);font-weight:600">{{ entry.received_quantity }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">− Sold</div>
+            <div style="color:var(--warn);font-weight:600">{{ entry.sold_quantity }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">− Expired</div>
+            <div style="color:var(--danger);font-weight:600">{{ entry.expired_quantity }}</div>
+          </div>
+          <div class="kv-row" style="border-top:2px solid var(--border);padding-top:12px">
+            <div class="kv-key" style="color:var(--text);font-weight:700">= Closing Stock</div>
+            <div style="font-size:20px;font-weight:800;color:var(--accent)">{{ entry.closing_stock }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Alerts & Quick Info -->
+  <div>
+
+    <!-- Near Expiry Alert -->
+    {% if entry.near_expiry_quantity > 0 %}
+    <div style="background:rgba(255,184,48,.08);border:1px solid rgba(255,184,48,.3);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <i class="fa-solid fa-triangle-exclamation" style="color:var(--warn);font-size:18px"></i>
+        <span style="font-weight:700;color:var(--warn)">Near Expiry Alert</span>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin:0">
+        <strong style="color:var(--text)">{{ entry.near_expiry_quantity }}</strong> units are approaching their expiry date and require immediate attention.
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Expired Alert -->
+    {% if entry.expired_quantity > 0 %}
+    <div style="background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.3);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <i class="fa-solid fa-circle-xmark" style="color:var(--danger);font-size:18px"></i>
+        <span style="font-weight:700;color:var(--danger)">Expired Stock</span>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin:0">
+        <strong style="color:var(--text)">{{ entry.expired_quantity }}</strong> units have expired. These should be returned or destroyed.
+      </p>
+    </div>
+    {% endif %}
+
+    <!-- Quick Stats Card -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title">Batch Info</span></div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Expiry Date</div>
+            <div style="{% if entry.batch.batch_status != 'active' %}color:var(--danger);font-weight:600{% endif %}">
+              {{ entry.batch.expiry_date|date:"d M Y" }}
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Days Left</div>
+            <div style="{% if entry.batch.days_to_expiry <= 90 %}color:var(--warn){% else %}color:var(--muted){% endif %}">
+              {% if entry.batch.days_to_expiry <= 0 %}Expired{% else %}{{ entry.batch.days_to_expiry }} days{% endif %}
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Batch Status</div>
+            <div>
+              <span class="badge {% if entry.batch.batch_status == 'active' %}badge-green{% elif entry.batch.batch_status == 'near_expiry' %}badge-yellow{% else %}badge-red{% endif %}">
+                {{ entry.batch.get_batch_status_display }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_distributors:stock_entry_edit' entry.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Entry
+        </a>
+        <a href="{% url 'crm_distributors:distributor_detail' entry.distributor.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-truck"></i> View Distributor
+        </a>
+        <a href="{% url 'crm_distributors:stock_entry_create' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> New Entry
+        </a>
+        <a href="{% url 'crm_distributors:stock_entry_delete' entry.pk %}" class="btn btn-danger" style="justify-content:center">
+          <i class="fa-solid fa-trash"></i> Delete Entry
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

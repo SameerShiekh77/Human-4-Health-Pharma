@@ -1,0 +1,205 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Doctor — CRM{% endblock %}
+{% block nav_doctors %}active{% endblock %}
+{% block topbar_title %}{{ action }} Doctor{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_doctors:doctor_list' %}">Doctors</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{% if obj %}Dr. {{ obj.doctor_name }}{% else %}New Doctor{% endif %}</span>
+    </div>
+    <h1>{{ action }} Doctor</h1>
+    <p>{% if obj %}Update profile for Dr. {{ obj.doctor_name }}.{% else %}Add a new doctor to the CRM and assign Medical Representatives.{% endif %}</p>
+  </div>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-error">
+    <i class="fa-solid fa-circle-xmark"></i> {{ form.non_field_errors }}
+  </div>
+  {% endif %}
+
+  <!-- Identity -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-user-doctor"></i> Doctor Identity
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Full Name *
+          <span style="font-size:11px;font-weight:400;color:var(--muted)">(without Dr. prefix)</span>
+        </label>
+        {{ form.doctor_name }}
+        {% if form.doctor_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.doctor_name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Specialty *</label>
+        {{ form.specialty }}
+        {% if form.specialty.errors %}<span style="color:var(--danger);font-size:12px">{{ form.specialty.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Qualification</label>
+        {{ form.qualification }}
+        {% if form.qualification.errors %}<span style="color:var(--danger);font-size:12px">{{ form.qualification.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        {{ form.status }}
+        {% if form.status.errors %}<span style="color:var(--danger);font-size:12px">{{ form.status.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Practice Locations -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-hospital"></i> Practice Locations
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Hospital / Institution</label>
+        {{ form.hospital_name }}
+        {% if form.hospital_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.hospital_name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Private Clinic</label>
+        {{ form.clinic_name }}
+        {% if form.clinic_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.clinic_name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>City *</label>
+        {{ form.city }}
+        {% if form.city.errors %}<span style="color:var(--danger);font-size:12px">{{ form.city.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Area</label>
+        {{ form.area }}
+        {% if form.area.errors %}<span style="color:var(--danger);font-size:12px">{{ form.area.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-address-card"></i> Contact Details
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Contact Number</label>
+        {{ form.contact_number }}
+        {% if form.contact_number.errors %}<span style="color:var(--danger);font-size:12px">{{ form.contact_number.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        {{ form.email }}
+        {% if form.email.errors %}<span style="color:var(--danger);font-size:12px">{{ form.email.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Prescription Potential -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-chart-simple"></i> Prescription Potential
+    </div>
+
+    <div style="background:rgba(79,124,255,.07);border:1px solid rgba(79,124,255,.2);border-radius:8px;padding:14px;margin-bottom:18px;font-size:13px;color:var(--muted)">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent2);margin-right:6px"></i>
+      These estimates help calculate ROI on doctor investments and visits.
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Est. Patients / Day</label>
+        {{ form.estimated_patients_per_day }}
+        {% if form.estimated_patients_per_day.errors %}<span style="color:var(--danger);font-size:12px">{{ form.estimated_patients_per_day.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Est. Prescription Potential / Month (PKR)</label>
+        {{ form.estimated_prescription_potential }}
+        {% if form.estimated_prescription_potential.errors %}<span style="color:var(--danger);font-size:12px">{{ form.estimated_prescription_potential.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+
+    <!-- Live monthly revenue estimate -->
+    <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:14px;margin-top:4px">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px">
+        Estimated Monthly Revenue Potential
+      </div>
+      <div id="potentialDisplay" style="font-size:26px;font-weight:800;color:var(--accent)">
+        PKR {% if obj %}{{ obj.estimated_prescription_potential|floatformat:0 }}{% else %}0{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Assigned MRs -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-user-tie"></i> Assigned Medical Representatives
+    </div>
+    <div class="form-group">
+      {{ form.assigned_mrs }}
+      {% if form.assigned_mrs.errors %}<span style="color:var(--danger);font-size:12px">{{ form.assigned_mrs.errors.0 }}</span>{% endif %}
+      <span style="font-size:11px;color:var(--muted);margin-top:4px">
+        Hold <kbd style="background:var(--border);padding:1px 5px;border-radius:3px;font-size:10px">Ctrl</kbd> /
+        <kbd style="background:var(--border);padding:1px 5px;border-radius:3px;font-size:10px">Cmd</kbd> to select multiple MRs.
+      </span>
+    </div>
+  </div>
+
+  {% if obj %}
+  <!-- Edit-mode info panel -->
+  <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:10px;padding:16px;margin-bottom:20px">
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:10px">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent2);margin-right:6px"></i>Current Record
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Doctor ID</div>
+        <code style="font-size:13px;color:var(--accent)">{{ obj.doctor_id }}</code>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Total Visits</div>
+        <div style="font-size:18px;font-weight:700">{{ obj.doctor_visits.count }}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Assigned MRs</div>
+        <div style="font-size:18px;font-weight:700">{{ obj.assigned_mrs.count }}</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% if obj %}{% url 'crm_doctors:doctor_detail' obj.pk %}{% else %}{% url 'crm_doctors:doctor_list' %}{% endif %}" class="btn btn-ghost">
+      Cancel
+    </a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Doctor
+    </button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const potInput = document.querySelector('[name="estimated_prescription_potential"]');
+  const display  = document.getElementById('potentialDisplay');
+
+  function updatePotential() {
+    const val = parseFloat(potInput.value) || 0;
+    display.textContent = 'PKR ' + val.toLocaleString('en-PK', { maximumFractionDigits: 0 });
+  }
+
+  if (potInput) potInput.addEventListener('input', updatePotential);
+</script>
+{% endblock %}

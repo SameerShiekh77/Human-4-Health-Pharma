@@ -1,0 +1,121 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Product — CRM{% endblock %}
+{% block nav_products %}active{% endblock %}
+{% block topbar_title %}{{ action }} Product{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:product_list' %}">Products</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{% if obj %}{{ obj.product_name }}{% else %}New Product{% endif %}</span>
+    </div>
+    <h1>{{ action }} Product</h1>
+    <p>{% if obj %}Update product master record for {{ obj.product_name }}.{% else %}Add a new product to the pharma catalogue.{% endif %}</p>
+  </div>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <!-- Identity -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-pills"></i> Product Identity
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Product Name *</label>
+        {{ form.product_name }}
+      </div>
+      <div class="form-group">
+        <label>Brand Name *</label>
+        {{ form.brand_name }}
+      </div>
+      <div class="form-group">
+        <label>Generic Name *</label>
+        {{ form.generic_name }}
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        {{ form.category }}
+      </div>
+      <div class="form-group">
+        <label>Strength</label>
+        {{ form.strength }}
+      </div>
+      <div class="form-group">
+        <label>Packing Size</label>
+        {{ form.packing_size }}
+      </div>
+      <div class="form-group">
+        <label>Division</label>
+        {{ form.division }}
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        {{ form.status }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-tag"></i> Pricing (PKR)
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Manufacturing Cost / Unit</label>
+        {{ form.manufacturing_cost_per_unit }}
+      </div>
+      <div class="form-group">
+        <label>Distributor Price</label>
+        {{ form.distributor_price }}
+      </div>
+      <div class="form-group">
+        <label>Trade Price</label>
+        {{ form.trade_price }}
+      </div>
+      <div class="form-group">
+        <label>Retail Price (MRP)</label>
+        {{ form.retail_price }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Description & Image -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-file-lines"></i> Additional Info
+    </div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Description</label>
+        {{ form.description }}
+      </div>
+      <div class="form-group">
+        <label>Product Image</label>
+        {{ form.image }}
+        {% if obj and obj.image %}
+        <div style="margin-top:8px">
+          <img src="{{ obj.image.url }}" style="height:60px;border-radius:6px;border:1px solid var(--border)">
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% if obj %}{% url 'crm_products:product_detail' obj.pk %}{% else %}{% url 'crm_products:product_list' %}{% endif %}" class="btn btn-ghost">
+      Cancel
+    </a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Product
+    </button>
+  </div>
+</form>
+{% endblock %}

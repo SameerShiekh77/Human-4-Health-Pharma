@@ -1,0 +1,151 @@
+{% extends 'crm/base.html' %}
+{% block title %}Medical Stores — CRM{% endblock %}
+{% block nav_stores %}active{% endblock %}
+{% block topbar_title %}Medical Stores{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_stores:store_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Add Store
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Medical Stores</span>
+    </div>
+    <h1>Medical Stores</h1>
+    <p>{{ total }} pharmacy / medical store(s) in the network</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Search store name, owner, ID...">
+  </div>
+  <select name="area" style="width:180px">
+    <option value="">All Areas</option>
+    {% for area in areas %}
+    <option value="{{ area.pk }}" {% if request.GET.area == area.pk|stringformat:"s" %}selected{% endif %}>
+      {{ area.area_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <select name="status" style="width:140px">
+    <option value="">All Status</option>
+    <option value="active"   {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.area or request.GET.status %}
+  <a href="{% url 'crm_stores:store_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Store ID</th>
+          <th>Store Name</th>
+          <th>Owner</th>
+          <th>Area</th>
+          <th>Phone</th>
+          <th>Distributor</th>
+          <th>Linked Doctors</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for store in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ store.store_id }}</code></td>
+          <td>
+            <a href="{% url 'crm_stores:store_detail' store.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              {{ store.store_name }}
+            </a>
+            {% if store.drug_license_number %}
+            <br><span style="font-size:11px;color:var(--muted)">Lic: {{ store.drug_license_number }}</span>
+            {% endif %}
+          </td>
+          <td>{{ store.owner_name }}</td>
+          <td style="color:var(--muted)">{{ store.area.area_name|default:"—" }}</td>
+          <td style="color:var(--muted)">{{ store.phone|default:"—" }}</td>
+          <td>
+            {% if store.distributor %}
+              <span style="font-size:12px">{{ store.distributor.distributor_name }}</span>
+            {% else %}
+              <span style="color:var(--muted)">—</span>
+            {% endif %}
+          </td>
+          <td style="text-align:center">
+            <span class="badge badge-blue">{{ store.linked_doctors.count }}</span>
+          </td>
+          <td>
+            <span class="badge {% if store.status == 'active' %}badge-green{% else %}badge-gray{% endif %}">
+              {{ store.get_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_stores:store_detail' store.pk %}" class="btn btn-ghost btn-sm" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="{% url 'crm_stores:store_edit' store.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_stores:store_delete' store.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">
+            <div class="empty-state">
+              <i class="fa-solid fa-store"></i>
+              <h3>No medical stores found</h3>
+              <p>Add your first store or adjust your search filters.</p>
+              <a href="{% url 'crm_stores:store_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Store
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&area={{ request.GET.area }}&status={{ request.GET.status }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&q={{ query }}&area={{ request.GET.area }}&status={{ request.GET.status }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&area={{ request.GET.area }}&status={{ request.GET.status }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,395 @@
+{% extends "crm/base.html" %}
+{% block title %}{{ action }} — Doctor Visit{% endblock %}
+{% block nav_visit_new %}active{% endblock %}
+{% block topbar_title %}{{ action }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .formset-row {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .formset-row .remove-row {
+    position: absolute; top: 10px; right: 10px;
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 13px; padding: 4px 8px;
+    border-radius: 6px; transition: all .15s;
+  }
+  .formset-row .remove-row:hover { background: rgba(255,77,109,.15); color: var(--danger); }
+  .add-row-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 14px; border: 1px dashed var(--border);
+    border-radius: 8px; color: var(--muted); font-size: 13px;
+    cursor: pointer; background: none; width: 100%;
+    justify-content: center; transition: all .15s; margin-top: 4px;
+  }
+  .add-row-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .gps-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 8px;
+    background: rgba(0,212,170,.1); border: 1px solid rgba(0,212,170,.3);
+    color: var(--accent); font-size: 13px; cursor: pointer;
+    transition: all .15s; font-family: 'DM Sans', sans-serif; width: 100%;
+    justify-content: center;
+  }
+  .gps-btn:hover { background: rgba(0,212,170,.2); }
+  .gps-status { font-size: 12px; color: var(--muted); margin-top: 6px; text-align: center; }
+  .tab-nav { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab-btn {
+    padding: 10px 16px; font-size: 13px; cursor: pointer;
+    border: none; background: none; color: var(--muted);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    font-family: 'DM Sans', sans-serif; transition: all .15s;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_doctors:visit_list' %}">Visit Log</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ action }}</span>
+    </div>
+    <h1>{{ action }}</h1>
+    <p>Record a complete doctor visit with products, investments &amp; GPS verification.</p>
+  </div>
+</div>
+
+<form method="post" id="visitForm">
+  {% csrf_token %}
+
+  <!-- Management Forms (required for formsets) -->
+  {{ product_fs.management_form }}
+  {{ investment_fs.management_form }}
+  {{ competitor_fs.management_form }}
+  {{ pharmacy_fs.management_form }}
+
+  <!-- Hidden GPS fields from main form -->
+  {{ form.gps_latitude }}
+  {{ form.gps_longitude }}
+  {{ form.is_gps_verified }}
+
+  <!-- SECTION 1: Basic Info -->
+  <div class="form-section">
+    <div class="form-section-title"><i class="fa-solid fa-circle-info"></i> Basic Visit Information</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Medical Representative *</label>
+        {{ form.mr }}
+      </div>
+      <div class="form-group">
+        <label>Doctor *</label>
+        {{ form.doctor }}
+      </div>
+      <div class="form-group">
+        <label>Visit Date *</label>
+        {{ form.visit_date }}
+      </div>
+      <div class="form-group">
+        <label>Visit Time *</label>
+        {{ form.visit_time }}
+      </div>
+      <div class="form-group">
+        <label>Hospital / Clinic</label>
+        {{ form.hospital_clinic_name }}
+      </div>
+      <div class="form-group">
+        <label>Visit Type *</label>
+        {{ form.visit_type }}
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: GPS -->
+  <div class="form-section">
+    <div class="form-section-title"><i class="fa-solid fa-location-dot"></i> GPS Location Verification</div>
+    <div class="form-grid">
+      <div>
+        <button type="button" class="gps-btn" onclick="captureGPS()">
+          <i class="fa-solid fa-crosshairs"></i> Capture Current GPS Location
+        </button>
+        <div class="gps-status" id="gpsStatus">Click to capture your location</div>
+      </div>
+      <div class="form-group">
+        <label>Address (Auto-filled)</label>
+        {{ form.gps_address }}
+      </div>
+    </div>
+  </div>
+
+  <!-- TABBED SECTIONS -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-body" style="padding-bottom:0">
+      <div class="tab-nav">
+        <button type="button" class="tab-btn active" onclick="showTab('products',this)">
+          <i class="fa-solid fa-pills"></i> Products Discussed
+        </button>
+        <button type="button" class="tab-btn" onclick="showTab('investments',this)">
+          <i class="fa-solid fa-hand-holding-dollar"></i> Investments
+        </button>
+        <button type="button" class="tab-btn" onclick="showTab('competitors',this)">
+          <i class="fa-solid fa-binoculars"></i> Competitors
+        </button>
+        <button type="button" class="tab-btn" onclick="showTab('pharmacies',this)">
+          <i class="fa-solid fa-store"></i> Pharmacy Refs
+        </button>
+      </div>
+
+      <!-- Products Tab -->
+      <div id="tab-products" class="tab-panel active" style="padding-bottom:20px">
+        <div id="product-formset">
+          {% for pf in product_fs %}
+            <div class="formset-row">
+              {{ pf.id }}
+              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fa-solid fa-times"></i></button>
+              <div class="form-grid-3">
+                <div class="form-group full">
+                  <label>Product *</label>{{ pf.product }}
+                </div>
+                <div class="form-group">
+                  <label>Samples Given</label>{{ pf.samples_given }}
+                </div>
+                <div class="form-group">
+                  <label>Promo Material</label>{{ pf.promotional_material_given }}
+                </div>
+                <div class="form-group">
+                  <label>Units/Day (Est.)</label>{{ pf.estimated_units_prescribed_per_day }}
+                </div>
+                <div class="form-group">
+                  <label>Units/Month (Est.)</label>{{ pf.estimated_units_prescribed_per_month }}
+                </div>
+                <div class="form-group">
+                  <label>Value/Month PKR</label>{{ pf.estimated_value_per_month }}
+                </div>
+              </div>
+              {% for field in pf.hidden_fields %}{{ field }}{% endfor %}
+              <div class="form-group" style="margin-top:8px">
+                <label>Delete</label>{{ pf.DELETE }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('product-formset', 'products')">
+          <i class="fa-solid fa-plus"></i> Add Product
+        </button>
+      </div>
+
+      <!-- Investments Tab -->
+      <div id="tab-investments" class="tab-panel" style="padding-bottom:20px">
+        <div id="investment-formset">
+          {% for inv in investment_fs %}
+            <div class="formset-row">
+              {{ inv.id }}
+              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fa-solid fa-times"></i></button>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Investment Type</label>{{ inv.investment_type }}
+                </div>
+                <div class="form-group">
+                  <label>Amount (PKR)</label>{{ inv.amount }}
+                </div>
+                <div class="form-group full">
+                  <label>Description</label>{{ inv.description }}
+                </div>
+              </div>
+              {% for field in inv.hidden_fields %}{{ field }}{% endfor %}
+              <div class="form-group" style="margin-top:8px">
+                <label>Delete</label>{{ inv.DELETE }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('investment-formset', 'investments')">
+          <i class="fa-solid fa-plus"></i> Add Investment
+        </button>
+      </div>
+
+      <!-- Competitors Tab -->
+      <div id="tab-competitors" class="tab-panel" style="padding-bottom:20px">
+        <div id="competitor-formset">
+          {% for cf in competitor_fs %}
+            <div class="formset-row">
+              {{ cf.id }}
+              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fa-solid fa-times"></i></button>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Competitor Product</label>{{ cf.competitor_product_name }}
+                </div>
+                <div class="form-group">
+                  <label>Company</label>{{ cf.competitor_company }}
+                </div>
+                <div class="form-group full">
+                  <label>Notes</label>{{ cf.notes }}
+                </div>
+              </div>
+              {% for field in cf.hidden_fields %}{{ field }}{% endfor %}
+              <div class="form-group" style="margin-top:8px">
+                <label>Delete</label>{{ cf.DELETE }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('competitor-formset', 'competitors')">
+          <i class="fa-solid fa-plus"></i> Add Competitor
+        </button>
+      </div>
+
+      <!-- Pharmacy Tab -->
+      <div id="tab-pharmacies" class="tab-panel" style="padding-bottom:20px">
+        <div id="pharmacy-formset">
+          {% for ph in pharmacy_fs %}
+            <div class="formset-row">
+              {{ ph.id }}
+              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fa-solid fa-times"></i></button>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Store Name</label>{{ ph.store_name }}
+                </div>
+                <div class="form-group">
+                  <label>Location</label>{{ ph.store_location }}
+                </div>
+              </div>
+              {% for field in ph.hidden_fields %}{{ field }}{% endfor %}
+              <div class="form-group" style="margin-top:8px">
+                <label>Delete</label>{{ ph.DELETE }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="add-row-btn" onclick="addFormsetRow('pharmacy-formset', 'pharmacies')">
+          <i class="fa-solid fa-plus"></i> Add Pharmacy
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION: Remarks & Follow Up -->
+  <div class="form-section">
+    <div class="form-section-title"><i class="fa-solid fa-note-sticky"></i> Remarks &amp; Follow Up</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Next Follow Up Date</label>
+        {{ form.next_follow_up_date }}
+      </div>
+      <div class="form-group full">
+        <label>Remarks / Notes</label>
+        {{ form.remarks }}
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% url 'crm_doctors:visit_list' %}" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Visit
+    </button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── GPS CAPTURE ──────────────────────────────────────
+function captureGPS() {
+  const btn = document.querySelector('.gps-btn');
+  const status = document.getElementById('gpsStatus');
+
+  if (!navigator.geolocation) {
+    status.textContent = 'Geolocation not supported on this device.';
+    return;
+  }
+
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Capturing location...';
+  status.textContent = 'Please allow location access...';
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude.toFixed(7);
+      const lng = pos.coords.longitude.toFixed(7);
+
+      document.querySelector('[name="gps_latitude"]').value  = lat;
+      document.querySelector('[name="gps_longitude"]').value = lng;
+      document.querySelector('[name="is_gps_verified"]').value = 'true';
+
+      btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> GPS Captured';
+      btn.style.background = 'rgba(0,212,170,.2)';
+
+      // Reverse geocode with OpenStreetMap Nominatim (free)
+      try {
+        const resp = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+        );
+        const data = await resp.json();
+        const addr = data.display_name || `${lat}, ${lng}`;
+        document.querySelector('[name="gps_address"]').value = addr;
+        status.innerHTML = `<span style="color:var(--accent)"><i class="fa-solid fa-check"></i> ${addr.substring(0,80)}...</span>`;
+      } catch {
+        document.querySelector('[name="gps_address"]').value = `${lat}, ${lng}`;
+        status.innerHTML = `<span style="color:var(--accent)"><i class="fa-solid fa-check"></i> Lat: ${lat}, Lng: ${lng}</span>`;
+      }
+    },
+    (err) => {
+      btn.innerHTML = '<i class="fa-solid fa-crosshairs"></i> Retry GPS Capture';
+      status.innerHTML = `<span style="color:var(--danger)"><i class="fa-solid fa-xmark"></i> Error: ${err.message}</span>`;
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+// ── TAB NAVIGATION ───────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── FORMSET ADD / REMOVE ─────────────────────────────
+function removeRow(btn) {
+  const row = btn.closest('.formset-row');
+  const deleteInput = row.querySelector('[id$="-DELETE"]');
+  if (deleteInput) {
+    deleteInput.checked = true;
+    row.style.opacity = '0.3';
+    row.style.pointerEvents = 'none';
+  } else {
+    row.remove();
+  }
+}
+
+function addFormsetRow(containerId, prefix) {
+  const container   = document.getElementById(containerId);
+  const totalForms  = document.querySelector(`[name="${prefix}-TOTAL_FORMS"]`);
+  const currentCount = parseInt(totalForms.value);
+  const template    = container.querySelector('.formset-row');
+
+  if (!template) return;
+  const newRow = template.cloneNode(true);
+
+  // Update all field names and ids to new index
+  newRow.innerHTML = newRow.innerHTML
+    .replace(new RegExp(`${prefix}-\\d+-`, 'g'), `${prefix}-${currentCount}-`);
+
+  // Clear all input values
+  newRow.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.type === 'checkbox') el.checked = false;
+    else if (el.type !== 'hidden') el.value = '';
+  });
+
+  container.appendChild(newRow);
+  totalForms.value = currentCount + 1;
+}
+</script>
+{% endblock %}

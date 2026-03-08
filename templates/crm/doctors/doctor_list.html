@@ -1,0 +1,172 @@
+{% extends 'crm/base.html' %}
+{% block title %}Doctors — CRM{% endblock %}
+{% block nav_doctors %}active{% endblock %}
+{% block topbar_title %}Doctor Management{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_doctors:doctor_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Add Doctor
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Doctors</span>
+    </div>
+    <h1>Doctors</h1>
+    <p>{{ total }} doctor(s) in the network</p>
+  </div>
+</div>
+
+<!-- KPI Strip -->
+<div class="stats-grid" style="grid-template-columns:repeat(2,1fr);max-width:320px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ active }}</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--muted);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total|add:active|add:"-"|add:active }}</div>
+    <div class="stat-label">Total</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Doctor name, ID, hospital, specialty...">
+  </div>
+  <select name="specialty" style="width:190px">
+    <option value="">All Specialties</option>
+    {% for spec in specialties %}
+    <option value="{{ spec }}" {% if request.GET.specialty == spec %}selected{% endif %}>{{ spec }}</option>
+    {% endfor %}
+  </select>
+  <select name="status" style="width:140px">
+    <option value="">All Status</option>
+    <option value="active"   {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="inactive" {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.specialty or request.GET.status %}
+  <a href="{% url 'crm_doctors:doctor_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor ID</th>
+          <th>Name</th>
+          <th>Specialty</th>
+          <th>Hospital / Clinic</th>
+          <th>City / Area</th>
+          <th>Patients/Day</th>
+          <th>Prescription Potential</th>
+          <th>Assigned MRs</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ doc.doctor_id }}</code></td>
+          <td>
+            <a href="{% url 'crm_doctors:doctor_detail' doc.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              Dr. {{ doc.doctor_name }}
+            </a>
+            {% if doc.qualification %}
+            <br><span style="font-size:11px;color:var(--muted)">{{ doc.qualification }}</span>
+            {% endif %}
+          </td>
+          <td><span class="badge badge-blue">{{ doc.specialty }}</span></td>
+          <td>
+            {% if doc.hospital_name %}
+            <span style="font-size:13px">{{ doc.hospital_name }}</span>
+            {% endif %}
+            {% if doc.clinic_name %}
+            <br><span style="font-size:11px;color:var(--muted)">{{ doc.clinic_name }}</span>
+            {% endif %}
+            {% if not doc.hospital_name and not doc.clinic_name %}
+            <span style="color:var(--muted)">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {{ doc.city }}
+            {% if doc.area %}<br><span style="font-size:11px;color:var(--muted)">{{ doc.area.area_name }}</span>{% endif %}
+          </td>
+          <td style="text-align:center;font-weight:600">{{ doc.estimated_patients_per_day }}</td>
+          <td style="color:var(--accent);font-weight:600">
+            PKR {{ doc.estimated_prescription_potential|floatformat:0 }}
+          </td>
+          <td style="text-align:center">
+            <span class="badge badge-gray">{{ doc.assigned_mrs.count }}</span>
+          </td>
+          <td>
+            <span class="badge {% if doc.status == 'active' %}badge-green{% else %}badge-gray{% endif %}">
+              {{ doc.get_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_doctors:doctor_detail' doc.pk %}" class="btn btn-ghost btn-sm" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="{% url 'crm_doctors:doctor_edit' doc.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_doctors:doctor_delete' doc.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="10">
+            <div class="empty-state">
+              <i class="fa-solid fa-user-doctor"></i>
+              <h3>No doctors found</h3>
+              <p>Add your first doctor or try a different search.</p>
+              <a href="{% url 'crm_doctors:doctor_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Doctor
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&specialty={{ request.GET.specialty }}&status={{ request.GET.status }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&q={{ query }}&specialty={{ request.GET.specialty }}&status={{ request.GET.status }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&specialty={{ request.GET.specialty }}&status={{ request.GET.status }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ mr.name }} — CRM{% endblock %}
+{% block nav_mrs %}active{% endblock %}
+{% block topbar_title %}MR Profile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div style="display:flex;align-items:center;gap:16px">
+    {% if mr.profile_image %}
+    <img src="{{ mr.profile_image.url }}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0">
+    {% else %}
+    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#0d0f14;flex-shrink:0">
+      {{ mr.name|slice:":1"|upper }}
+    </div>
+    {% endif %}
+    <div>
+      <div class="breadcrumb">
+        <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+        <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+        <a href="{% url 'crm_sales:mr_list' %}">Medical Reps</a>
+        <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+        <span>{{ mr.name }}</span>
+      </div>
+      <h1 style="margin-bottom:2px">{{ mr.name }}</h1>
+      <p style="margin:0">
+        <code style="font-size:12px;color:var(--muted)">{{ mr.mr_id }}</code>
+        {% if mr.division %}&nbsp;&mdash;&nbsp;<span style="color:var(--muted)">{{ mr.division.name }}</span>{% endif %}
+      </p>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="badge
+      {% if mr.status == 'active' %}badge-green
+      {% elif mr.status == 'on_leave' %}badge-yellow
+      {% elif mr.status == 'terminated' %}badge-red
+      {% else %}badge-gray{% endif %}" style="font-size:13px;padding:6px 14px">
+      {{ mr.get_status_display }}
+    </span>
+    <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost">
+      <i class="fa-solid fa-plus"></i> Log Visit
+    </a>
+    <a href="{% url 'crm_sales:mr_edit' mr.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_sales:mr_delete' mr.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-route"></i></div>
+    <div class="stat-value">{{ total_visits }}</div>
+    <div class="stat-label">Total Visits</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)">
+      <i class="fa-solid fa-location-dot"></i>
+    </div>
+    <div class="stat-value" style="color:var(--accent2)">{{ gps_visits }}</div>
+    <div class="stat-label">GPS Verified</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--warn)">
+    <div class="stat-icon" style="background:rgba(255,184,48,.1);color:var(--warn)">
+      <i class="fa-solid fa-user-doctor"></i>
+    </div>
+    <div class="stat-value" style="color:var(--warn)">{{ assigned_doctors.count }}</div>
+    <div class="stat-label">Assigned Doctors</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-percent"></i></div>
+    <div class="stat-value">
+      {% if total_visits > 0 %}
+        {% widthratio gps_visits total_visits 100 %}%
+      {% else %}—{% endif %}
+    </div>
+    <div class="stat-label">GPS Compliance</div>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left Column -->
+  <div>
+
+    <!-- Personal Info -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-user" style="color:var(--accent);margin-right:8px"></i>Personal Information
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Full Name</div>
+            <div style="font-weight:600">{{ mr.name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">CNIC</div>
+            <div><code style="font-size:12px;color:var(--muted)">{{ mr.cnic }}</code></div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Phone</div>
+            <div>{{ mr.phone_number }}</div>
+          </div>
+          {% if mr.email %}
+          <div class="kv-row">
+            <div class="kv-key">Email</div>
+            <div style="color:var(--muted)">{{ mr.email }}</div>
+          </div>
+          {% endif %}
+          {% if mr.address %}
+          <div class="kv-row">
+            <div class="kv-key">Address</div>
+            <div style="color:var(--muted)">{{ mr.address }}</div>
+          </div>
+          {% endif %}
+          <div class="kv-row">
+            <div class="kv-key">Date of Joining</div>
+            <div>{{ mr.date_of_joining|date:"d F Y"|default:"—" }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Monthly Salary</div>
+            <div style="font-weight:600">PKR {{ mr.salary|floatformat:0 }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Territory -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-map-location-dot" style="color:var(--accent);margin-right:8px"></i>Territory
+        </span>
+      </div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          {% if mr.division %}
+          <span class="badge badge-blue">{{ mr.division.name }}</span>
+          <i class="fa-solid fa-chevron-right" style="font-size:9px;color:var(--muted)"></i>
+          {% endif %}
+          {% if mr.region %}
+          <span class="badge badge-gray">{{ mr.region.region_name }}</span>
+          <i class="fa-solid fa-chevron-right" style="font-size:9px;color:var(--muted)"></i>
+          {% endif %}
+          {% if mr.area %}
+          <span class="badge badge-green">{{ mr.area.area_name }}</span>
+          {% endif %}
+          {% if not mr.division and not mr.region and not mr.area %}
+          <span style="color:var(--muted);font-size:13px">No territory assigned yet.</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Visits -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-clock-rotate-left" style="color:var(--accent);margin-right:8px"></i>Recent Visits
+        </span>
+        <a href="{% url 'crm_doctors:visit_list' %}?mr={{ mr.pk }}" class="btn btn-ghost btn-sm">View All</a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Doctor</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>GPS</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for visit in recent_visits %}
+            <tr>
+              <td>
+                <span style="font-weight:500">Dr. {{ visit.doctor.doctor_name }}</span><br>
+                <span style="font-size:11px;color:var(--muted)">{{ visit.doctor.specialty }}</span>
+              </td>
+              <td style="color:var(--muted);font-size:12px;white-space:nowrap">
+                {{ visit.visit_date|date:"d M Y" }}
+              </td>
+              <td>
+                <span class="badge badge-blue" style="font-size:11px">{{ visit.get_visit_type_display }}</span>
+              </td>
+              <td>
+                {% if visit.is_gps_verified %}
+                <span class="gps-dot gps-ok" title="GPS Verified"></span>
+                {% else %}
+                <span class="gps-dot gps-off" title="Not Verified"></span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{% url 'crm_doctors:visit_detail' visit.pk %}" class="btn btn-ghost btn-sm">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" style="text-align:center;color:var(--muted);padding:20px">
+                No visits logged yet.
+                <a href="{% url 'crm_doctors:visit_create' %}" style="color:var(--accent)">Log first visit</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column -->
+  <div>
+
+    <!-- GPS Compliance Card -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title">GPS Compliance</span></div>
+      <div class="card-body">
+        {% if total_visits > 0 %}
+        {% with pct=gps_visits|floatformat:0 %}
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <span style="font-size:13px;color:var(--muted)">{{ gps_visits }} of {{ total_visits }} visits verified</span>
+          <span style="font-size:22px;font-weight:800;color:
+            {% widthratio gps_visits total_visits 100 as gps_pct %}
+            {% if gps_pct >= 80 %}var(--accent){% elif gps_pct >= 50 %}var(--warn){% else %}var(--danger){% endif %}">
+            {% widthratio gps_visits total_visits 100 %}%
+          </span>
+        </div>
+        <div style="height:10px;background:var(--border);border-radius:5px;overflow:hidden">
+          <div style="height:100%;border-radius:5px;transition:width .6s;
+            width:{% widthratio gps_visits total_visits 100 %}%;
+            background:{% widthratio gps_visits total_visits 100 as gps_pct %}
+            {% if gps_pct >= 80 %}var(--accent){% elif gps_pct >= 50 %}var(--warn){% else %}var(--danger){% endif %}">
+          </div>
+        </div>
+        {% endwith %}
+        {% else %}
+        <div style="text-align:center;color:var(--muted);font-size:13px;padding:10px 0">No visits yet.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Assigned Doctors -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-user-doctor" style="color:var(--accent);margin-right:8px"></i>Assigned Doctors
+        </span>
+        <span class="badge badge-blue">{{ assigned_doctors.count }}</span>
+      </div>
+      <div style="max-height:280px;overflow-y:auto">
+        {% for doc in assigned_doctors %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid var(--border)">
+          <div>
+            <a href="{% url 'crm_doctors:doctor_detail' doc.pk %}" style="color:var(--text);text-decoration:none;font-size:13.5px;font-weight:500">
+              Dr. {{ doc.doctor_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ doc.specialty }} &mdash; {{ doc.city }}</span>
+          </div>
+          <span class="badge {% if doc.status == 'active' %}badge-green{% else %}badge-gray{% endif %}">
+            {{ doc.get_status_display }}
+          </span>
+        </div>
+        {% empty %}
+        <div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">
+          No doctors assigned yet.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> Log New Visit
+        </a>
+        <a href="{% url 'crm_doctors:visit_list' %}?mr={{ mr.pk }}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-list"></i> All Visits by this MR
+        </a>
+        <a href="{% url 'crm_sales:mr_edit' mr.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Profile
+        </a>
+        <a href="{% url 'crm_analytics:mr_performance' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-chart-line"></i> Performance Report
+        </a>
+        <a href="{% url 'crm_sales:mr_delete' mr.pk %}" class="btn btn-danger" style="justify-content:center">
+          <i class="fa-solid fa-trash"></i> Delete MR
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

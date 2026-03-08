@@ -1,0 +1,110 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Batch — CRM{% endblock %}
+{% block nav_batches %}active{% endblock %}
+{% block topbar_title %}{{ action }} Batch{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:batch_list' %}">Batches</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{% if obj %}{{ obj.batch_number }}{% else %}New Batch{% endif %}</span>
+    </div>
+    <h1>{{ action }} Batch</h1>
+    <p>{% if obj %}Edit batch record {{ obj.batch_number }}.{% else %}Register a new production batch.{% endif %}</p>
+  </div>
+</div>
+
+<form method="post" style="max-width:860px">
+  {% csrf_token %}
+
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-boxes-stacked"></i> Batch Information
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Batch Number *</label>
+        {{ form.batch_number }}
+      </div>
+      <div class="form-group">
+        <label>Product *</label>
+        {{ form.product }}
+      </div>
+      <div class="form-group">
+        <label>Manufacturing Date *</label>
+        {{ form.manufacturing_date }}
+      </div>
+      <div class="form-group">
+        <label>Expiry Date *</label>
+        {{ form.expiry_date }}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-cubes"></i> Quantity Tracking
+    </div>
+
+    <!-- Visual aid for the closing stock formula -->
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:18px;font-size:13px;color:var(--muted)">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent2);margin-right:6px"></i>
+      Available in Company = Quantity Manufactured − Quantity Sent to Distributors
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Quantity Manufactured *</label>
+        {{ form.quantity_manufactured }}
+      </div>
+      <div class="form-group">
+        <label>Quantity Sent to Distributors</label>
+        {{ form.quantity_sent_to_distributors }}
+      </div>
+    </div>
+
+    <!-- Live calculator -->
+    <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:14px;margin-top:4px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Available in Company (Calculated)</div>
+      <div id="availableCalc" style="font-size:26px;font-weight:800;color:var(--accent)">—</div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-note-sticky"></i> Notes
+    </div>
+    <div class="form-group">
+      <label>Notes (Optional)</label>
+      {{ form.notes }}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% if obj %}{% url 'crm_products:batch_detail' obj.pk %}{% else %}{% url 'crm_products:batch_list' %}{% endif %}" class="btn btn-ghost">
+      Cancel
+    </a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Batch
+    </button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function updateCalc() {
+    const mfg  = parseInt(document.querySelector('[name="quantity_manufactured"]').value)  || 0;
+    const sent = parseInt(document.querySelector('[name="quantity_sent_to_distributors"]').value) || 0;
+    const avail = Math.max(0, mfg - sent);
+    document.getElementById('availableCalc').textContent = avail.toLocaleString();
+  }
+  document.querySelector('[name="quantity_manufactured"]').addEventListener('input', updateCalc);
+  document.querySelector('[name="quantity_sent_to_distributors"]').addEventListener('input', updateCalc);
+  updateCalc();
+</script>
+{% endblock %}

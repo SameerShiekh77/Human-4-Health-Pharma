@@ -1,0 +1,178 @@
+{% extends 'crm/base.html' %}
+{% block title %}Medical Representatives — CRM{% endblock %}
+{% block nav_mrs %}active{% endblock %}
+{% block topbar_title %}Medical Representatives{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'crm_sales:mr_create' %}" class="btn btn-primary btn-sm">
+  <i class="fa-solid fa-plus"></i> Add MR
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Medical Representatives</span>
+    </div>
+    <h1>Medical Representatives</h1>
+    <p>{{ total }} MR(s) in the field force</p>
+  </div>
+</div>
+
+<!-- KPI Strip -->
+<div class="stats-grid" style="grid-template-columns:repeat(2,1fr);max-width:300px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ active }}</div>
+    <div class="stat-label">Active</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--muted);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total }}</div>
+    <div class="stat-label">Total</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Name, MR ID, CNIC, phone...">
+  </div>
+  <select name="region" style="width:190px">
+    <option value="">All Regions</option>
+    {% for region in regions %}
+    <option value="{{ region.pk }}" {% if request.GET.region == region.pk|stringformat:"s" %}selected{% endif %}>
+      {{ region.region_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <select name="status" style="width:150px">
+    <option value="">All Status</option>
+    <option value="active"     {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
+    <option value="inactive"   {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
+    <option value="on_leave"   {% if request.GET.status == 'on_leave' %}selected{% endif %}>On Leave</option>
+    <option value="terminated" {% if request.GET.status == 'terminated' %}selected{% endif %}>Terminated</option>
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.region or request.GET.status %}
+  <a href="{% url 'crm_sales:mr_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>MR ID</th>
+          <th>Name</th>
+          <th>Contact</th>
+          <th>Territory</th>
+          <th>Joined</th>
+          <th>Salary</th>
+          <th>Total Visits</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mr in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ mr.mr_id }}</code></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              {% if mr.profile_image %}
+              <img src="{{ mr.profile_image.url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0">
+              {% else %}
+              <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0d0f14;flex-shrink:0">
+                {{ mr.name|slice:":1"|upper }}
+              </div>
+              {% endif %}
+              <div>
+                <a href="{% url 'crm_sales:mr_detail' mr.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+                  {{ mr.name }}
+                </a><br>
+                <span style="font-size:11px;color:var(--muted)">{{ mr.cnic }}</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span style="font-size:13px">{{ mr.phone_number }}</span><br>
+            {% if mr.email %}
+            <span style="font-size:11px;color:var(--muted)">{{ mr.email }}</span>
+            {% endif %}
+          </td>
+          <td style="font-size:12px">
+            {% if mr.division %}<div style="color:var(--muted)">{{ mr.division.name }}</div>{% endif %}
+            {% if mr.region %}<div>{{ mr.region.region_name }}</div>{% endif %}
+            {% if mr.area %}<div style="color:var(--muted)">{{ mr.area.area_name }}</div>{% endif %}
+          </td>
+          <td style="color:var(--muted);font-size:12px">
+            {{ mr.date_of_joining|date:"d M Y"|default:"—" }}
+          </td>
+          <td style="font-weight:600">PKR {{ mr.salary|floatformat:0 }}</td>
+          <td style="text-align:center">
+            <span class="badge badge-blue">{{ mr.doctor_visits.count }}</span>
+          </td>
+          <td>
+            <span class="badge
+              {% if mr.status == 'active' %}badge-green
+              {% elif mr.status == 'on_leave' %}badge-yellow
+              {% elif mr.status == 'terminated' %}badge-red
+              {% else %}badge-gray{% endif %}">
+              {{ mr.get_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_sales:mr_detail' mr.pk %}" class="btn btn-ghost btn-sm" title="View">
+                <i class="fa-solid fa-eye"></i>
+              </a>
+              <a href="{% url 'crm_sales:mr_edit' mr.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_sales:mr_delete' mr.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">
+            <div class="empty-state">
+              <i class="fa-solid fa-user-tie"></i>
+              <h3>No medical representatives found</h3>
+              <p>Add your field team to start tracking visits.</p>
+              <a href="{% url 'crm_sales:mr_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add MR
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&region={{ request.GET.region }}&status={{ request.GET.status }}"><i class="fa-solid fa-chevron-left"></i></a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+      <a class="page-link" href="?page={{ n }}&q={{ query }}&region={{ request.GET.region }}&status={{ request.GET.status }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&region={{ request.GET.region }}&status={{ request.GET.status }}"><i class="fa-solid fa-chevron-right"></i></a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

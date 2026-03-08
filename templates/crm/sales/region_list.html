@@ -1,0 +1,127 @@
+{% extends 'crm/base.html' %}
+{% block title %}Regions — CRM{% endblock %}
+{% block nav_regions %}active{% endblock %}
+{% block topbar_title %}Regions{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'crm_sales:region_create' %}" class="btn btn-primary btn-sm">
+  <i class="fa-solid fa-plus"></i> Add Region
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Regions</span>
+    </div>
+    <h1>Sales Regions</h1>
+    <p>{{ total }} region(s) across all divisions</p>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Region name or manager...">
+  </div>
+  <select name="division" style="width:200px">
+    <option value="">All Divisions</option>
+    {% for div in divisions %}
+    <option value="{{ div.pk }}" {% if request.GET.division == div.pk|stringformat:"s" %}selected{% endif %}>
+      {{ div.name }}
+    </option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.division %}
+  <a href="{% url 'crm_sales:region_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Region ID</th>
+          <th>Region Name</th>
+          <th>Division</th>
+          <th>Regional Manager</th>
+          <th>Areas</th>
+          <th>MRs</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for region in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ region.region_id }}</code></td>
+          <td style="font-weight:500">{{ region.region_name }}</td>
+          <td>
+            <span class="badge badge-blue">{{ region.division.name }}</span>
+          </td>
+          <td style="color:var(--muted)">{{ region.regional_manager|default:"—" }}</td>
+          <td style="text-align:center">
+            <span class="badge badge-gray">{{ region.area_count }}</span>
+          </td>
+          <td style="text-align:center">
+            <span class="badge badge-gray">{{ region.mrs.count }}</span>
+          </td>
+          <td>
+            <span class="badge {% if region.is_active %}badge-green{% else %}badge-gray{% endif %}">
+              {% if region.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_sales:region_edit' region.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_sales:region_delete' region.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">
+            <div class="empty-state">
+              <i class="fa-solid fa-map"></i>
+              <h3>No regions found</h3>
+              <p>Create your first sales region to build the territory structure.</p>
+              <a href="{% url 'crm_sales:region_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Region
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&division={{ request.GET.division }}"><i class="fa-solid fa-chevron-left"></i></a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+      <a class="page-link" href="?page={{ n }}&q={{ query }}&division={{ request.GET.division }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&division={{ request.GET.division }}"><i class="fa-solid fa-chevron-right"></i></a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

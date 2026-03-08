@@ -1,0 +1,492 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Health4Human CRM{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg:       #0d0f14;
+      --surface:  #14171f;
+      --card:     #1a1e28;
+      --border:   #242836;
+      --accent:   #00d4aa;
+      --accent2:  #4f7cff;
+      --danger:   #ff4d6d;
+      --warn:     #ffb830;
+      --text:     #e8eaf0;
+      --muted:    #6b7280;
+      --sidebar-w: 260px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      overflow-y: auto;
+    }
+    .sidebar-brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-brand .logo-mark {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+    .sidebar-brand .logo-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .nav-section {
+      padding: 12px 12px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      margin: 2px 8px;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: all .15s;
+    }
+    .nav-item:hover { background: var(--card); color: var(--text); }
+    .nav-item.active { background: rgba(0,212,170,.12); color: var(--accent); }
+    .nav-item i { width: 16px; text-align: center; font-size: 13px; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 20px;
+    }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .footer-name { font-size: 13px; font-weight: 500; }
+    .footer-role { font-size: 11px; color: var(--muted); }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+    }
+    .topbar-actions { display: flex; align-items: center; gap: 12px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all .15s;
+    }
+    .btn-primary { background: var(--accent); color: #0d0f14; }
+    .btn-primary:hover { background: #00bfa0; color: #0d0f14; }
+    .btn-ghost { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-danger { background: rgba(255,77,109,.15); color: var(--danger); border: 1px solid rgba(255,77,109,.3); }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+    .btn-sm { padding: 5px 11px; font-size: 12px; }
+
+    /* ── PAGE CONTENT ── */
+    .page-content { padding: 28px; flex: 1; }
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .page-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .page-header p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+    .breadcrumb {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--muted); margin-bottom: 8px;
+    }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--text); }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .card-body { padding: 20px; }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent-color, var(--accent));
+    }
+    .stat-card .stat-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(0,212,170,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .stat-card .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-card .stat-label {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .stat-card .stat-delta {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.02); }
+    tbody td { padding: 13px 16px; vertical-align: middle; }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-green  { background: rgba(0,212,170,.12); color: var(--accent); }
+    .badge-red    { background: rgba(255,77,109,.12); color: var(--danger); }
+    .badge-yellow { background: rgba(255,184,48,.12); color: var(--warn); }
+    .badge-blue   { background: rgba(79,124,255,.12); color: var(--accent2); }
+    .badge-gray   { background: rgba(107,114,128,.12); color: var(--muted); }
+
+    /* ── FORMS ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+    @media (max-width: 768px) {
+      .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; }
+    input, select, textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-family: 'DM Sans', sans-serif;
+      transition: border .15s;
+      width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,212,170,.1);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-section {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .form-section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── ALERT / MESSAGES ── */
+    .alert { padding: 12px 16px; border-radius: 8px; font-size: 13.5px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .alert-success { background: rgba(0,212,170,.1); border: 1px solid rgba(0,212,170,.3); color: var(--accent); }
+    .alert-error   { background: rgba(255,77,109,.1); border: 1px solid rgba(255,77,109,.3); color: var(--danger); }
+    .alert-warning { background: rgba(255,184,48,.1); border: 1px solid rgba(255,184,48,.3); color: var(--warn); }
+
+    /* ── SEARCH BAR ── */
+    .search-bar {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .search-input-wrap { position: relative; flex: 1; min-width: 220px; }
+    .search-input-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; }
+    .search-input-wrap input { padding-left: 36px; }
+
+    /* ── PAGINATION ── */
+    .pagination { display: flex; align-items: center; gap: 6px; justify-content: center; padding: 20px 0 4px; }
+    .page-link {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; text-decoration: none; color: var(--muted);
+      border: 1px solid var(--border); background: var(--card);
+      transition: all .15s;
+    }
+    .page-link:hover, .page-link.active { background: var(--accent); color: #0d0f14; border-color: var(--accent); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state i { font-size: 48px; margin-bottom: 16px; opacity: .3; }
+    .empty-state h3 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+
+    /* ── GPS INDICATOR ── */
+    .gps-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+    .gps-ok   { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+    .gps-fail { background: var(--muted); }
+
+    /* ── DETAIL VIEW ── */
+    .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    @media(max-width:900px){ .detail-grid { grid-template-columns: 1fr; } }
+    .kv-list { display: flex; flex-direction: column; gap: 0; }
+    .kv-row { display: flex; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+    .kv-row:last-child { border-bottom: none; }
+    .kv-key { width: 180px; flex-shrink: 0; color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; padding-top: 2px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo-mark">Health4Human</div>
+    <div class="logo-sub">Pharma CRM</div>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <a href="{% url 'crm_analytics:dashboard' %}" class="nav-item {% block nav_dashboard %}{% endblock %}">
+    <i class="fa-solid fa-chart-pie"></i> Dashboard
+  </a>
+
+  <div class="nav-section">Products</div>
+   <a href="{% url 'crm_products:division_list' %}" class="nav-item {% block nav_divisions %}{% endblock %}">
+    <i class="fa-solid fa-sitemap"></i> Divisions
+  </a>
+  <a href="{% url 'crm_products:product_list' %}" class="nav-item {% block nav_products %}{% endblock %}">
+    <i class="fa-solid fa-pills"></i> Products
+  </a>
+  <a href="{% url 'crm_products:batch_list' %}" class="nav-item {% block nav_batches %}{% endblock %}">
+    <i class="fa-solid fa-boxes-stacked"></i> Batches
+  </a>
+  <a href="{% url 'crm_products:stock_list' %}" class="nav-item {% block nav_stock %}{% endblock %}">
+    <i class="fa-solid fa-warehouse"></i> Company Stock
+  </a>
+ 
+
+  <div class="nav-section">Distribution</div>
+  <a href="{% url 'crm_distributors:distributor_list' %}" class="nav-item {% block nav_distributors %}{% endblock %}">
+    <i class="fa-solid fa-truck"></i> Distributors
+  </a>
+  <a href="{% url 'crm_distributors:stock_entry_list' %}" class="nav-item {% block nav_stock_entries %}{% endblock %}">
+    <i class="fa-solid fa-file-invoice"></i> Stock Entries
+  </a>
+
+  <div class="nav-section">Sales Force</div>
+  <a href="{% url 'crm_sales:region_list' %}" class="nav-item {% block nav_regions %}{% endblock %}">
+    <i class="fa-solid fa-map"></i> Regions
+  </a>
+  <a href="{% url 'crm_sales:area_list' %}" class="nav-item {% block nav_areas %}{% endblock %}">
+    <i class="fa-solid fa-location-dot"></i> Areas
+  </a>
+  <a href="{% url 'crm_sales:mr_list' %}" class="nav-item {% block nav_mrs %}{% endblock %}">
+    <i class="fa-solid fa-user-tie"></i> Medical Reps
+  </a>
+
+  <div class="nav-section">Field Activity</div>
+  <a href="{% url 'crm_doctors:doctor_list' %}" class="nav-item {% block nav_doctors %}{% endblock %}">
+    <i class="fa-solid fa-user-doctor"></i> Doctors
+  </a>
+  <a href="{% url 'crm_doctors:visit_list' %}" class="nav-item {% block nav_visits %}{% endblock %}">
+    <i class="fa-solid fa-clipboard-list"></i> Visit Log
+  </a>
+  <a href="{% url 'crm_doctors:visit_create' %}" class="nav-item {% block nav_visit_new %}{% endblock %}">
+    <i class="fa-solid fa-plus-circle"></i> New Visit
+  </a>
+
+  <div class="nav-section">Retail</div>
+  <a href="{% url 'crm_stores:store_list' %}" class="nav-item {% block nav_stores %}{% endblock %}">
+    <i class="fa-solid fa-store"></i> Medical Stores
+  </a>
+
+  <div class="nav-section">Analytics</div>
+  <a href="{% url 'crm_analytics:mr_performance' %}" class="nav-item {% block nav_mr_perf %}{% endblock %}">
+    <i class="fa-solid fa-ranking-star"></i> MR Performance
+  </a>
+  <a href="{% url 'crm_analytics:doctor_performance' %}" class="nav-item {% block nav_doc_perf %}{% endblock %}">
+    <i class="fa-solid fa-stethoscope"></i> Doctor ROI
+  </a>
+  <a href="{% url 'crm_analytics:distributor_performance' %}" class="nav-item {% block nav_dist_perf %}{% endblock %}">
+    <i class="fa-solid fa-chart-bar"></i> Distributor Perf.
+  </a>
+  <a href="{% url 'crm_analytics:expiry_alerts' %}" class="nav-item {% block nav_alerts %}{% endblock %}">
+    <i class="fa-solid fa-triangle-exclamation"></i> Expiry Alerts
+    {% if expiry_alert_count %}<span class="nav-badge">{{ expiry_alert_count }}</span>{% endif %}
+  </a>
+
+  <div class="sidebar-footer">
+    <div class="avatar">{{ request.user.username|slice:":1"|upper }}</div>
+    <div>
+      <div class="footer-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+      <div class="footer-role">Administrator</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-title">{% block topbar_title %}CRM{% endblock %}</div>
+    <div class="topbar-actions">
+      {% block topbar_actions %}{% endblock %}
+      <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-primary btn-sm">
+        <i class="fa-solid fa-plus"></i> New Visit
+      </a>
+    </div>
+  </header>
+
+  <div class="page-content">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% else %}success{% endif %}">
+          <i class="fa-solid fa-{% if message.tags == 'error' %}circle-xmark{% elif message.tags == 'warning' %}triangle-exclamation{% else %}circle-check{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

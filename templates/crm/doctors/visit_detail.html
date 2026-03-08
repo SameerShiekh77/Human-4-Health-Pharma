@@ -1,0 +1,122 @@
+{% extends "crm/base.html" %}
+{% comment %}FILE: templates/crm/doctors/visit_detail.html{% endcomment %}
+{% block title %}Visit #{{ visit.pk }} — CRM{% endblock %}
+{% block nav_visits %}active{% endblock %}
+{% block topbar_title %}Visit Detail{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb"><a href="{% url 'crm_doctors:visit_list' %}">Visit Log</a> <i class="fa-solid fa-chevron-right" style="font-size:9px"></i> <span>Visit #{{ visit.pk }}</span></div>
+    <h1>Dr. {{ visit.doctor.doctor_name }}</h1>
+    <p>{{ visit.mr.name }} &mdash; {{ visit.visit_date|date:"d F Y" }} at {{ visit.visit_time|time:"H:i" }}</p>
+  </div>
+  <div style="display:flex;gap:8px">
+    <a href="{% url 'crm_doctors:visit_edit' visit.pk %}" class="btn btn-ghost"><i class="fa-solid fa-pen"></i> Edit</a>
+    <a href="{% url 'crm_doctors:visit_delete' visit.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+  </div>
+</div>
+<div class="detail-grid">
+  <div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">Visit Info</span>
+        <span class="badge {% if visit.is_gps_verified %}badge-green{% else %}badge-gray{% endif %}">
+          {% if visit.is_gps_verified %}<span class="gps-dot gps-ok"></span>GPS Verified{% else %}No GPS{% endif %}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row"><div class="kv-key">MR</div><div>{{ visit.mr.name }} <span style="color:var(--muted)">({{ visit.mr.mr_id }})</span></div></div>
+          <div class="kv-row"><div class="kv-key">Doctor</div><div>Dr. {{ visit.doctor.doctor_name }} &mdash; {{ visit.doctor.specialty }}</div></div>
+          <div class="kv-row"><div class="kv-key">Visit Type</div><div><span class="badge badge-blue">{{ visit.get_visit_type_display }}</span></div></div>
+          <div class="kv-row"><div class="kv-key">Location</div><div style="font-size:12px;color:var(--muted)">{{ visit.gps_address|default:"Not captured" }}</div></div>
+          {% if visit.gps_latitude and visit.gps_longitude %}
+          <div class="kv-row"><div class="kv-key">Coordinates</div><div style="font-size:12px;color:var(--muted)">{{ visit.gps_latitude }}, {{ visit.gps_longitude }}</div></div>
+          {% endif %}
+          <div class="kv-row"><div class="kv-key">Next Follow Up</div><div>{{ visit.next_follow_up_date|date:"d M Y"|default:"—" }}</div></div>
+          <div class="kv-row"><div class="kv-key">Remarks</div><div style="color:var(--muted)">{{ visit.remarks|default:"—" }}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header"><span class="card-title"><i class="fa-solid fa-pills" style="color:var(--accent);margin-right:6px"></i>Products Discussed</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Samples</th><th>Units/Day</th><th>Units/Month</th><th>Value/Month</th></tr></thead>
+          <tbody>
+            {% for pd in visit.product_details.all %}
+            <tr>
+              <td style="font-weight:500">{{ pd.product.product_name }}<br><span style="font-size:11px;color:var(--muted)">{{ pd.product.strength }}</span></td>
+              <td>{{ pd.samples_given }}</td>
+              <td>{{ pd.estimated_units_prescribed_per_day }}</td>
+              <td>{{ pd.estimated_units_prescribed_per_month }}</td>
+              <td style="font-weight:600;color:var(--accent)">PKR {{ pd.estimated_value_per_month }}</td>
+            </tr>
+            {% empty %}<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px">No products recorded</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% if visit.competitor_info.exists %}
+    <div class="card">
+      <div class="card-header"><span class="card-title"><i class="fa-solid fa-binoculars" style="color:var(--warn);margin-right:6px"></i>Competitor Products</span></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Product</th><th>Company</th><th>Notes</th></tr></thead>
+          <tbody>
+            {% for ci in visit.competitor_info.all %}
+            <tr><td>{{ ci.competitor_product_name }}</td><td>{{ ci.competitor_company }}</td><td style="color:var(--muted)">{{ ci.notes|default:"—" }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  <div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title">Investment Given</span></div>
+      <div class="card-body">
+        {% for inv in visit.investments.all %}
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px">
+          <span><span class="badge badge-yellow">{{ inv.get_investment_type_display }}</span> {{ inv.description|default:"" }}</span>
+          <span style="font-weight:600">PKR {{ inv.amount }}</span>
+        </div>
+        {% empty %}<p style="color:var(--muted);font-size:13px">No investment recorded</p>{% endfor %}
+        <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:700">
+          <span>Total</span><span style="color:var(--accent)">PKR {{ visit.total_investment|floatformat:2 }}</span>
+        </div>
+      </div>
+    </div>
+    {% if visit.pharmacy_references.exists %}
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title">Pharmacy References</span></div>
+      <div class="card-body">
+        {% for ph in visit.pharmacy_references.all %}
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px">
+          <div style="font-weight:500">{{ ph.store_name }}</div>
+          <div style="color:var(--muted);font-size:12px">{{ ph.store_location|default:"" }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><span class="card-title">Visit ROI</span></div>
+      <div class="card-body">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13.5px">
+          <span style="color:var(--muted)">Est. Revenue</span>
+          <span style="color:var(--accent);font-weight:600">PKR {{ visit.total_estimated_value|floatformat:2 }}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13.5px">
+          <span style="color:var(--muted)">Investment</span>
+          <span style="color:var(--danger);font-weight:600">PKR {{ visit.total_investment|floatformat:2 }}</span>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;justify-content:space-between;font-weight:700;font-size:15px">
+          <span>ROI</span><span style="color:var(--accent)">PKR {{ visit.total_estimated_value|floatformat:2 }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

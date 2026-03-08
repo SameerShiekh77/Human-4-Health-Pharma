@@ -12,7 +12,14 @@ urlpatterns = [
     path('',include('core.urls')),
     path('dashboard/hr/',include('hr.urls')),
     path('dashboard/products/',include('products.urls')),
-     path("__reload__/", include("django_browser_reload.urls")),
+    path("__reload__/", include("django_browser_reload.urls")),
+     
+    path('crm/',               include('crm_analytics.urls')),       # /crm/  → dashboard
+    path('crm/products/',      include('crm_products.urls')),        # /crm/products/
+    path('crm/distributors/',  include('crm_distributors.urls')),    # /crm/distributors/
+    path('crm/sales/',         include('crm_sales.urls')),           # /crm/sales/
+    path('crm/doctors/',       include('crm_doctors.urls')),         # /crm/doctors/
+    path('crm/stores/',        include('crm_stores.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

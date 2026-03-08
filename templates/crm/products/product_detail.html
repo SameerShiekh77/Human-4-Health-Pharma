@@ -1,0 +1,236 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ product.product_name }} — CRM{% endblock %}
+{% block nav_products %}active{% endblock %}
+{% block topbar_title %}Product Detail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:product_list' %}">Products</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ product.product_name }}</span>
+    </div>
+    <h1>{{ product.product_name }}</h1>
+    <p>{{ product.generic_name }} &mdash; {{ product.strength }}</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="badge {% if product.status == 'active' %}badge-green{% else %}badge-gray{% endif %}" style="font-size:13px;padding:6px 14px">
+      {{ product.get_status_display }}
+    </span>
+    <a href="{% url 'crm_products:product_edit' product.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_products:product_delete' product.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left Column -->
+  <div>
+
+    <!-- Product Info Card -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-pills" style="color:var(--accent);margin-right:8px"></i>Product Information</span>
+        <code style="font-size:12px;color:var(--muted)">{{ product.product_id }}</code>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Product Name</div>
+            <div style="font-weight:600">{{ product.product_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Brand Name</div>
+            <div>{{ product.brand_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Generic Name</div>
+            <div>{{ product.generic_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Category</div>
+            <div><span class="badge badge-blue">{{ product.get_category_display }}</span></div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Strength</div>
+            <div>{{ product.strength }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Packing Size</div>
+            <div>{{ product.packing_size }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Division</div>
+            <div>{{ product.division.name|default:"—" }}</div>
+          </div>
+          {% if product.description %}
+          <div class="kv-row">
+            <div class="kv-key">Description</div>
+            <div style="color:var(--muted)">{{ product.description }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Batches Table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-boxes-stacked" style="color:var(--accent);margin-right:8px"></i>Batches</span>
+        <a href="{% url 'crm_products:batch_create' %}" class="btn btn-ghost btn-sm">
+          <i class="fa-solid fa-plus"></i> Add Batch
+        </a>
+      </div>
+
+      <!-- Batch KPIs -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)">
+        <div style="background:var(--card);padding:14px;text-align:center">
+          <div style="font-size:20px;font-weight:800;color:var(--accent)">{{ active_batches }}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Active</div>
+        </div>
+        <div style="background:var(--card);padding:14px;text-align:center">
+          <div style="font-size:20px;font-weight:800;color:var(--warn)">{{ near_expiry_batches }}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Near Expiry</div>
+        </div>
+        <div style="background:var(--card);padding:14px;text-align:center">
+          <div style="font-size:20px;font-weight:800;color:var(--danger)">{{ expired_batches }}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Expired</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Batch No.</th>
+              <th>Mfg Date</th>
+              <th>Expiry Date</th>
+              <th>Manufactured</th>
+              <th>Available</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for batch in batches %}
+            <tr>
+              <td>
+                <a href="{% url 'crm_products:batch_detail' batch.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+                  {{ batch.batch_number }}
+                </a>
+              </td>
+              <td style="color:var(--muted);font-size:12px">{{ batch.manufacturing_date|date:"d M Y" }}</td>
+              <td style="font-size:13px;
+                {% if batch.batch_status == 'expired' %}color:var(--danger);font-weight:600
+                {% elif batch.batch_status == 'near_expiry' %}color:var(--warn);font-weight:600
+                {% else %}color:var(--muted){% endif %}">
+                {{ batch.expiry_date|date:"d M Y" }}
+              </td>
+              <td style="text-align:center">{{ batch.quantity_manufactured }}</td>
+              <td style="text-align:center;font-weight:600;color:var(--accent)">
+                {{ batch.quantity_available_in_company }}
+              </td>
+              <td>
+                <span class="badge
+                  {% if batch.batch_status == 'active' %}badge-green
+                  {% elif batch.batch_status == 'near_expiry' %}badge-yellow
+                  {% else %}badge-red{% endif %}">
+                  {{ batch.get_batch_status_display }}
+                </span>
+              </td>
+              <td>
+                <div style="display:flex;gap:5px">
+                  <a href="{% url 'crm_products:batch_edit' batch.pk %}" class="btn btn-ghost btn-sm">
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                  <a href="{% url 'crm_products:batch_delete' batch.pk %}" class="btn btn-danger btn-sm">
+                    <i class="fa-solid fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" style="text-align:center;color:var(--muted);padding:24px">
+                No batches created yet.
+                <a href="{% url 'crm_products:batch_create' %}" style="color:var(--accent)">Create one</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column -->
+  <div>
+
+    {% if product.image %}
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-body" style="padding:12px">
+        <img src="{{ product.image.url }}" style="width:100%;border-radius:8px;object-fit:cover;max-height:220px">
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Pricing Card -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-tag" style="color:var(--accent);margin-right:8px"></i>Pricing</span>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Mfg Cost</div>
+            <div style="color:var(--muted)">PKR {{ product.manufacturing_cost_per_unit }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Distributor</div>
+            <div>PKR {{ product.distributor_price }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Trade Price</div>
+            <div>PKR {{ product.trade_price }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">MRP (Retail)</div>
+            <div style="font-weight:700;color:var(--accent);font-size:16px">PKR {{ product.retail_price }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Gross Margin</div>
+            <div style="color:var(--accent);font-weight:600">
+              PKR {{ product.profit_margin|floatformat:2 }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_products:batch_create' %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> Add New Batch
+        </a>
+        <a href="{% url 'crm_products:product_edit' product.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Product
+        </a>
+        <a href="{% url 'crm_products:batch_list' %}?product={{ product.pk }}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-boxes-stacked"></i> View All Batches
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

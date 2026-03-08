@@ -1,0 +1,63 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Division — CRM{% endblock %}
+{% block nav_divisions %}active{% endblock %}
+{% block topbar_title %}{{ action }} Division{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:division_list' %}">Divisions</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{% if obj %}{{ obj.name }}{% else %}New Division{% endif %}</span>
+    </div>
+    <h1>{{ action }} Division</h1>
+    <p>{% if obj %}Update details for the {{ obj.name }} division.{% else %}Create a new sales and product division.{% endif %}</p>
+  </div>
+</div>
+
+<form method="post" style="max-width:640px">
+  {% csrf_token %}
+
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-sitemap"></i> Division Details
+    </div>
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-error">
+      <i class="fa-solid fa-circle-xmark"></i> {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Division Name *</label>
+        {{ form.name }}
+        {% if form.name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Division Manager</label>
+        {{ form.manager_name }}
+        {% if form.manager_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.manager_name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group full">
+        <label style="display:flex;align-items:center;gap:8px;text-transform:none;font-size:13.5px;font-weight:500;color:var(--text)">
+          {{ form.is_active }}
+          <span>Division is Active</span>
+        </label>
+        <span style="font-size:11px;color:var(--muted)">Inactive divisions will not appear in product or MR assignment dropdowns.</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% url 'crm_products:division_list' %}" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Division
+    </button>
+  </div>
+</form>
+{% endblock %}

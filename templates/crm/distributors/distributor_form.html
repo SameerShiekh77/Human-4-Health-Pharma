@@ -1,0 +1,147 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Distributor — CRM{% endblock %}
+{% block nav_distributors %}active{% endblock %}
+{% block topbar_title %}{{ action }} Distributor{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:distributor_list' %}">Distributors</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{% if obj %}{{ obj.distributor_name }}{% else %}New Distributor{% endif %}</span>
+    </div>
+    <h1>{{ action }} Distributor</h1>
+    <p>{% if obj %}Update network partner details for {{ obj.distributor_name }}.{% else %}Register a new distributor in the pharma network.{% endif %}</p>
+  </div>
+</div>
+
+<form method="post" style="max-width:860px">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-error">
+    <i class="fa-solid fa-circle-xmark"></i> {{ form.non_field_errors }}
+  </div>
+  {% endif %}
+
+  <!-- Company Identity -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-building"></i> Company Information
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Distributor / Company Name *</label>
+        {{ form.distributor_name }}
+        {% if form.distributor_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.distributor_name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Owner Name *</label>
+        {{ form.owner_name }}
+        {% if form.owner_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.owner_name.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Drug License Number</label>
+        {{ form.license_number }}
+        {% if form.license_number.errors %}<span style="color:var(--danger);font-size:12px">{{ form.license_number.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>NTN Number</label>
+        {{ form.ntn_number }}
+        {% if form.ntn_number.errors %}<span style="color:var(--danger);font-size:12px">{{ form.ntn_number.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact & Location -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-address-card"></i> Contact & Location
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Contact Number *</label>
+        {{ form.contact_number }}
+        {% if form.contact_number.errors %}<span style="color:var(--danger);font-size:12px">{{ form.contact_number.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        {{ form.email }}
+        {% if form.email.errors %}<span style="color:var(--danger);font-size:12px">{{ form.email.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>City *</label>
+        {{ form.city }}
+        {% if form.city.errors %}<span style="color:var(--danger);font-size:12px">{{ form.city.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Region / Province</label>
+        {{ form.region }}
+        {% if form.region.errors %}<span style="color:var(--danger);font-size:12px">{{ form.region.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group full">
+        <label>Full Address</label>
+        {{ form.address }}
+        {% if form.address.errors %}<span style="color:var(--danger);font-size:12px">{{ form.address.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial & Status -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-coins"></i> Financial & Status
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Credit Limit (PKR)</label>
+        {{ form.credit_limit }}
+        {% if form.credit_limit.errors %}<span style="color:var(--danger);font-size:12px">{{ form.credit_limit.errors.0 }}</span>{% endif %}
+        <span style="font-size:11px;color:var(--muted);margin-top:3px">
+          Maximum outstanding balance allowed for this distributor.
+        </span>
+      </div>
+      <div class="form-group">
+        <label>Status *</label>
+        {{ form.status }}
+        {% if form.status.errors %}<span style="color:var(--danger);font-size:12px">{{ form.status.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if obj %}
+  <!-- Edit-mode info panel -->
+  <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:10px;padding:16px;margin-bottom:20px">
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:10px">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent2);margin-right:6px"></i>Current Record
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Distributor ID</div>
+        <code style="font-size:13px;color:var(--accent)">{{ obj.distributor_id }}</code>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Stock Entries</div>
+        <div style="font-size:18px;font-weight:700">{{ obj.stock_entries.count }}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Sales Records</div>
+        <div style="font-size:18px;font-weight:700">{{ obj.sales_values.count }}</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% if obj %}{% url 'crm_distributors:distributor_detail' obj.pk %}{% else %}{% url 'crm_distributors:distributor_list' %}{% endif %}" class="btn btn-ghost">
+      Cancel
+    </a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Distributor
+    </button>
+  </div>
+</form>
+{% endblock %}

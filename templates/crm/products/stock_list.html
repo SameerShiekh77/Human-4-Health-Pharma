@@ -1,0 +1,184 @@
+{% extends 'crm/base.html' %}
+{% block title %}Company Stock — CRM{% endblock %}
+{% block nav_stock %}active{% endblock %}
+{% block topbar_title %}Company Stock{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_products:stock_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Add Stock Record
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:product_list' %}">Products</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Company Stock</span>
+    </div>
+    <h1>Company Stock</h1>
+    <p>{{ total }} stock record(s) in warehouse</p>
+  </div>
+</div>
+
+<!-- Alert Summary Strip -->
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);max-width:440px;margin-bottom:20px">
+  <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
+    <div class="stat-value" style="font-size:22px">{{ total }}</div>
+    <div class="stat-label">Total Records</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--warn);padding:14px">
+    <div class="stat-value" style="font-size:22px;color:var(--warn)">{{ low_count }}</div>
+    <div class="stat-label">Low Stock</div>
+  </div>
+  <div class="stat-card" style="--accent-color:var(--danger);padding:14px">
+    <div class="stat-value" style="font-size:22px;color:var(--danger)">{{ exp_count }}</div>
+    <div class="stat-label">Near Expiry</div>
+  </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Product name or batch number...">
+  </div>
+  <select name="location" style="width:180px">
+    <option value="">All Warehouses</option>
+    {% for val, label in locations %}
+    <option value="{{ val }}" {% if request.GET.location == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if query or request.GET.location %}
+  <a href="{% url 'crm_products:stock_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Batch</th>
+          <th>Warehouse</th>
+          <th>Available Stock</th>
+          <th>Low Stock Threshold</th>
+          <th>Expiry Date</th>
+          <th>Batch Status</th>
+          <th>Alerts</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stock in page_obj %}
+        <tr>
+          <td>
+            <a href="{% url 'crm_products:product_detail' stock.product.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+              {{ stock.product.product_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ stock.product.product_id }} · {{ stock.product.strength }}</span>
+          </td>
+          <td>
+            <a href="{% url 'crm_products:batch_detail' stock.batch.pk %}" style="color:var(--accent);text-decoration:none;font-size:13px">
+              {{ stock.batch.batch_number }}
+            </a>
+          </td>
+          <td>
+            <span class="badge badge-gray">{{ stock.get_warehouse_location_display }}</span>
+          </td>
+          <td style="font-weight:700;font-size:16px;
+            {% if stock.is_low_stock %}color:var(--danger){% else %}color:var(--accent){% endif %}">
+            {{ stock.available_stock }}
+          </td>
+          <td style="color:var(--muted)">{{ stock.low_stock_threshold }}</td>
+          <td style="
+            {% if stock.batch.batch_status == 'expired' %}color:var(--danger);font-weight:600
+            {% elif stock.batch.batch_status == 'near_expiry' %}color:var(--warn);font-weight:600
+            {% else %}color:var(--muted){% endif %}">
+            {{ stock.batch.expiry_date|date:"d M Y" }}
+          </td>
+          <td>
+            <span class="badge
+              {% if stock.batch.batch_status == 'active' %}badge-green
+              {% elif stock.batch.batch_status == 'near_expiry' %}badge-yellow
+              {% else %}badge-red{% endif %}">
+              {{ stock.batch.get_batch_status_display }}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              {% if stock.is_low_stock %}
+              <span style="font-size:11px;color:var(--danger);display:flex;align-items:center;gap:4px">
+                <i class="fa-solid fa-triangle-exclamation"></i> Low Stock
+              </span>
+              {% endif %}
+              {% if stock.is_near_expiry %}
+              <span style="font-size:11px;color:var(--warn);display:flex;align-items:center;gap:4px">
+                <i class="fa-solid fa-clock"></i> Near Expiry
+              </span>
+              {% endif %}
+              {% if not stock.is_low_stock and not stock.is_near_expiry %}
+              <span style="font-size:11px;color:var(--accent);display:flex;align-items:center;gap:4px">
+                <i class="fa-solid fa-circle-check"></i> OK
+              </span>
+              {% endif %}
+            </div>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_products:stock_edit' stock.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_products:stock_delete' stock.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">
+            <div class="empty-state">
+              <i class="fa-solid fa-warehouse"></i>
+              <h3>No stock records found</h3>
+              <p>Add a stock record to start tracking warehouse inventory.</p>
+              <a href="{% url 'crm_products:stock_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Stock Record
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&location={{ request.GET.location }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&q={{ query }}&location={{ request.GET.location }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&location={{ request.GET.location }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

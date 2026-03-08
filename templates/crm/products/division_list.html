@@ -1,0 +1,120 @@
+{% extends 'crm/base.html' %}
+{% block title %}Divisions — CRM{% endblock %}
+{% block nav_divisions %}active{% endblock %}
+{% block topbar_title %}Divisions{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'crm_products:division_create' %}" class="btn btn-primary btn-sm">
+    <i class="fa-solid fa-plus"></i> Add Division
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_products:product_list' %}">Products</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Divisions</span>
+    </div>
+    <h1>Divisions</h1>
+    <p>{{ total }} sales division(s) — each maps to a product line and field team</p>
+  </div>
+</div>
+
+<!-- Search -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ query }}" placeholder="Search division name or manager...">
+  </div>
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Search</button>
+  {% if query %}
+  <a href="{% url 'crm_products:division_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Division ID</th>
+          <th>Division Name</th>
+          <th>Manager</th>
+          <th>Products</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for div in page_obj %}
+        <tr>
+          <td><code style="font-size:11px;color:var(--muted)">{{ div.division_id }}</code></td>
+          <td style="font-weight:500">{{ div.name }}</td>
+          <td style="color:var(--muted)">{{ div.manager_name|default:"—" }}</td>
+          <td style="text-align:center">
+            <span class="badge badge-blue">{{ div.product_count }}</span>
+          </td>
+          <td>
+            <span class="badge {% if div.is_active %}badge-green{% else %}badge-gray{% endif %}">
+              {% if div.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+          <td style="color:var(--muted);font-size:12px">{{ div.created_at|date:"d M Y" }}</td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <a href="{% url 'crm_products:division_edit' div.pk %}" class="btn btn-ghost btn-sm" title="Edit">
+                <i class="fa-solid fa-pen"></i>
+              </a>
+              <a href="{% url 'crm_products:division_delete' div.pk %}" class="btn btn-danger btn-sm" title="Delete">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <i class="fa-solid fa-sitemap"></i>
+              <h3>No divisions found</h3>
+              <p>Create your first sales division to get started.</p>
+              <a href="{% url 'crm_products:division_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Division
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}
+        <a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+        <a class="page-link" href="?page={{ n }}&q={{ query }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

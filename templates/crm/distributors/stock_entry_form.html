@@ -1,0 +1,168 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Stock Entry — CRM{% endblock %}
+{% block nav_stock_entries %}active{% endblock %}
+{% block topbar_title %}{{ action }} Stock Entry{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:stock_entry_list' %}">Stock Entries</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{% if obj %}Edit Entry{% else %}Submit Entry{% endif %}</span>
+    </div>
+    <h1>{{ action }} Stock Entry</h1>
+    <p>{% if obj %}Edit distributor stock report for {{ obj.distributor.distributor_name }}.{% else %}Submit a monthly stock report from a distributor.{% endif %}</p>
+  </div>
+</div>
+
+<form method="post" style="max-width:860px">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-error">
+    <i class="fa-solid fa-circle-xmark"></i> {{ form.non_field_errors }}
+  </div>
+  {% endif %}
+
+  <!-- Distributor & Product -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-truck"></i> Distributor & Product
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Distributor *</label>
+        {{ form.distributor }}
+        {% if form.distributor.errors %}<span style="color:var(--danger);font-size:12px">{{ form.distributor.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Product *</label>
+        {{ form.product }}
+        {% if form.product.errors %}<span style="color:var(--danger);font-size:12px">{{ form.product.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Batch *</label>
+        {{ form.batch }}
+        {% if form.batch.errors %}<span style="color:var(--danger);font-size:12px">{{ form.batch.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Period -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-calendar-days"></i> Report Period
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Period Start *</label>
+        {{ form.report_period_start }}
+        {% if form.report_period_start.errors %}<span style="color:var(--danger);font-size:12px">{{ form.report_period_start.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Period End *</label>
+        {{ form.report_period_end }}
+        {% if form.report_period_end.errors %}<span style="color:var(--danger);font-size:12px">{{ form.report_period_end.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Quantities -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-boxes-stacked"></i> Stock Quantities
+    </div>
+
+    <!-- Formula hint -->
+    <div style="background:rgba(79,124,255,.07);border:1px solid rgba(79,124,255,.2);border-radius:8px;padding:14px;margin-bottom:18px;font-size:13px;color:var(--muted);line-height:1.7">
+      <i class="fa-solid fa-circle-info" style="color:var(--accent2);margin-right:6px"></i>
+      <strong style="color:var(--text)">Closing Stock Formula:</strong>
+      Opening + Received − Sold − Expired
+      <span id="closingResult" style="margin-left:12px;font-weight:700;color:var(--accent)"></span>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Opening Stock *</label>
+        {{ form.opening_stock }}
+        {% if form.opening_stock.errors %}<span style="color:var(--danger);font-size:12px">{{ form.opening_stock.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Received Quantity</label>
+        {{ form.received_quantity }}
+        {% if form.received_quantity.errors %}<span style="color:var(--danger);font-size:12px">{{ form.received_quantity.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Sold Quantity</label>
+        {{ form.sold_quantity }}
+        {% if form.sold_quantity.errors %}<span style="color:var(--danger);font-size:12px">{{ form.sold_quantity.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Expired Quantity</label>
+        {{ form.expired_quantity }}
+        {% if form.expired_quantity.errors %}<span style="color:var(--danger);font-size:12px">{{ form.expired_quantity.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Near Expiry Quantity</label>
+        {{ form.near_expiry_quantity }}
+        {% if form.near_expiry_quantity.errors %}<span style="color:var(--danger);font-size:12px">{{ form.near_expiry_quantity.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+
+    <!-- Live closing stock display -->
+    <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:16px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600">Closing Stock (Auto-calculated)</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Saved automatically when you submit</div>
+      </div>
+      <div id="closingStockDisplay" style="font-size:32px;font-weight:800;color:var(--accent)">—</div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-note-sticky"></i> Notes
+    </div>
+    <div class="form-group">
+      <label>Additional Notes (Optional)</label>
+      {{ form.notes }}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% url 'crm_distributors:stock_entry_list' %}" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> {% if obj %}Update Entry{% else %}Submit Entry{% endif %}
+    </button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const fields = ['opening_stock', 'received_quantity', 'sold_quantity', 'expired_quantity'];
+
+  function calcClosing() {
+    const opening  = parseInt(document.querySelector('[name="opening_stock"]').value)   || 0;
+    const received = parseInt(document.querySelector('[name="received_quantity"]').value) || 0;
+    const sold     = parseInt(document.querySelector('[name="sold_quantity"]').value)    || 0;
+    const expired  = parseInt(document.querySelector('[name="expired_quantity"]').value) || 0;
+    const closing  = Math.max(0, opening + received - sold - expired);
+
+    const display = document.getElementById('closingStockDisplay');
+    display.textContent = closing.toLocaleString();
+    display.style.color = closing === 0 ? 'var(--muted)' : 'var(--accent)';
+  }
+
+  fields.forEach(name => {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (el) el.addEventListener('input', calcClosing);
+  });
+
+  calcClosing();
+</script>
+{% endblock %}

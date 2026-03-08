@@ -1,0 +1,136 @@
+{% extends "crm/base.html" %}
+{% block title %}Dashboard — Health4Human CRM{% endblock %}
+{% block nav_dashboard %}active{% endblock %}
+{% block topbar_title %}Overview Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Good {% now "G" as hr %}{% if hr < 12 %}Morning{% elif hr < 17 %}Afternoon{% else %}Evening{% endif %}, {{ request.user.first_name|default:request.user.username }} 👋</h1>
+    <p>Here's what's happening across your pharma network today.</p>
+  </div>
+</div>
+
+<!-- KPI Row 1 -->
+<div class="stats-grid">
+  <div class="stat-card" style="--accent-color: var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-pills"></i></div>
+    <div class="stat-value">{{ total_products }}</div>
+    <div class="stat-label">Active Products</div>
+  </div>
+  <div class="stat-card" style="--accent-color: var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)"><i class="fa-solid fa-truck"></i></div>
+    <div class="stat-value">{{ total_distributors }}</div>
+    <div class="stat-label">Active Distributors</div>
+  </div>
+  <div class="stat-card" style="--accent-color: var(--warn)">
+    <div class="stat-icon" style="background:rgba(255,184,48,.1);color:var(--warn)"><i class="fa-solid fa-user-tie"></i></div>
+    <div class="stat-value">{{ total_mrs }}</div>
+    <div class="stat-label">Medical Reps</div>
+  </div>
+  <div class="stat-card" style="--accent-color: #a78bfa">
+    <div class="stat-icon" style="background:rgba(167,139,250,.1);color:#a78bfa"><i class="fa-solid fa-user-doctor"></i></div>
+    <div class="stat-value">{{ total_doctors }}</div>
+    <div class="stat-label">Covered Doctors</div>
+  </div>
+</div>
+
+<!-- KPI Row 2 -->
+<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px,1fr))">
+  <div class="stat-card" style="--accent-color: var(--accent)">
+    <div class="stat-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+    <div class="stat-value">{{ visits_today }}</div>
+    <div class="stat-label">Visits Today</div>
+    <div class="stat-delta"><i class="fa-solid fa-calendar"></i> {{ visits_month }} this month</div>
+  </div>
+  <div class="stat-card" style="--accent-color: var(--accent2)">
+    <div class="stat-icon" style="background:rgba(79,124,255,.1);color:var(--accent2)"><i class="fa-solid fa-location-dot"></i></div>
+    <div class="stat-value">{{ gps_verified_month }}</div>
+    <div class="stat-label">GPS Verified (Month)</div>
+  </div>
+  <div class="stat-card" style="--accent-color: var(--danger)">
+    <div class="stat-icon" style="background:rgba(255,77,109,.1);color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <div class="stat-value">{{ expiry_alerts_count }}</div>
+    <div class="stat-label">Pending Alerts</div>
+    <div class="stat-delta" style="color:var(--danger)">{{ near_expiry_batches }} near expiry</div>
+  </div>
+  <div class="stat-card" style="--accent-color: var(--warn)">
+    <div class="stat-icon" style="background:rgba(255,184,48,.1);color:var(--warn)"><i class="fa-solid fa-warehouse"></i></div>
+    <div class="stat-value">{{ low_stock_items }}</div>
+    <div class="stat-label">Low Stock Items</div>
+  </div>
+</div>
+
+<!-- Bottom Grid -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+  <!-- Recent Visits -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-clipboard-list" style="color:var(--accent);margin-right:8px"></i>Recent Visits</span>
+      <a href="{% url 'crm_doctors:visit_list' %}" class="btn btn-ghost btn-sm">View All</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>MR</th><th>Doctor</th><th>Date</th><th>GPS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in recent_visits %}
+          <tr>
+            <td>{{ v.mr.name }}</td>
+            <td><a href="{% url 'crm_doctors:visit_detail' v.pk %}" style="color:var(--accent);text-decoration:none">Dr. {{ v.doctor.doctor_name }}</a></td>
+            <td style="color:var(--muted)">{{ v.visit_date|date:"d M" }}</td>
+            <td>
+              {% if v.is_gps_verified %}
+                <span class="gps-dot gps-ok"></span><span style="font-size:11px;color:var(--accent)">Verified</span>
+              {% else %}
+                <span class="gps-dot gps-fail"></span><span style="font-size:11px;color:var(--muted)">None</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">No visits yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Expiry Alerts -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title"><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);margin-right:8px"></i>Expiry Alerts</span>
+      <a href="{% url 'crm_analytics:expiry_alerts' %}" class="btn btn-ghost btn-sm">View All</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Product</th><th>Batch</th><th>Expiry</th><th>Type</th></tr>
+        </thead>
+        <tbody>
+          {% for a in pending_alerts %}
+          <tr>
+            <td>{{ a.product.product_name }}</td>
+            <td style="color:var(--muted);font-size:12px">{{ a.batch_number }}</td>
+            <td style="color:var(--danger)">{{ a.expiry_date|date:"d M Y" }}</td>
+            <td>
+              <span class="badge {% if a.alert_type == 'expired' %}badge-red{% else %}badge-yellow{% endif %}">
+                {{ a.get_alert_type_display }}
+              </span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">
+            <i class="fa-solid fa-check-circle" style="color:var(--accent)"></i> No pending alerts
+          </td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

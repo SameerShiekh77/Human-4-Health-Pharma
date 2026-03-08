@@ -1,0 +1,258 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ store.store_name }} — CRM{% endblock %}
+{% block nav_stores %}active{% endblock %}
+{% block topbar_title %}Store Detail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_stores:store_list' %}">Medical Stores</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ store.store_name }}</span>
+    </div>
+    <h1>{{ store.store_name }}</h1>
+    <p>{{ store.owner_name }} &mdash; {{ store.area.area_name|default:"No area assigned" }}</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="badge {% if store.status == 'active' %}badge-green{% else %}badge-gray{% endif %}" style="font-size:13px;padding:6px 14px">
+      {{ store.get_status_display }}
+    </span>
+    <a href="{% url 'crm_stores:store_product_add' store.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-plus"></i> Add Product
+    </a>
+    <a href="{% url 'crm_stores:store_edit' store.pk %}" class="btn btn-ghost">
+      <i class="fa-solid fa-pen"></i> Edit
+    </a>
+    <a href="{% url 'crm_stores:store_delete' store.pk %}" class="btn btn-danger">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+</div>
+
+<div class="detail-grid">
+
+  <!-- Left Column -->
+  <div>
+
+    <!-- Store Info -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-store" style="color:var(--accent);margin-right:8px"></i>Store Information
+        </span>
+        <code style="font-size:11px;color:var(--muted)">{{ store.store_id }}</code>
+      </div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Store Name</div>
+            <div style="font-weight:600">{{ store.store_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Owner</div>
+            <div>{{ store.owner_name }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Phone</div>
+            <div>{{ store.phone|default:"—" }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Address</div>
+            <div style="color:var(--muted)">{{ store.address|default:"—" }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Area</div>
+            <div>{{ store.area.area_name|default:"—" }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Drug License</div>
+            <div>
+              {% if store.drug_license_number %}
+              <code style="font-size:12px;color:var(--muted)">{{ store.drug_license_number }}</code>
+              {% else %}—{% endif %}
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Distributor</div>
+            <div>
+              {% if store.distributor %}
+              <a href="{% url 'crm_distributors:distributor_detail' store.distributor.pk %}" style="color:var(--accent);text-decoration:none">
+                {{ store.distributor.distributor_name }}
+              </a>
+              {% else %}—{% endif %}
+            </div>
+          </div>
+          {% if store.gps_latitude and store.gps_longitude %}
+          <div class="kv-row">
+            <div class="kv-key">GPS</div>
+            <div style="font-size:12px">
+              <span class="gps-dot gps-ok"></span>
+              <span style="color:var(--accent)">{{ store.gps_latitude }}, {{ store.gps_longitude }}</span>
+              <a href="https://maps.google.com/?q={{ store.gps_latitude }},{{ store.gps_longitude }}" target="_blank" style="color:var(--muted);font-size:11px;margin-left:8px">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Maps
+              </a>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Tracking Table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-pills" style="color:var(--accent);margin-right:8px"></i>Product Availability
+        </span>
+        <a href="{% url 'crm_stores:store_product_add' store.pk %}" class="btn btn-ghost btn-sm">
+          <i class="fa-solid fa-plus"></i> Track Product
+        </a>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Availability</th>
+              <th>Monthly Sales Est.</th>
+              <th>Monthly Revenue Est.</th>
+              <th>Last Updated By</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tracking in products %}
+            <tr>
+              <td>
+                <a href="{% url 'crm_products:product_detail' tracking.product.pk %}" style="color:var(--text);text-decoration:none;font-weight:500">
+                  {{ tracking.product.product_name }}
+                </a><br>
+                <span style="font-size:11px;color:var(--muted)">{{ tracking.product.strength }}</span>
+              </td>
+              <td>
+                <span class="badge
+                  {% if tracking.availability == 'available' %}badge-green
+                  {% elif tracking.availability == 'low_stock' %}badge-yellow
+                  {% else %}badge-red{% endif %}">
+                  {{ tracking.get_availability_display }}
+                </span>
+              </td>
+              <td style="text-align:center">
+                {% if tracking.monthly_sales_estimate %}
+                {{ tracking.monthly_sales_estimate }} units
+                {% else %}<span style="color:var(--muted)">—</span>{% endif %}
+              </td>
+              <td style="font-weight:600;color:var(--accent)">
+                {% if tracking.monthly_revenue_estimate %}
+                PKR {{ tracking.monthly_revenue_estimate|floatformat:0 }}
+                {% else %}<span style="color:var(--muted);font-weight:400">—</span>{% endif %}
+              </td>
+              <td style="font-size:12px;color:var(--muted)">{{ tracking.last_updated_by_mr|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5">
+                <div class="empty-state" style="padding:30px 20px">
+                  <i class="fa-solid fa-pills" style="font-size:32px"></i>
+                  <h3 style="font-size:14px">No products tracked yet</h3>
+                  <a href="{% url 'crm_stores:store_product_add' store.pk %}" class="btn btn-ghost btn-sm" style="margin-top:8px">
+                    <i class="fa-solid fa-plus"></i> Add Product
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column -->
+  <div>
+
+    <!-- Linked Doctors -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fa-solid fa-user-doctor" style="color:var(--accent);margin-right:8px"></i>Linked Doctors
+        </span>
+        <span class="badge badge-blue">{{ store.linked_doctors.count }}</span>
+      </div>
+      <div class="card-body" style="padding:0">
+        {% for doc in store.linked_doctors.all %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border)">
+          <div>
+            <a href="{% url 'crm_doctors:doctor_detail' doc.pk %}" style="color:var(--text);text-decoration:none;font-weight:500;font-size:13.5px">
+              Dr. {{ doc.doctor_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ doc.specialty }}</span>
+          </div>
+          <span class="badge {% if doc.status == 'active' %}badge-green{% else %}badge-gray{% endif %}">
+            {{ doc.get_status_display }}
+          </span>
+        </div>
+        {% empty %}
+        <div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">
+          No doctors linked to this store.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><span class="card-title">Quick Stats</span></div>
+      <div class="card-body">
+        <div class="kv-list">
+          <div class="kv-row">
+            <div class="kv-key">Total Products</div>
+            <div style="font-weight:700">{{ products.count }}</div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Available</div>
+            <div style="color:var(--accent);font-weight:600">
+              {{ products.filter.availability.available.count|default:0 }}
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Out of Stock</div>
+            <div style="color:var(--danger);font-weight:600">
+              {% with oos=products|length %}{{ oos }}{% endwith %}
+            </div>
+          </div>
+          <div class="kv-row">
+            <div class="kv-key">Linked Doctors</div>
+            <div>{{ store.linked_doctors.count }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
+        <a href="{% url 'crm_stores:store_product_add' store.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-plus"></i> Track New Product
+        </a>
+        <a href="{% url 'crm_stores:store_edit' store.pk %}" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-pen"></i> Edit Store
+        </a>
+        {% if store.gps_latitude and store.gps_longitude %}
+        <a href="https://maps.google.com/?q={{ store.gps_latitude }},{{ store.gps_longitude }}" target="_blank" class="btn btn-ghost" style="justify-content:center">
+          <i class="fa-solid fa-map-location-dot"></i> View on Google Maps
+        </a>
+        {% endif %}
+        <a href="{% url 'crm_stores:store_delete' store.pk %}" class="btn btn-danger" style="justify-content:center">
+          <i class="fa-solid fa-trash"></i> Delete Store
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

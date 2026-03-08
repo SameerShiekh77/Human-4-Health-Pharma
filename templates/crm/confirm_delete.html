@@ -1,0 +1,30 @@
+{% extends "crm/base.html" %}
+{% comment %}FILE: templates/crm/confirm_delete.html{% endcomment %}
+{% block title %}Confirm Delete{% endblock %}
+{% block content %}
+<div style="max-width:500px;margin:60px auto">
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title" style="color:var(--danger)">
+        <i class="fa-solid fa-triangle-exclamation"></i> Confirm Deletion
+      </span>
+    </div>
+    <div class="card-body" style="text-align:center;padding:36px">
+      <i class="fa-solid fa-trash" style="font-size:44px;color:var(--danger);opacity:.7;margin-bottom:20px;display:block"></i>
+      <h3 style="margin-bottom:8px;font-family:'Syne',sans-serif">Delete this record?</h3>
+      <p style="color:var(--muted);margin-bottom:28px;line-height:1.6">
+        You are about to permanently delete<br>
+        <strong style="color:var(--text)">{{ obj_name }}</strong>.<br>
+        This action cannot be undone.
+      </p>
+      <form method="post" style="display:flex;gap:12px;justify-content:center">
+        {% csrf_token %}
+        <a href="javascript:history.back()" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-danger">
+          <i class="fa-solid fa-trash"></i> Yes, Delete
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
