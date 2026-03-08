@@ -1,0 +1,103 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} Sales Record — CRM{% endblock %}
+{% block nav_sales_values %}active{% endblock %}
+{% block topbar_title %}{{ action }} Sales Record{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:sales_value_list' %}">Sales Records</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ action }}</span>
+    </div>
+    <h1>{{ action }} Sales Record</h1>
+    <p>Record a product sale made by a distributor for revenue tracking.</p>
+  </div>
+</div>
+
+<form method="post" style="max-width:700px">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+  <div class="alert alert-error">
+    <i class="fa-solid fa-circle-xmark"></i> {{ form.non_field_errors }}
+  </div>
+  {% endif %}
+
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-receipt"></i> Sale Details
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Distributor *</label>
+        {{ form.distributor }}
+        {% if form.distributor.errors %}<span style="color:var(--danger);font-size:12px">{{ form.distributor.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Product *</label>
+        {{ form.product }}
+        {% if form.product.errors %}<span style="color:var(--danger);font-size:12px">{{ form.product.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Sale Date *</label>
+        {{ form.sale_date }}
+        {% if form.sale_date.errors %}<span style="color:var(--danger);font-size:12px">{{ form.sale_date.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">
+      <i class="fa-solid fa-coins"></i> Quantity & Pricing
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Quantity Sold *</label>
+        {{ form.quantity_sold }}
+        {% if form.quantity_sold.errors %}<span style="color:var(--danger);font-size:12px">{{ form.quantity_sold.errors.0 }}</span>{% endif %}
+      </div>
+      <div class="form-group">
+        <label>Price Per Unit (PKR) *</label>
+        {{ form.price_per_unit }}
+        {% if form.price_per_unit.errors %}<span style="color:var(--danger);font-size:12px">{{ form.price_per_unit.errors.0 }}</span>{% endif %}
+      </div>
+    </div>
+
+    <!-- Live total value calculator -->
+    <div style="background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:16px;margin-top:4px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600">Total Sales Value (Auto-calculated)</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Quantity × Price Per Unit</div>
+      </div>
+      <div id="totalDisplay" style="font-size:28px;font-weight:800;color:var(--accent)">PKR 0</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end">
+    <a href="{% url 'crm_distributors:sales_value_list' %}" class="btn btn-ghost">Cancel</a>
+    <button type="submit" class="btn btn-primary">
+      <i class="fa-solid fa-floppy-disk"></i> Save Sales Record
+    </button>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function calcTotal() {
+    const qty   = parseFloat(document.querySelector('[name="quantity_sold"]').value)  || 0;
+    const price = parseFloat(document.querySelector('[name="price_per_unit"]').value) || 0;
+    const total = qty * price;
+    document.getElementById('totalDisplay').textContent =
+      'PKR ' + total.toLocaleString('en-PK', { maximumFractionDigits: 0 });
+    document.getElementById('totalDisplay').style.color = total > 0 ? 'var(--accent)' : 'var(--muted)';
+  }
+
+  document.querySelector('[name="quantity_sold"]').addEventListener('input', calcTotal);
+  document.querySelector('[name="price_per_unit"]').addEventListener('input', calcTotal);
+</script>
+{% endblock %}

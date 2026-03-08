@@ -406,6 +406,9 @@
   <a href="{% url 'crm_distributors:distributor_list' %}" class="nav-item {% block nav_distributors %}{% endblock %}">
     <i class="fa-solid fa-truck"></i> Distributors
   </a>
+  <a href="{% url 'crm_distributors:sales_value_list' %}" class="nav-item {% block nav_sales_values %}{% endblock %}">
+    <i class="fa-solid fa-truck"></i> Sales Records
+  </a>
   <a href="{% url 'crm_distributors:stock_entry_list' %}" class="nav-item {% block nav_stock_entries %}{% endblock %}">
     <i class="fa-solid fa-file-invoice"></i> Stock Entries
   </a>
@@ -467,9 +470,7 @@
     <div class="topbar-title">{% block topbar_title %}CRM{% endblock %}</div>
     <div class="topbar-actions">
       {% block topbar_actions %}{% endblock %}
-      <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-primary btn-sm">
-        <i class="fa-solid fa-plus"></i> New Visit
-      </a>
+      
     </div>
   </header>
 

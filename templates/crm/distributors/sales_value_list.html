@@ -1,0 +1,144 @@
+{% extends 'crm/base.html' %}
+{% block title %}Sales Records — CRM{% endblock %}
+{% block nav_sales_values %}active{% endblock %}
+{% block topbar_title %}Distributor Sales Records{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'crm_distributors:sales_value_create' %}" class="btn btn-primary btn-sm">
+  <i class="fa-solid fa-plus"></i> Add Sales Record
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_distributors:distributor_list' %}">Distributors</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Sales Records</span>
+    </div>
+    <h1>Distributor Sales Records</h1>
+    <p>Track product-level sales values reported by each distributor.</p>
+  </div>
+</div>
+
+<!-- Total Value KPI -->
+<div style="background:linear-gradient(135deg,rgba(0,212,170,.12),rgba(79,124,255,.08));border:1px solid rgba(0,212,170,.25);border-radius:12px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between">
+  <div>
+    <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-bottom:4px">
+      Total Sales Value (Filtered)
+    </div>
+    <div style="font-size:30px;font-weight:800;color:var(--accent)">
+      PKR {{ total_value|floatformat:0 }}
+    </div>
+  </div>
+  <i class="fa-solid fa-coins" style="font-size:40px;color:var(--accent);opacity:.2"></i>
+</div>
+
+<!-- Filters -->
+<form method="get" class="search-bar">
+  <div class="search-input-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Distributor or product name...">
+  </div>
+  <select name="distributor" style="width:220px">
+    <option value="">All Distributors</option>
+    {% for dist in distributors %}
+    <option value="{{ dist.pk }}" {% if request.GET.distributor == dist.pk|stringformat:"s" %}selected{% endif %}>
+      {{ dist.distributor_name }}
+    </option>
+    {% endfor %}
+  </select>
+  <input type="date" name="date_from" value="{{ request.GET.date_from }}" title="From date" style="width:150px">
+  <input type="date" name="date_to" value="{{ request.GET.date_to }}" title="To date" style="width:150px">
+  <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+  {% if request.GET.q or request.GET.distributor or request.GET.date_from or request.GET.date_to %}
+  <a href="{% url 'crm_distributors:sales_value_list' %}" class="btn btn-ghost">
+    <i class="fa-solid fa-xmark"></i> Clear
+  </a>
+  {% endif %}
+</form>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Distributor</th>
+          <th>Product</th>
+          <th>Sale Date</th>
+          <th>Qty Sold</th>
+          <th>Price / Unit</th>
+          <th>Total Value</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sale in page_obj %}
+        <tr>
+          <td>
+            <a href="{% url 'crm_distributors:distributor_detail' sale.distributor.pk %}" style="color:var(--accent);text-decoration:none;font-weight:500">
+              {{ sale.distributor.distributor_name }}
+            </a><br>
+            <span style="font-size:11px;color:var(--muted)">{{ sale.distributor.city }}</span>
+          </td>
+          <td>
+            <span style="font-weight:500">{{ sale.product.product_name }}</span><br>
+            <span style="font-size:11px;color:var(--muted)">{{ sale.product.strength }}</span>
+          </td>
+          <td style="color:var(--muted);font-size:12px;white-space:nowrap">
+            {{ sale.sale_date|date:"d M Y" }}
+          </td>
+          <td style="text-align:center;font-weight:600">{{ sale.quantity_sold }}</td>
+          <td style="text-align:right;color:var(--muted)">PKR {{ sale.price_per_unit|floatformat:2 }}</td>
+          <td style="text-align:right;font-weight:700;color:var(--accent);font-size:15px">
+            PKR {{ sale.total_sales_value|floatformat:0 }}
+          </td>
+          <td>
+            <a href="{% url 'crm_distributors:sales_value_delete' sale.pk %}" class="btn btn-danger btn-sm" title="Delete">
+              <i class="fa-solid fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <i class="fa-solid fa-chart-line"></i>
+              <h3>No sales records found</h3>
+              <p>Start recording distributor sales values to track revenue.</p>
+              <a href="{% url 'crm_distributors:sales_value_create' %}" class="btn btn-primary" style="margin-top:12px">
+                <i class="fa-solid fa-plus"></i> Add Sales Record
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&distributor={{ request.GET.distributor }}&date_from={{ request.GET.date_from }}&date_to={{ request.GET.date_to }}">
+      <i class="fa-solid fa-chevron-left"></i>
+    </a>
+    {% endif %}
+    {% for n in page_obj.paginator.page_range %}
+      {% if n == page_obj.number %}<a class="page-link active">{{ n }}</a>
+      {% elif n >= page_obj.number|add:"-2" and n <= page_obj.number|add:"2" %}
+      <a class="page-link" href="?page={{ n }}&q={{ request.GET.q }}&distributor={{ request.GET.distributor }}&date_from={{ request.GET.date_from }}&date_to={{ request.GET.date_to }}">{{ n }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&distributor={{ request.GET.distributor }}&date_from={{ request.GET.date_from }}&date_to={{ request.GET.date_to }}">
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
