@@ -126,8 +126,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://72.62.243.240",
-    "http://h4hpharma.com/",
-    "https://h4hpharma.com/"
+    "http://h4hpharma.com",
+    "https://h4hpharma.com"
     
     
     
@@ -158,8 +158,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://72.62.243.240",
-    "http://h4hpharma.com/",
-    "https://h4hpharma.com/"
+    "http://h4hpharma.com",
+    "https://h4hpharma.com"
     
     
     
