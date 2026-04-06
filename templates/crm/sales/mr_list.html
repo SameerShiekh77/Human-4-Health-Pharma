@@ -9,6 +9,67 @@
 </a>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+  .mr-kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 300px;
+    margin-bottom: 20px;
+  }
+  .mr-filters select {
+    width: 190px;
+  }
+  .mr-table {
+    min-width: 980px;
+  }
+  .mr-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mr-avatar-fallback {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .mr-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .mr-kpi-strip {
+      grid-template-columns: 1fr;
+      max-width: none;
+    }
+    .mr-filters .search-input-wrap,
+    .mr-filters select,
+    .mr-filters .btn {
+      width: 100% !important;
+      min-width: 0;
+    }
+    .mr-filters .btn {
+      justify-content: center;
+    }
+    .mr-actions .btn {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <div>
@@ -23,7 +84,7 @@
 </div>
 
 <!-- KPI Strip -->
-<div class="stats-grid" style="grid-template-columns:repeat(2,1fr);max-width:300px;margin-bottom:20px">
+<div class="stats-grid mr-kpi-strip">
   <div class="stat-card" style="--accent-color:var(--accent);padding:14px">
     <div class="stat-value" style="font-size:22px">{{ active }}</div>
     <div class="stat-label">Active</div>
@@ -35,12 +96,12 @@
 </div>
 
 <!-- Filters -->
-<form method="get" class="search-bar">
+<form method="get" class="search-bar mr-filters">
   <div class="search-input-wrap">
     <i class="fa-solid fa-magnifying-glass"></i>
     <input type="text" name="q" value="{{ query }}" placeholder="Name, MR ID, CNIC, phone...">
   </div>
-  <select name="region" style="width:190px">
+  <select name="region">
     <option value="">All Regions</option>
     {% for region in regions %}
     <option value="{{ region.pk }}" {% if request.GET.region == region.pk|stringformat:"s" %}selected{% endif %}>
@@ -48,7 +109,7 @@
     </option>
     {% endfor %}
   </select>
-  <select name="status" style="width:150px">
+  <select name="status">
     <option value="">All Status</option>
     <option value="active"     {% if request.GET.status == 'active' %}selected{% endif %}>Active</option>
     <option value="inactive"   {% if request.GET.status == 'inactive' %}selected{% endif %}>Inactive</option>
@@ -65,7 +126,7 @@
 
 <div class="card">
   <div class="table-wrap">
-    <table>
+    <table class="mr-table">
       <thead>
         <tr>
           <th>MR ID</th>
@@ -84,11 +145,11 @@
         <tr>
           <td><code style="font-size:11px;color:var(--muted)">{{ mr.mr_id }}</code></td>
           <td>
-            <div style="display:flex;align-items:center;gap:10px">
+            <div class="mr-name-cell">
               {% if mr.profile_image %}
               <img src="{{ mr.profile_image.url }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0">
               {% else %}
-              <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0d0f14;flex-shrink:0">
+              <div class="mr-avatar-fallback">
                 {{ mr.name|slice:":1"|upper }}
               </div>
               {% endif %}
@@ -128,7 +189,7 @@
             </span>
           </td>
           <td>
-            <div style="display:flex;gap:6px">
+            <div class="mr-actions">
               <a href="{% url 'crm_sales:mr_detail' mr.pk %}" class="btn btn-ghost btn-sm" title="View">
                 <i class="fa-solid fa-eye"></i>
               </a>
