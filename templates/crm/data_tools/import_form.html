@@ -1,0 +1,42 @@
+{% extends 'crm/base.html' %}
+{% block title %}Import {{ config.title }} — CRM{% endblock %}
+{% block topbar_title %}Import {{ config.title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{{ export_url }}">{{ config.title }}</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Import</span>
+    </div>
+    <h1>Import {{ config.title }}</h1>
+    <p>Download the sample file first, fill it in, then upload the CSV here.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+      <a class="btn btn-ghost" href="{{ sample_url }}"><i class="fa-solid fa-file-arrow-down"></i> Download Sample File</a>
+      <a class="btn btn-ghost" href="{{ export_url }}"><i class="fa-solid fa-file-export"></i> Download Current Data</a>
+      <a class="btn btn-ghost" href="{% url config.list_url %}"><i class="fa-solid fa-arrow-left"></i> Back to List</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>CSV File</label>
+          {{ form.data_file }}
+          {% if form.data_file.errors %}<span style="color:var(--danger);font-size:12px">{{ form.data_file.errors.0 }}</span>{% endif %}
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-eye"></i> Preview Import</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

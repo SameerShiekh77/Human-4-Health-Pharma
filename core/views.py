@@ -18,6 +18,7 @@ from hr.models import (
 )
 
 from products.models import Product, ProductCategory, ProductImage
+from core.auth_utils import is_crm_user
 
 # ============================================
 # FRONTEND VIEWS
@@ -185,6 +186,8 @@ def login_view(request):
     if request.user.is_authenticated:
         if request.user.is_staff:
             return redirect('dashboard')
+        if is_crm_user(request.user):
+            return redirect('crm_analytics:dashboard')
         return redirect('home')
     
     if request.method == 'POST':
@@ -208,13 +211,15 @@ def login_view(request):
                 request.session.set_expiry(1209600)
             
             messages.success(request, f'Welcome back, {user.first_name or user.username}!')
-            
-            # Redirect staff to dashboard, others to home or next page
+
+            # Redirect staff to dashboard, CRM users to CRM, others to home or next page
             next_page = request.GET.get('next')
             if next_page:
                 return redirect(next_page)
             elif user.is_staff:
                 return redirect('dashboard')
+            elif is_crm_user(user):
+                return redirect('crm_analytics:dashboard')
             return redirect('home')
         else:
             messages.error(request, 'Invalid username or password. Please try again.')

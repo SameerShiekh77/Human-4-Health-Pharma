@@ -15,17 +15,27 @@ class Division(models.Model):
     Used in both Products and Sales Structure.
     Defined here to avoid circular imports.
     """
-    division_id = models.CharField(max_length=20, unique=True, editable=False)
-    name = models.CharField(max_length=100)
-    manager_name = models.CharField(max_length=100, blank=True, null=True)
+    division_id = models.CharField(
+        max_length=20,
+        unique=True,
+        editable=False,
+        verbose_name='Territory ID'
+    )
+    name = models.CharField(max_length=100, verbose_name='Territory Name')
+    manager_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Territory Manager'
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['name']
-        verbose_name = 'Division'
-        verbose_name_plural = 'Divisions'
+        verbose_name = 'Territory'
+        verbose_name_plural = 'Territories'
 
     def __str__(self):
         return self.name
@@ -74,7 +84,8 @@ class ProductMaster(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='products'
+        related_name='products',
+        verbose_name='Territory'
     )
 
     # Specs

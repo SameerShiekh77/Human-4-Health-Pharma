@@ -1,0 +1,36 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} CRM Role — CRM{% endblock %}
+{% block nav_crm_roles %}active{% endblock %}
+{% block topbar_title %}{{ action }} CRM Role{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_analytics:crm_role_list' %}">CRM Roles</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ action }}</span>
+    </div>
+    <h1>{{ action }} CRM Role</h1>
+    <p>Role names are stored as CRM-prefixed access groups.</p>
+  </div>
+</div>
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="form-group full">
+        <label>Role Name *</label>
+        <input type="text" name="name" value="{{ role.name|cut:'CRM - '|default:'' }}" placeholder="Sales Manager" required>
+      </div>
+    </div>
+    <div class="card-body" style="padding-top:0; display:flex; justify-content:flex-end; gap:10px;">
+      <a href="{% url 'crm_analytics:crm_role_list' %}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">{% if action == 'Create' %}Create Role{% else %}Save Changes{% endif %}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

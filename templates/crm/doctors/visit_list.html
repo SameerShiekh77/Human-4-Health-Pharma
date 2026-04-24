@@ -7,6 +7,7 @@
   <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-primary btn-sm">
     <i class="fa-solid fa-plus"></i> Log Visit
   </a>
+  {% include 'crm/data_tools/topbar_buttons.html' with export_url=export_url sample_url=sample_url import_url=import_url %}
 {% endblock %}
 {% block content %}
 <div class="page-header">
@@ -34,7 +35,7 @@
   <select name="mr" style="width:180px"><option value="">All MRs</option>
     {% for mr in mrs %}<option value="{{ mr.pk }}" {% if request.GET.mr == mr.pk|stringformat:"s" %}selected{% endif %}>{{ mr.name }}</option>{% endfor %}
   </select>
-  <select name="type" style="width:140px"><option value="">All Types</option>
+  <select name="type" style="width:170px"><option value="">All Statuses</option>
     {% for val, label in visit_types %}<option value="{{ val }}" {% if request.GET.type == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
   </select>
   <select name="gps" style="width:140px">
@@ -51,7 +52,7 @@
 <div class="card">
   <div class="table-wrap">
     <table>
-      <thead><tr><th>#</th><th>MR</th><th>Doctor</th><th>Date / Time</th><th>Type</th><th>GPS</th><th>Products</th><th>Investment</th><th>Actions</th></tr></thead>
+      <thead><tr><th>#</th><th>MR</th><th>Doctor</th><th>Date / Time</th><th>Visit Location</th><th>Status</th><th>GPS</th><th>Products</th><th>Investment</th><th>Actions</th></tr></thead>
       <tbody>
         {% for v in page_obj %}
         <tr>
@@ -62,6 +63,7 @@
             <span style="font-size:11px;color:var(--muted)">{{ v.doctor.specialty }}</span>
           </td>
           <td>{{ v.visit_date|date:"d M Y" }}<br><span style="font-size:11px;color:var(--muted)">{{ v.visit_time|time:"H:i" }}</span></td>
+          <td style="color:var(--muted)">{{ v.visit_location.location_name|default:v.hospital_clinic_name|default:"—" }}</td>
           <td><span class="badge badge-blue">{{ v.get_visit_type_display }}</span></td>
           <td>
             {% if v.is_gps_verified %}<span class="gps-dot gps-ok"></span><span style="font-size:11px;color:var(--accent)">OK</span>
@@ -76,7 +78,7 @@
           </div></td>
         </tr>
         {% empty %}
-        <tr><td colspan="9"><div class="empty-state"><i class="fa-solid fa-clipboard-list"></i><h3>No visits recorded</h3></div></td></tr>
+        <tr><td colspan="10"><div class="empty-state"><i class="fa-solid fa-clipboard-list"></i><h3>No visits recorded</h3></div></td></tr>
         {% endfor %}
       </tbody>
     </table>

@@ -79,6 +79,40 @@ class Doctor(models.Model):
         super().save(*args, **kwargs)
 
 
+class DoctorPracticeLocation(models.Model):
+    """A doctor can practice at multiple hospitals/clinics."""
+
+    LOCATION_TYPE_CHOICES = [
+        ('hospital', 'Hospital'),
+        ('clinic', 'Clinic'),
+        ('other', 'Other'),
+    ]
+
+    doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.CASCADE,
+        related_name='practice_locations'
+    )
+    location_name = models.CharField(max_length=200)
+    location_type = models.CharField(
+        max_length=20,
+        choices=LOCATION_TYPE_CHOICES,
+        default='clinic'
+    )
+    address = models.CharField(max_length=300, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['location_name']
+        verbose_name = 'Doctor Practice Location'
+        verbose_name_plural = 'Doctor Practice Locations'
+
+    def __str__(self):
+        return f"{self.location_name} ({self.get_location_type_display()})"
+
+
 class VisitProductDetail(models.Model):
     """
     Products discussed during a single doctor visit.
@@ -150,13 +184,12 @@ class DoctorInvestment(models.Model):
     """
 
     INVESTMENT_TYPE_CHOICES = [
-        ('meeting', 'Meeting'),
+        ('cash', 'Cash'),
+        ('tour', 'Tour and Accommodation'),
+        ('goods', 'Good Purchased'),
         ('sponsorship', 'Sponsorship'),
-        ('gifts', 'Gifts'),
-        ('conference', 'Conference'),
-        ('dinner', 'Dinner / Lunch'),
-        ('samples', 'Samples'),
-        ('other', 'Other'),
+        ('lunch_dinner', 'Lunch / Dinner'),
+        ('other', 'Others'),
     ]
 
     visit = models.ForeignKey(
@@ -214,9 +247,9 @@ class DoctorVisit(models.Model):
     """
 
     VISIT_TYPE_CHOICES = [
-        ('new_visit', 'New Visit'),
-        ('follow_up', 'Follow Up'),
-        ('emergency', 'Emergency Visit'),
+        ('new_visit', 'Call Done'),
+        ('follow_up', 'Reminder Dropped'),
+        ('emergency', 'Doctor Not Available'),
     ]
 
     # Basic Info (MR auto-populated from request.user)
@@ -228,6 +261,13 @@ class DoctorVisit(models.Model):
     doctor = models.ForeignKey(
         Doctor,
         on_delete=models.CASCADE,
+        related_name='visits'
+    )
+    visit_location = models.ForeignKey(
+        DoctorPracticeLocation,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name='visits'
     )
 

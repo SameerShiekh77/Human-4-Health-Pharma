@@ -7,6 +7,7 @@
 <a href="{% url 'crm_sales:region_create' %}" class="btn btn-primary btn-sm">
   <i class="fa-solid fa-plus"></i> Add Region
 </a>
+{% include 'crm/data_tools/topbar_buttons.html' with export_url=export_url sample_url=sample_url import_url=import_url %}
 {% endblock %}
 
 {% block content %}
@@ -18,7 +19,7 @@
       <span>Regions</span>
     </div>
     <h1>Sales Regions</h1>
-    <p>{{ total }} region(s) across all divisions</p>
+    <p>{{ total }} region(s) across all territories</p>
   </div>
 </div>
 
@@ -29,7 +30,7 @@
     <input type="text" name="q" value="{{ query }}" placeholder="Region name or manager...">
   </div>
   <select name="division" style="width:200px">
-    <option value="">All Divisions</option>
+    <option value="">All Territories</option>
     {% for div in divisions %}
     <option value="{{ div.pk }}" {% if request.GET.division == div.pk|stringformat:"s" %}selected{% endif %}>
       {{ div.name }}
@@ -51,7 +52,7 @@
         <tr>
           <th>Region ID</th>
           <th>Region Name</th>
-          <th>Division</th>
+          <th>Territory</th>
           <th>Regional Manager</th>
           <th>Areas</th>
           <th>MRs</th>

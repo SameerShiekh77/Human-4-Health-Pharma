@@ -7,8 +7,8 @@ class DivisionForm(forms.ModelForm):
         model  = Division
         fields = ['name', 'manager_name', 'is_active']
         widgets = {
-            'name':         forms.TextInput(attrs={'placeholder': 'e.g., Cardiology Division'}),
-            'manager_name': forms.TextInput(attrs={'placeholder': 'Division Manager Name'}),
+            'name':         forms.TextInput(attrs={'placeholder': 'e.g., Cardiology Territory'}),
+            'manager_name': forms.TextInput(attrs={'placeholder': 'Territory Manager Name'}),
         }
 
 

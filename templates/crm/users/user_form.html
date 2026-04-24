@@ -1,0 +1,71 @@
+{% extends 'crm/base.html' %}
+{% block title %}{{ action }} CRM User — CRM{% endblock %}
+{% block nav_crm_users %}active{% endblock %}
+{% block topbar_title %}{{ action }} CRM User{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{% url 'crm_analytics:crm_user_list' %}">CRM Users</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>{{ action }}</span>
+    </div>
+    <h1>{{ action }} CRM User</h1>
+    <p>Assign a CRM role and create account access from inside the CRM.</p>
+  </div>
+</div>
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" name="first_name" value="{{ user_obj.first_name|default:'' }}" placeholder="First name">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" name="last_name" value="{{ user_obj.last_name|default:'' }}" placeholder="Last name">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" name="username" value="{{ user_obj.username|default:'' }}" required>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" name="email" value="{{ user_obj.email|default:'' }}" required>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Password {% if action == 'Create' %}*{% endif %}</label>
+          <input type="password" name="password" {% if action == 'Create' %}required{% endif %} placeholder="{% if action == 'Edit' %}Leave blank to keep existing password{% else %}Enter password{% endif %}">
+        </div>
+        <div class="form-group">
+          <label>CRM Role *</label>
+          <select name="role" required>
+            <option value="">Select role</option>
+            {% for role in roles %}
+              <option value="{{ role.id }}" {% if selected_role and selected_role.id == role.id %}selected{% endif %}>{{ role.name|cut:'CRM - ' }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <label style="display:flex;align-items:center;gap:10px;margin:10px 0 0;">
+        <input type="checkbox" name="is_active" {% if user_obj.is_active or not user_obj %}checked{% endif %}>
+        Active account
+      </label>
+    </div>
+    <div class="card-body" style="padding-top:0; display:flex; justify-content:flex-end; gap:10px;">
+      <a href="{% url 'crm_analytics:crm_user_list' %}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">{% if action == 'Create' %}Create User{% else %}Save Changes{% endif %}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

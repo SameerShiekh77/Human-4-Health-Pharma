@@ -15,6 +15,7 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
      
     path('crm/',               include('crm_analytics.urls')),       # /crm/  → dashboard
+    path('crm/data-tools/',    include('crm_data_tools.urls')),
     path('crm/products/',      include('crm_products.urls')),        # /crm/products/
     path('crm/distributors/',  include('crm_distributors.urls')),    # /crm/distributors/
     path('crm/sales/',         include('crm_sales.urls')),           # /crm/sales/

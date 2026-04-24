@@ -2,7 +2,8 @@
 # crm_doctors/admin.py
 from django.contrib import admin
 from .models import (Doctor, DoctorVisit, VisitProductDetail,
-                     CompetitorInfo, DoctorInvestment, PharmacyReference)
+                     CompetitorInfo, DoctorInvestment, PharmacyReference,
+                     DoctorPracticeLocation)
 
 class VisitProductDetailInline(admin.TabularInline):
     model = VisitProductDetail
@@ -30,7 +31,7 @@ class DoctorAdmin(admin.ModelAdmin):
 
 @admin.register(DoctorVisit)
 class DoctorVisitAdmin(admin.ModelAdmin):
-    list_display = ['mr', 'doctor', 'visit_date', 'visit_type',
+    list_display = ['mr', 'doctor', 'visit_location', 'visit_date', 'visit_type',
                     'is_gps_verified', 'total_investment']
     list_filter = ['visit_type', 'is_gps_verified', 'visit_date']
     search_fields = ['mr__name', 'doctor__doctor_name']
@@ -40,3 +41,10 @@ class DoctorVisitAdmin(admin.ModelAdmin):
         DoctorInvestmentInline,
         PharmacyReferenceInline,
     ]
+
+
+@admin.register(DoctorPracticeLocation)
+class DoctorPracticeLocationAdmin(admin.ModelAdmin):
+    list_display = ['doctor', 'location_name', 'location_type', 'is_active']
+    search_fields = ['doctor__doctor_name', 'location_name', 'address']
+    list_filter = ['location_type', 'is_active']

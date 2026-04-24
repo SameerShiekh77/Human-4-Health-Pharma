@@ -7,6 +7,7 @@
 <a href="{% url 'crm_sales:area_create' %}" class="btn btn-primary btn-sm">
   <i class="fa-solid fa-plus"></i> Add Area
 </a>
+{% include 'crm/data_tools/topbar_buttons.html' with export_url=export_url sample_url=sample_url import_url=import_url %}
 {% endblock %}
 
 {% block content %}
@@ -54,7 +55,7 @@
           <th>Area ID</th>
           <th>Area Name</th>
           <th>Region</th>
-          <th>Division</th>
+          <th>Territory</th>
           <th>Area Manager</th>
           <th>MRs</th>
           <th>Doctors</th>

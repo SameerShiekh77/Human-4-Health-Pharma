@@ -2,13 +2,17 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from core.auth_utils import crm_access_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count, Avg
 from django.forms import inlineformset_factory
+from django.http import JsonResponse
+from django.urls import reverse
 
 from .models import (Doctor, DoctorVisit, VisitProductDetail,
-                     CompetitorInfo, DoctorInvestment, PharmacyReference)
+                     CompetitorInfo, DoctorInvestment, PharmacyReference,
+                     DoctorPracticeLocation)
 from .forms import (DoctorForm, DoctorVisitForm,
                     VisitProductDetailFormSet, DoctorInvestmentFormSet,
                     CompetitorInfoFormSet, PharmacyReferenceFormSet)
@@ -16,7 +20,7 @@ from .forms import (DoctorForm, DoctorVisitForm,
 
 # ─── DOCTOR ──────────────────────────────
 
-@login_required
+@crm_access_required
 def doctor_list(request):
     qs = Doctor.objects.select_related('area').prefetch_related('assigned_mrs')
 
@@ -47,10 +51,13 @@ def doctor_list(request):
         'specialties': specialties,
         'total':       qs.count(),
         'active':      Doctor.objects.filter(status='active').count(),
+        'export_url': reverse('crm_data_tools:export', args=['doctor']),
+        'sample_url': reverse('crm_data_tools:sample', args=['doctor']),
+        'import_url': reverse('crm_data_tools:import', args=['doctor']),
     })
 
 
-@login_required
+@crm_access_required
 def doctor_detail(request, pk):
     doctor  = get_object_or_404(Doctor, pk=pk)
     visits  = doctor.visits.select_related('mr').order_by('-visit_date')
@@ -70,7 +77,7 @@ def doctor_detail(request, pk):
     })
 
 
-@login_required
+@crm_access_required
 def doctor_create(request):
     form = DoctorForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -80,7 +87,7 @@ def doctor_create(request):
     return render(request, 'crm/doctors/doctor_form.html', {'form': form, 'action': 'Add'})
 
 
-@login_required
+@crm_access_required
 def doctor_edit(request, pk):
     obj  = get_object_or_404(Doctor, pk=pk)
     form = DoctorForm(request.POST or None, instance=obj)
@@ -91,7 +98,7 @@ def doctor_edit(request, pk):
     return render(request, 'crm/doctors/doctor_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def doctor_delete(request, pk):
     obj = get_object_or_404(Doctor, pk=pk)
     if request.method == 'POST':
@@ -103,9 +110,9 @@ def doctor_delete(request, pk):
 
 # ─── DOCTOR VISIT (MOST IMPORTANT) ───────
 
-@login_required
+@crm_access_required
 def visit_list(request):
-    qs = DoctorVisit.objects.select_related('mr', 'doctor').order_by('-visit_date', '-visit_time')
+    qs = DoctorVisit.objects.select_related('mr', 'doctor', 'visit_location').order_by('-visit_date', '-visit_time')
 
     q          = request.GET.get('q', '')
     mr_id      = request.GET.get('mr', '')
@@ -149,13 +156,16 @@ def visit_list(request):
                 visit_date=__import__('datetime').date.today()
             ).count(),
         'visit_types': DoctorVisit.VISIT_TYPE_CHOICES,
+        'export_url': reverse('crm_data_tools:export', args=['doctor_visit']),
+        'sample_url': reverse('crm_data_tools:sample', args=['doctor_visit']),
+        'import_url': reverse('crm_data_tools:import', args=['doctor_visit']),
     })
 
 
-@login_required
+@crm_access_required
 def visit_detail(request, pk):
     visit = get_object_or_404(
-        DoctorVisit.objects.select_related('mr', 'doctor')
+        DoctorVisit.objects.select_related('mr', 'doctor', 'visit_location')
             .prefetch_related('product_details__product',
                               'investments',
                               'competitor_info',
@@ -165,7 +175,7 @@ def visit_detail(request, pk):
     return render(request, 'crm/doctors/visit_detail.html', {'visit': visit})
 
 
-@login_required
+@crm_access_required
 def visit_create(request):
     """
     Full visit entry form with inline formsets for:
@@ -225,7 +235,7 @@ def visit_create(request):
     })
 
 
-@login_required
+@crm_access_required
 def visit_edit(request, pk):
     visit = get_object_or_404(DoctorVisit, pk=pk)
 
@@ -262,7 +272,7 @@ def visit_edit(request, pk):
     })
 
 
-@login_required
+@crm_access_required
 def visit_delete(request, pk):
     obj = get_object_or_404(DoctorVisit, pk=pk)
     if request.method == 'POST':
@@ -272,5 +282,98 @@ def visit_delete(request, pk):
     return render(request, 'crm/confirm_delete.html', {
         'obj': obj,
         'obj_name': f'Visit by {obj.mr.name} → Dr. {obj.doctor.doctor_name} ({obj.visit_date})'
+    })
+
+
+@crm_access_required
+def doctor_locations_api(request, doctor_id):
+    locations = DoctorPracticeLocation.objects.filter(
+        doctor_id=doctor_id,
+        is_active=True,
+    ).order_by('location_name')
+
+    return JsonResponse({
+        'results': [
+            {
+                'id': loc.id,
+                'name': loc.location_name,
+                'type': loc.get_location_type_display(),
+                'address': loc.address or '',
+            }
+            for loc in locations
+        ]
+    })
+
+
+@crm_access_required
+def doctor_last_visit_api(request, doctor_id):
+    visit = (
+        DoctorVisit.objects.select_related('mr', 'doctor', 'visit_location')
+        .prefetch_related(
+            'product_details__product',
+            'investments',
+            'competitor_info',
+            'pharmacy_references',
+        )
+        .filter(doctor_id=doctor_id)
+        .order_by('-visit_date', '-visit_time', '-id')
+        .first()
+    )
+
+    if not visit:
+        return JsonResponse({'found': False})
+
+    return JsonResponse({
+        'found': True,
+        'visit': {
+            'id': visit.id,
+            'mr_name': visit.mr.name,
+            'mr_id': visit.mr.mr_id,
+            'doctor_name': visit.doctor.doctor_name,
+            'doctor_specialty': visit.doctor.specialty,
+            'visit_date': visit.visit_date.isoformat(),
+            'visit_time': visit.visit_time.strftime('%H:%M'),
+            'visit_status': visit.get_visit_type_display(),
+            'visit_location': visit.visit_location.location_name if visit.visit_location else (visit.hospital_clinic_name or ''),
+            'gps_address': visit.gps_address or '',
+            'gps_latitude': str(visit.gps_latitude) if visit.gps_latitude is not None else '',
+            'gps_longitude': str(visit.gps_longitude) if visit.gps_longitude is not None else '',
+            'next_follow_up_date': visit.next_follow_up_date.isoformat() if visit.next_follow_up_date else '',
+            'remarks': visit.remarks or '',
+            'products': [
+                {
+                    'name': pd.product.product_name,
+                    'strength': pd.product.strength,
+                    'samples_given': pd.samples_given,
+                    'units_day': pd.estimated_units_prescribed_per_day,
+                    'units_month': pd.estimated_units_prescribed_per_month,
+                    'value_month': str(pd.estimated_value_per_month),
+                }
+                for pd in visit.product_details.all()
+            ],
+            'investments': [
+                {
+                    'type': inv.get_investment_type_display(),
+                    'amount': str(inv.amount),
+                    'description': inv.description or '',
+                }
+                for inv in visit.investments.all()
+            ],
+            'competitors': [
+                {
+                    'product_name': ci.competitor_product_name,
+                    'company': ci.competitor_company,
+                    'notes': ci.notes or '',
+                }
+                for ci in visit.competitor_info.all()
+            ],
+            'pharmacies': [
+                {
+                    'store_name': ph.store_name,
+                    'store_location': ph.store_location or '',
+                }
+                for ph in visit.pharmacy_references.all()
+            ],
+        }
     })
 

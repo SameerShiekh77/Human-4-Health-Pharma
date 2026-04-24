@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from core.auth_utils import crm_access_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count
 from django.utils import timezone
 from datetime import timedelta
+from django.urls import reverse
 
 from .models import Division, ProductMaster, BatchManagement, CompanyStock
 from .forms import DivisionForm, ProductMasterForm, BatchManagementForm, CompanyStockForm
@@ -14,7 +16,7 @@ from .forms import DivisionForm, ProductMasterForm, BatchManagementForm, Company
 # DIVISION VIEWS
 # ─────────────────────────────────────────
 
-@login_required
+@crm_access_required
 def division_list(request):
     qs = Division.objects.annotate(product_count=Count('products'))
     q = request.GET.get('q', '')
@@ -28,36 +30,39 @@ def division_list(request):
         'page_obj': page,
         'query': q,
         'total': qs.count(),
+        'export_url': reverse('crm_data_tools:export', args=['territory']),
+        'sample_url': reverse('crm_data_tools:sample', args=['territory']),
+        'import_url': reverse('crm_data_tools:import', args=['territory']),
     })
 
 
-@login_required
+@crm_access_required
 def division_create(request):
     form = DivisionForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         form.save()
-        messages.success(request, 'Division created successfully.')
+        messages.success(request, 'Territory created successfully.')
         return redirect('crm_products:division_list')
     return render(request, 'crm/products/division_form.html', {'form': form, 'action': 'Create'})
 
 
-@login_required
+@crm_access_required
 def division_edit(request, pk):
     obj = get_object_or_404(Division, pk=pk)
     form = DivisionForm(request.POST or None, instance=obj)
     if request.method == 'POST' and form.is_valid():
         form.save()
-        messages.success(request, 'Division updated.')
+        messages.success(request, 'Territory updated.')
         return redirect('crm_products:division_list')
     return render(request, 'crm/products/division_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def division_delete(request, pk):
     obj = get_object_or_404(Division, pk=pk)
     if request.method == 'POST':
         obj.delete()
-        messages.success(request, 'Division deleted.')
+        messages.success(request, 'Territory deleted.')
         return redirect('crm_products:division_list')
     return render(request, 'crm/confirm_delete.html', {'obj': obj, 'obj_name': obj.name})
 
@@ -66,7 +71,7 @@ def division_delete(request, pk):
 # PRODUCT VIEWS
 # ─────────────────────────────────────────
 
-@login_required
+@crm_access_required
 def product_list(request):
     qs = ProductMaster.objects.select_related('division')
 
@@ -100,10 +105,13 @@ def product_list(request):
         'total':      qs.count(),
         'active_count':   ProductMaster.objects.filter(status='active').count(),
         'inactive_count': ProductMaster.objects.filter(status='inactive').count(),
+        'export_url': reverse('crm_data_tools:export', args=['product']),
+        'sample_url': reverse('crm_data_tools:sample', args=['product']),
+        'import_url': reverse('crm_data_tools:import', args=['product']),
     })
 
 
-@login_required
+@crm_access_required
 def product_detail(request, pk):
     product = get_object_or_404(ProductMaster, pk=pk)
     batches = product.batches.order_by('expiry_date')
@@ -116,7 +124,7 @@ def product_detail(request, pk):
     })
 
 
-@login_required
+@crm_access_required
 def product_create(request):
     form = ProductMasterForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
@@ -126,7 +134,7 @@ def product_create(request):
     return render(request, 'crm/products/product_form.html', {'form': form, 'action': 'Add New'})
 
 
-@login_required
+@crm_access_required
 def product_edit(request, pk):
     obj  = get_object_or_404(ProductMaster, pk=pk)
     form = ProductMasterForm(request.POST or None, request.FILES or None, instance=obj)
@@ -137,7 +145,7 @@ def product_edit(request, pk):
     return render(request, 'crm/products/product_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def product_delete(request, pk):
     obj = get_object_or_404(ProductMaster, pk=pk)
     if request.method == 'POST':
@@ -151,7 +159,7 @@ def product_delete(request, pk):
 # BATCH VIEWS
 # ─────────────────────────────────────────
 
-@login_required
+@crm_access_required
 def batch_list(request):
     qs = BatchManagement.objects.select_related('product')
 
@@ -185,16 +193,19 @@ def batch_list(request):
         'active':      qs.filter(batch_status='active').count(),
         'near_expiry': qs.filter(batch_status='near_expiry').count(),
         'expired':     qs.filter(batch_status='expired').count(),
+        'export_url': reverse('crm_data_tools:export', args=['batch']),
+        'sample_url': reverse('crm_data_tools:sample', args=['batch']),
+        'import_url': reverse('crm_data_tools:import', args=['batch']),
     })
 
 
-@login_required
+@crm_access_required
 def batch_detail(request, pk):
     batch = get_object_or_404(BatchManagement, pk=pk)
     return render(request, 'crm/products/batch_detail.html', {'batch': batch})
 
 
-@login_required
+@crm_access_required
 def batch_create(request):
     form = BatchManagementForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -204,7 +215,7 @@ def batch_create(request):
     return render(request, 'crm/products/batch_form.html', {'form': form, 'action': 'Create'})
 
 
-@login_required
+@crm_access_required
 def batch_edit(request, pk):
     obj  = get_object_or_404(BatchManagement, pk=pk)
     form = BatchManagementForm(request.POST or None, instance=obj)
@@ -215,7 +226,7 @@ def batch_edit(request, pk):
     return render(request, 'crm/products/batch_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def batch_delete(request, pk):
     obj = get_object_or_404(BatchManagement, pk=pk)
     if request.method == 'POST':
@@ -229,7 +240,7 @@ def batch_delete(request, pk):
 # COMPANY STOCK VIEWS
 # ─────────────────────────────────────────
 
-@login_required
+@crm_access_required
 def stock_list(request):
     qs = CompanyStock.objects.select_related('product', 'batch')
 
@@ -260,10 +271,13 @@ def stock_list(request):
         'low_count': low_count,
         'exp_count': exp_count,
         'locations': CompanyStock.WAREHOUSE_CHOICES,
+        'export_url': reverse('crm_data_tools:export', args=['company_stock']),
+        'sample_url': reverse('crm_data_tools:sample', args=['company_stock']),
+        'import_url': reverse('crm_data_tools:import', args=['company_stock']),
     })
 
 
-@login_required
+@crm_access_required
 def stock_create(request):
     form = CompanyStockForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -273,7 +287,7 @@ def stock_create(request):
     return render(request, 'crm/products/stock_form.html', {'form': form, 'action': 'Add'})
 
 
-@login_required
+@crm_access_required
 def stock_edit(request, pk):
     obj  = get_object_or_404(CompanyStock, pk=pk)
     form = CompanyStockForm(request.POST or None, instance=obj)
@@ -284,7 +298,7 @@ def stock_edit(request, pk):
     return render(request, 'crm/products/stock_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def stock_delete(request, pk):
     obj = get_object_or_404(CompanyStock, pk=pk)
     if request.method == 'POST':

@@ -1,11 +1,12 @@
 {% extends 'crm/base.html' %}
-{% block title %}Divisions — CRM{% endblock %}
+{% block title %}Territories — CRM{% endblock %}
 {% block nav_divisions %}active{% endblock %}
-{% block topbar_title %}Divisions{% endblock %}
+{% block topbar_title %}Territories{% endblock %}
 {% block topbar_actions %}
   <a href="{% url 'crm_products:division_create' %}" class="btn btn-primary btn-sm">
-    <i class="fa-solid fa-plus"></i> Add Division
+    <i class="fa-solid fa-plus"></i> Add Territory
   </a>
+  {% include 'crm/data_tools/topbar_buttons.html' with export_url=export_url sample_url=sample_url import_url=import_url %}
 {% endblock %}
 
 {% block content %}
@@ -16,10 +17,10 @@
       <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
       <a href="{% url 'crm_products:product_list' %}">Products</a>
       <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
-      <span>Divisions</span>
+      <span>Territories</span>
     </div>
-    <h1>Divisions</h1>
-    <p>{{ total }} sales division(s) — each maps to a product line and field team</p>
+    <h1>Territories</h1>
+    <p>{{ total }} sales territory(ies) — each maps to a product line and field team</p>
   </div>
 </div>
 
@@ -27,7 +28,7 @@
 <form method="get" class="search-bar">
   <div class="search-input-wrap">
     <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" name="q" value="{{ query }}" placeholder="Search division name or manager...">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search territory name or manager...">
   </div>
   <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Search</button>
   {% if query %}
@@ -42,8 +43,8 @@
     <table>
       <thead>
         <tr>
-          <th>Division ID</th>
-          <th>Division Name</th>
+          <th>Territory ID</th>
+          <th>Territory Name</th>
           <th>Manager</th>
           <th>Products</th>
           <th>Status</th>
@@ -82,10 +83,10 @@
           <td colspan="7">
             <div class="empty-state">
               <i class="fa-solid fa-sitemap"></i>
-              <h3>No divisions found</h3>
-              <p>Create your first sales division to get started.</p>
+              <h3>No territories found</h3>
+              <p>Create your first sales territory to get started.</p>
               <a href="{% url 'crm_products:division_create' %}" class="btn btn-primary" style="margin-top:12px">
-                <i class="fa-solid fa-plus"></i> Add Division
+                <i class="fa-solid fa-plus"></i> Add Territory
               </a>
             </div>
           </td>

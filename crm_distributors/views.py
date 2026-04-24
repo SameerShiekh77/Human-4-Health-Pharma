@@ -2,9 +2,11 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from core.auth_utils import crm_access_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count
+from django.urls import reverse
 
 from .models import Distributor, DistributorStockEntry, DistributorSalesValue
 from .forms import DistributorForm, DistributorStockEntryForm, DistributorSalesValueForm
@@ -12,7 +14,7 @@ from .forms import DistributorForm, DistributorStockEntryForm, DistributorSalesV
 
 # ─── DISTRIBUTOR ────────────────────────
 
-@login_required
+@crm_access_required
 def distributor_list(request):
     qs = Distributor.objects.all()
     q      = request.GET.get('q', '')
@@ -41,10 +43,13 @@ def distributor_list(request):
         'cities': cities,
         'total': qs.count(),
         'active': Distributor.objects.filter(status='active').count(),
+        'export_url': reverse('crm_data_tools:export', args=['distributor']),
+        'sample_url': reverse('crm_data_tools:sample', args=['distributor']),
+        'import_url': reverse('crm_data_tools:import', args=['distributor']),
     })
 
 
-@login_required
+@crm_access_required
 def distributor_detail(request, pk):
     dist = get_object_or_404(Distributor, pk=pk)
     entries = dist.stock_entries.select_related('product').order_by('-date_submitted')[:10]
@@ -58,7 +63,7 @@ def distributor_detail(request, pk):
     })
 
 
-@login_required
+@crm_access_required
 def distributor_create(request):
     form = DistributorForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -68,7 +73,7 @@ def distributor_create(request):
     return render(request, 'crm/distributors/distributor_form.html', {'form': form, 'action': 'Add'})
 
 
-@login_required
+@crm_access_required
 def distributor_edit(request, pk):
     obj  = get_object_or_404(Distributor, pk=pk)
     form = DistributorForm(request.POST or None, instance=obj)
@@ -79,7 +84,7 @@ def distributor_edit(request, pk):
     return render(request, 'crm/distributors/distributor_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def distributor_delete(request, pk):
     obj = get_object_or_404(Distributor, pk=pk)
     if request.method == 'POST':
@@ -91,7 +96,7 @@ def distributor_delete(request, pk):
 
 # ─── STOCK ENTRY ─────────────────────────
 
-@login_required
+@crm_access_required
 def stock_entry_list(request):
     qs = DistributorStockEntry.objects.select_related('distributor', 'product')
 
@@ -114,16 +119,19 @@ def stock_entry_list(request):
         'query':        q,
         'distributors': Distributor.objects.filter(status='active'),
         'total':        qs.count(),
+        'export_url': reverse('crm_data_tools:export', args=['distributor_stock_entry']),
+        'sample_url': reverse('crm_data_tools:sample', args=['distributor_stock_entry']),
+        'import_url': reverse('crm_data_tools:import', args=['distributor_stock_entry']),
     })
 
 
-@login_required
+@crm_access_required
 def stock_entry_detail(request, pk):
     entry = get_object_or_404(DistributorStockEntry, pk=pk)
     return render(request, 'crm/distributors/stock_entry_detail.html', {'entry': entry})
 
 
-@login_required
+@crm_access_required
 def stock_entry_create(request):
     form = DistributorStockEntryForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -133,7 +141,7 @@ def stock_entry_create(request):
     return render(request, 'crm/distributors/stock_entry_form.html', {'form': form, 'action': 'Submit'})
 
 
-@login_required
+@crm_access_required
 def stock_entry_edit(request, pk):
     obj  = get_object_or_404(DistributorStockEntry, pk=pk)
     form = DistributorStockEntryForm(request.POST or None, instance=obj)
@@ -144,7 +152,7 @@ def stock_entry_edit(request, pk):
     return render(request, 'crm/distributors/stock_entry_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def stock_entry_delete(request, pk):
     obj = get_object_or_404(DistributorStockEntry, pk=pk)
     if request.method == 'POST':
@@ -156,7 +164,7 @@ def stock_entry_delete(request, pk):
 
 # ─── SALES VALUE ──────────────────────────
 
-@login_required
+@crm_access_required
 def sales_value_list(request):
     qs = DistributorSalesValue.objects.select_related('distributor', 'product')
     dist = request.GET.get('distributor', '')
@@ -171,10 +179,13 @@ def sales_value_list(request):
         'page_obj':     page,
         'distributors': Distributor.objects.filter(status='active'),
         'total_value':  total_value,
+        'export_url': reverse('crm_data_tools:export', args=['distributor_sales_value']),
+        'sample_url': reverse('crm_data_tools:sample', args=['distributor_sales_value']),
+        'import_url': reverse('crm_data_tools:import', args=['distributor_sales_value']),
     })
 
 
-@login_required
+@crm_access_required
 def sales_value_create(request):
     form = DistributorSalesValueForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -184,7 +195,7 @@ def sales_value_create(request):
     return render(request, 'crm/distributors/sales_value_form.html', {'form': form, 'action': 'Add'})
 
 
-@login_required
+@crm_access_required
 def sales_value_delete(request, pk):
     obj = get_object_or_404(DistributorSalesValue, pk=pk)
     if request.method == 'POST':

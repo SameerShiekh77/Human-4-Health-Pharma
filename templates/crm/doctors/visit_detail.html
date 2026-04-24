@@ -28,7 +28,8 @@
         <div class="kv-list">
           <div class="kv-row"><div class="kv-key">MR</div><div>{{ visit.mr.name }} <span style="color:var(--muted)">({{ visit.mr.mr_id }})</span></div></div>
           <div class="kv-row"><div class="kv-key">Doctor</div><div>Dr. {{ visit.doctor.doctor_name }} &mdash; {{ visit.doctor.specialty }}</div></div>
-          <div class="kv-row"><div class="kv-key">Visit Type</div><div><span class="badge badge-blue">{{ visit.get_visit_type_display }}</span></div></div>
+          <div class="kv-row"><div class="kv-key">Visited Hospital / Clinic</div><div>{{ visit.visit_location.location_name|default:visit.hospital_clinic_name|default:"—" }}</div></div>
+          <div class="kv-row"><div class="kv-key">Visit Status</div><div><span class="badge badge-blue">{{ visit.get_visit_type_display }}</span></div></div>
           <div class="kv-row"><div class="kv-key">Location</div><div style="font-size:12px;color:var(--muted)">{{ visit.gps_address|default:"Not captured" }}</div></div>
           {% if visit.gps_latitude and visit.gps_longitude %}
           <div class="kv-row"><div class="kv-key">Coordinates</div><div style="font-size:12px;color:var(--muted)">{{ visit.gps_latitude }}, {{ visit.gps_longitude }}</div></div>

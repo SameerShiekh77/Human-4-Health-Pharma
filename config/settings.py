@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crm_sales',
     'crm_analytics',
     'crm_stores',
-    'crm_doctors'
+    'crm_doctors',
+    'crm_data_tools'
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'core.middleware.CRMAccessMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
      "django_browser_reload.middleware.BrowserReloadMiddleware",

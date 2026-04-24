@@ -3,6 +3,40 @@
 {% block nav_products %}active{% endblock %}
 {% block topbar_title %}{{ action }} Product{% endblock %}
 
+{% block extra_css %}
+<style>
+  .trade-formula-group input[type="number"] {
+    max-width: 220px;
+  }
+  .trade-helper {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  .trade-toggle {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  #trade_auto_calc {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <div>
@@ -40,7 +74,7 @@
         {{ form.generic_name }}
       </div>
       <div class="form-group">
-        <label>Category *</label>
+        <label>Presentation *</label>
         {{ form.category }}
       </div>
       <div class="form-group">
@@ -52,7 +86,7 @@
         {{ form.packing_size }}
       </div>
       <div class="form-group">
-        <label>Division</label>
+        <label>Territory</label>
         {{ form.division }}
       </div>
       <div class="form-group">
@@ -69,7 +103,7 @@
     </div>
     <div class="form-grid">
       <div class="form-group">
-        <label>Manufacturing Cost / Unit</label>
+        <label>Manufacturing / Factory Price</label>
         {{ form.manufacturing_cost_per_unit }}
       </div>
       <div class="form-group">
@@ -77,12 +111,22 @@
         {{ form.distributor_price }}
       </div>
       <div class="form-group">
+        <label>Retail Price (MRP)</label>
+        {{ form.retail_price }}
+      </div>
+      <div class="form-group">
         <label>Trade Price</label>
         {{ form.trade_price }}
       </div>
-      <div class="form-group">
-        <label>Retail Price (MRP)</label>
-        {{ form.retail_price }}
+      <div class="form-group full trade-formula-group">
+        <label>Trade Price Formula (%)</label>
+        <input type="number" id="trade_discount_percent" value="17.64" step="0.01" min="0" max="100" placeholder="17.64">
+        <span class="trade-helper">Trade Price = Retail Price - (Retail Price x percentage / 100)</span>
+        <label class="trade-toggle">
+          <input type="checkbox" id="trade_auto_calc" checked>
+          Auto-calculate from Retail Price
+        </label>
+        <span class="trade-helper">Trade Price is still manually editable at any time.</span>
       </div>
     </div>
   </div>
@@ -118,4 +162,48 @@
     </button>
   </div>
 </form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    const retailInput = document.getElementById('id_retail_price');
+    const tradeInput = document.getElementById('id_trade_price');
+    const percentInput = document.getElementById('trade_discount_percent');
+    const autoCalcInput = document.getElementById('trade_auto_calc');
+
+    if (!retailInput || !tradeInput || !percentInput || !autoCalcInput) {
+      return;
+    }
+
+    const toNumber = (value) => {
+      const parsed = parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const round2 = (value) => Math.round(value * 100) / 100;
+
+    const calculateTradePrice = () => {
+      const retail = toNumber(retailInput.value);
+      const percent = toNumber(percentInput.value);
+      const discountAmount = retail * (percent / 100);
+      const trade = Math.max(0, retail - discountAmount);
+      tradeInput.value = round2(trade).toFixed(2);
+    };
+
+    const recalcIfEnabled = () => {
+      if (autoCalcInput.checked) {
+        calculateTradePrice();
+      }
+    };
+
+    retailInput.addEventListener('input', recalcIfEnabled);
+    percentInput.addEventListener('input', recalcIfEnabled);
+    autoCalcInput.addEventListener('change', recalcIfEnabled);
+
+    if (!tradeInput.value || toNumber(tradeInput.value) === 0) {
+      calculateTradePrice();
+    }
+  })();
+</script>
 {% endblock %}

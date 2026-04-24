@@ -9,17 +9,24 @@
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 16px;
+    padding: 14px;
     margin-bottom: 12px;
     position: relative;
   }
   .formset-row .remove-row {
-    position: absolute; top: 10px; right: 10px;
+    position: static;
     background: none; border: none; color: var(--muted);
     cursor: pointer; font-size: 13px; padding: 4px 8px;
     border-radius: 6px; transition: all .15s;
+    margin-left: auto;
+    align-self: flex-start;
   }
   .formset-row .remove-row:hover { background: rgba(255,77,109,.15); color: var(--danger); }
+  .formset-row-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
   .add-row-btn {
     display: inline-flex; align-items: center; gap: 7px;
     padding: 8px 14px; border: 1px dashed var(--border);
@@ -48,6 +55,152 @@
   .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
+  .location-subsection {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .location-mode-wrap ul {
+    list-style: none;
+    display: flex;
+    gap: 10px 16px;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .location-mode-wrap li { margin: 0; }
+  .location-mode-wrap label {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13px;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+  .location-mode-wrap input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    accent-color: var(--accent);
+  }
+  .investment-other-name-group {
+    display: none;
+  }
+  .investment-delete-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 8px;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    font-weight: 600;
+  }
+  .investment-delete-row label {
+    margin: 0;
+  }
+  .visit-history-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.48);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 20px;
+  }
+  .visit-history-modal.active { display: flex; }
+  .visit-history-panel {
+    width: min(980px, 100%);
+    max-height: 88vh;
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.24);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .visit-history-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #fff, #f8fbff);
+  }
+  .visit-history-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .visit-history-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  .visit-history-close:hover {
+    color: var(--danger);
+    border-color: rgba(255, 77, 109, 0.35);
+  }
+  .visit-history-body {
+    padding: 18px 20px 22px;
+    overflow: auto;
+  }
+  .visit-history-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 16px;
+  }
+  .visit-history-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    background: var(--card);
+  }
+  .visit-history-section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .visit-history-list {
+    display: grid;
+    gap: 10px;
+  }
+  .visit-history-item {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fbfdff;
+  }
+  .visit-history-item strong {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
+  .visit-history-muted {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  @media (max-width: 900px) {
+    .visit-history-grid { grid-template-columns: 1fr; }
+  }
 </style>
 {% endblock %}
 
@@ -79,6 +232,7 @@
   {{ form.gps_latitude }}
   {{ form.gps_longitude }}
   {{ form.is_gps_verified }}
+  {{ form.hospital_clinic_name }}
 
   <!-- SECTION 1: Basic Info -->
   <div class="form-section">
@@ -101,12 +255,40 @@
         {{ form.visit_time }}
       </div>
       <div class="form-group">
-        <label>Hospital / Clinic</label>
-        {{ form.hospital_clinic_name }}
-      </div>
-      <div class="form-group">
-        <label>Visit Type *</label>
+        <label>Visit Status *</label>
         {{ form.visit_type }}
+      </div>
+      <div class="form-group full">
+        <label>Visit Location *</label>
+        <div class="location-subsection">
+          <div class="location-mode-wrap" style="margin-bottom:10px">
+            {{ form.location_mode }}
+          </div>
+
+          <div id="existing-location-wrap" class="form-grid" style="margin-top:8px">
+            <div class="form-group full">
+              <label>Choose Existing Hospital / Clinic</label>
+              {{ form.visit_location }}
+              {% if form.visit_location.errors %}<span style="color:var(--danger);font-size:12px">{{ form.visit_location.errors.0 }}</span>{% endif %}
+            </div>
+          </div>
+
+          <div id="new-location-wrap" class="form-grid" style="margin-top:8px">
+            <div class="form-group">
+              <label>New Location Name</label>
+              {{ form.new_location_name }}
+              {% if form.new_location_name.errors %}<span style="color:var(--danger);font-size:12px">{{ form.new_location_name.errors.0 }}</span>{% endif %}
+            </div>
+            <div class="form-group">
+              <label>Location Type</label>
+              {{ form.new_location_type }}
+            </div>
+            <div class="form-group full">
+              <label>Address (Optional)</label>
+              {{ form.new_location_address }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -191,7 +373,9 @@
           {% for inv in investment_fs %}
             <div class="formset-row">
               {{ inv.id }}
-              <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fa-solid fa-times"></i></button>
+              <div class="formset-row-header">
+                <button type="button" class="remove-row" onclick="removeRow(this)"><i class="fa-solid fa-times"></i> Remove</button>
+              </div>
               <div class="form-grid">
                 <div class="form-group">
                   <label>Investment Type</label>{{ inv.investment_type }}
@@ -199,12 +383,13 @@
                 <div class="form-group">
                   <label>Amount (PKR)</label>{{ inv.amount }}
                 </div>
-                <div class="form-group full">
-                  <label>Description</label>{{ inv.description }}
+                <div class="form-group full investment-other-name-group">
+                  <label>Other Name</label>{{ inv.description }}
+                  {% if inv.description.errors %}<span style="color:var(--danger);font-size:12px">{{ inv.description.errors.0 }}</span>{% endif %}
                 </div>
               </div>
               {% for field in inv.hidden_fields %}{{ field }}{% endfor %}
-              <div class="form-group" style="margin-top:8px">
+              <div class="investment-delete-row">
                 <label>Delete</label>{{ inv.DELETE }}
               </div>
             </div>
@@ -297,10 +482,31 @@
     </button>
   </div>
 </form>
+
+<div id="visitHistoryModal" class="visit-history-modal" aria-hidden="true">
+  <div class="visit-history-panel" role="dialog" aria-modal="true" aria-labelledby="visitHistoryTitle">
+    <div class="visit-history-header">
+      <div>
+        <div class="visit-history-title" id="visitHistoryTitle">Previous Visit Details</div>
+        <div id="visitHistorySubtitle" class="visit-history-muted">Latest record for the selected doctor</div>
+      </div>
+      <button type="button" class="visit-history-close" id="visitHistoryClose" aria-label="Close popup">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="visit-history-body" id="visitHistoryBody">
+      <div class="visit-history-muted">Select a doctor to load the last visit.</div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+let visitHistoryModal = null;
+let visitHistoryBody = null;
+let visitHistorySubtitle = null;
+
 // ── GPS CAPTURE ──────────────────────────────────────
 function captureGPS() {
   const btn = document.querySelector('.gps-btn');
@@ -390,6 +596,266 @@ function addFormsetRow(containerId, prefix) {
 
   container.appendChild(newRow);
   totalForms.value = currentCount + 1;
+
+  if (prefix === 'investments') {
+    bindInvestmentOtherToggle(newRow);
+    toggleInvestmentOtherName(newRow);
+  }
+}
+
+// ── INVESTMENT TYPE: OTHERS FIELD TOGGLE ───────────────
+function toggleInvestmentOtherName(row) {
+  const typeSelect = row.querySelector('select[name$="-investment_type"]');
+  const otherGroup = row.querySelector('.investment-other-name-group');
+  const otherInput = row.querySelector('input[name$="-description"]');
+
+  if (!typeSelect || !otherGroup) return;
+
+  if (typeSelect.value === 'other') {
+    otherGroup.style.display = 'flex';
+  } else {
+    otherGroup.style.display = 'none';
+    if (otherInput) otherInput.value = '';
+  }
+}
+
+function bindInvestmentOtherToggle(row) {
+  const typeSelect = row.querySelector('select[name$="-investment_type"]');
+  if (!typeSelect || typeSelect.dataset.otherBound === '1') return;
+
+  typeSelect.addEventListener('change', () => toggleInvestmentOtherName(row));
+  typeSelect.dataset.otherBound = '1';
+}
+
+// ── DOCTOR LOCATION HANDLING ────────────────────────
+async function loadDoctorLocations(doctorId) {
+  const select = document.getElementById('id_visit_location');
+  if (!select) return;
+
+  const selectedValue = select.value;
+
+  select.innerHTML = '<option value="">Loading locations...</option>';
+  if (!doctorId) {
+    select.innerHTML = '<option value="">Select doctor first</option>';
+    return;
+  }
+
+  try {
+    const response = await fetch(`/crm/doctors/${doctorId}/locations/`);
+    const data = await response.json();
+
+    select.innerHTML = '<option value="">Select saved location</option>';
+    if (!data.results || data.results.length === 0) {
+      select.innerHTML = '<option value="">No saved locations. Add new below.</option>';
+      const newMode = document.querySelector('input[name="location_mode"][value="new"]');
+      if (newMode) {
+        newMode.checked = true;
+        toggleLocationMode();
+      }
+      return;
+    }
+
+    data.results.forEach((loc) => {
+      const option = document.createElement('option');
+      option.value = loc.id;
+      option.textContent = `${loc.name} (${loc.type})${loc.address ? ' - ' + loc.address : ''}`;
+      select.appendChild(option);
+    });
+
+    if (selectedValue) {
+      select.value = selectedValue;
+    }
+  } catch (error) {
+    select.innerHTML = '<option value="">Unable to load locations</option>';
+  }
+}
+
+function toggleLocationMode() {
+  const modeInput = document.querySelector('input[name="location_mode"]:checked');
+  const mode = modeInput ? modeInput.value : 'existing';
+
+  const existingWrap = document.getElementById('existing-location-wrap');
+  const newWrap = document.getElementById('new-location-wrap');
+
+  if (mode === 'new') {
+    existingWrap.style.display = 'none';
+    newWrap.style.display = 'grid';
+  } else {
+    existingWrap.style.display = 'grid';
+    newWrap.style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const doctorSelect = document.getElementById('id_doctor');
+  const locationModeInputs = document.querySelectorAll('input[name="location_mode"]');
+  const investmentRows = document.querySelectorAll('#investment-formset .formset-row');
+  visitHistoryModal = document.getElementById('visitHistoryModal');
+  visitHistoryBody = document.getElementById('visitHistoryBody');
+  visitHistorySubtitle = document.getElementById('visitHistorySubtitle');
+  const modalClose = document.getElementById('visitHistoryClose');
+
+  toggleLocationMode();
+
+  if (doctorSelect && doctorSelect.value) {
+    loadDoctorLocations(doctorSelect.value);
+  }
+
+  if (doctorSelect) {
+    doctorSelect.addEventListener('change', (e) => {
+      loadDoctorLocations(e.target.value);
+      loadLastVisitDetails(e.target.value);
+    });
+  }
+
+  locationModeInputs.forEach((input) => {
+    input.addEventListener('change', toggleLocationMode);
+  });
+
+  investmentRows.forEach((row) => {
+    bindInvestmentOtherToggle(row);
+    toggleInvestmentOtherName(row);
+  });
+
+  if (modalClose) {
+    modalClose.addEventListener('click', () => {
+      visitHistoryModal.classList.remove('active');
+      visitHistoryModal.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  if (visitHistoryModal) {
+    visitHistoryModal.addEventListener('click', (event) => {
+      if (event.target === visitHistoryModal) {
+        visitHistoryModal.classList.remove('active');
+        visitHistoryModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
+  if (doctorSelect && doctorSelect.value) {
+    loadLastVisitDetails(doctorSelect.value);
+  }
+});
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderVisitDetails(data) {
+  const products = data.products.length
+    ? data.products.map((item) => `
+      <div class="visit-history-item">
+        <strong>${escapeHtml(item.name)}</strong>
+        <div class="visit-history-muted">${escapeHtml(item.strength)} | Samples: ${escapeHtml(item.samples_given)} | Units/Day: ${escapeHtml(item.units_day)} | Units/Month: ${escapeHtml(item.units_month)} | Value/Month: PKR ${escapeHtml(item.value_month)}</div>
+      </div>
+    `).join('')
+    : '<div class="visit-history-muted">No products recorded.</div>';
+
+  const investments = data.investments.length
+    ? data.investments.map((item) => `
+      <div class="visit-history-item">
+        <strong>${escapeHtml(item.type)}${item.description ? ' - ' + escapeHtml(item.description) : ''}</strong>
+        <div class="visit-history-muted">Amount: PKR ${escapeHtml(item.amount)}</div>
+      </div>
+    `).join('')
+    : '<div class="visit-history-muted">No investments recorded.</div>';
+
+  const competitors = data.competitors.length
+    ? data.competitors.map((item) => `
+      <div class="visit-history-item">
+        <strong>${escapeHtml(item.product_name)}</strong>
+        <div class="visit-history-muted">${escapeHtml(item.company)}${item.notes ? ' | ' + escapeHtml(item.notes) : ''}</div>
+      </div>
+    `).join('')
+    : '<div class="visit-history-muted">No competitor data recorded.</div>';
+
+  const pharmacies = data.pharmacies.length
+    ? data.pharmacies.map((item) => `
+      <div class="visit-history-item">
+        <strong>${escapeHtml(item.store_name)}</strong>
+        <div class="visit-history-muted">${escapeHtml(item.store_location)}</div>
+      </div>
+    `).join('')
+    : '<div class="visit-history-muted">No pharmacy references recorded.</div>';
+
+  return `
+    <div class="visit-history-grid">
+      <div class="visit-history-card">
+        <div class="visit-history-section-title">Visit Summary</div>
+        <div class="kv-list">
+          <div class="kv-row"><div class="kv-key">MR</div><div>${escapeHtml(data.mr_name)} <span style="color:var(--muted)">(${escapeHtml(data.mr_id)})</span></div></div>
+          <div class="kv-row"><div class="kv-key">Doctor</div><div>Dr. ${escapeHtml(data.doctor_name)} &mdash; ${escapeHtml(data.doctor_specialty)}</div></div>
+          <div class="kv-row"><div class="kv-key">Date / Time</div><div>${escapeHtml(data.visit_date)} at ${escapeHtml(data.visit_time)}</div></div>
+          <div class="kv-row"><div class="kv-key">Status</div><div><span class="badge badge-blue">${escapeHtml(data.visit_status)}</span></div></div>
+          <div class="kv-row"><div class="kv-key">Visited Location</div><div>${escapeHtml(data.visit_location || '—')}</div></div>
+          <div class="kv-row"><div class="kv-key">GPS Address</div><div style="font-size:12px;color:var(--muted)">${escapeHtml(data.gps_address || 'Not captured')}</div></div>
+          <div class="kv-row"><div class="kv-key">Follow Up</div><div>${escapeHtml(data.next_follow_up_date || '—')}</div></div>
+          <div class="kv-row"><div class="kv-key">Remarks</div><div style="color:var(--muted)">${escapeHtml(data.remarks || '—')}</div></div>
+        </div>
+      </div>
+      <div class="visit-history-card">
+        <div class="visit-history-section-title">Products Discussed</div>
+        <div class="visit-history-list">${products}</div>
+      </div>
+      <div class="visit-history-card">
+        <div class="visit-history-section-title">Investments</div>
+        <div class="visit-history-list">${investments}</div>
+      </div>
+      <div class="visit-history-card">
+        <div class="visit-history-section-title">Competitors</div>
+        <div class="visit-history-list">${competitors}</div>
+      </div>
+      <div class="visit-history-card" style="grid-column: 1 / -1;">
+        <div class="visit-history-section-title">Pharmacy References</div>
+        <div class="visit-history-list">${pharmacies}</div>
+      </div>
+    </div>
+  `;
+}
+
+async function loadLastVisitDetails(doctorId) {
+  if (!doctorId) return;
+
+  try {
+    const response = await fetch(`/crm/doctors/${doctorId}/last-visit/`);
+    const data = await response.json();
+
+    if (!data.found) {
+      if (visitHistoryBody) {
+        visitHistoryBody.innerHTML = '<div class="visit-history-muted">No previous visits found for this doctor.</div>';
+      }
+      if (visitHistoryModal) {
+        visitHistoryModal.classList.add('active');
+        visitHistoryModal.setAttribute('aria-hidden', 'false');
+      }
+      return;
+    }
+
+    if (visitHistorySubtitle) {
+      visitHistorySubtitle.textContent = `Latest visit loaded for Dr. ${data.visit.doctor_name}`;
+    }
+    if (visitHistoryBody) {
+      visitHistoryBody.innerHTML = renderVisitDetails(data.visit);
+    }
+    if (visitHistoryModal) {
+      visitHistoryModal.classList.add('active');
+      visitHistoryModal.setAttribute('aria-hidden', 'false');
+    }
+  } catch (error) {
+    if (visitHistoryBody) {
+      visitHistoryBody.innerHTML = '<div class="visit-history-muted">Unable to load previous visit details.</div>';
+    }
+    if (visitHistoryModal) {
+      visitHistoryModal.classList.add('active');
+      visitHistoryModal.setAttribute('aria-hidden', 'false');
+    }
+  }
 }
 </script>
 {% endblock %}

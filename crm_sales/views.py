@@ -2,10 +2,12 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from core.auth_utils import crm_access_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 from .models import Region, Area, MedicalRepresentative
 from crm_products.models import Division
@@ -14,7 +16,7 @@ from .forms import RegionForm, AreaForm, MedicalRepresentativeForm
 
 # ─── REGION ──────────────────────────────
 
-@login_required
+@crm_access_required
 def region_list(request):
     qs = Region.objects.select_related('division').annotate(area_count=Count('areas'))
     q = request.GET.get('q', '')
@@ -30,10 +32,13 @@ def region_list(request):
         'query': q,
         'divisions': Division.objects.filter(is_active=True),
         'total': qs.count(),
+        'export_url': reverse('crm_data_tools:export', args=['region']),
+        'sample_url': reverse('crm_data_tools:sample', args=['region']),
+        'import_url': reverse('crm_data_tools:import', args=['region']),
     })
 
 
-@login_required
+@crm_access_required
 def region_create(request):
     form = RegionForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -43,7 +48,7 @@ def region_create(request):
     return render(request, 'crm/sales/region_form.html', {'form': form, 'action': 'Create'})
 
 
-@login_required
+@crm_access_required
 def region_edit(request, pk):
     obj = get_object_or_404(Region, pk=pk)
     form = RegionForm(request.POST or None, instance=obj)
@@ -54,7 +59,7 @@ def region_edit(request, pk):
     return render(request, 'crm/sales/region_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def region_delete(request, pk):
     obj = get_object_or_404(Region, pk=pk)
     if request.method == 'POST':
@@ -66,7 +71,7 @@ def region_delete(request, pk):
 
 # ─── AREA ────────────────────────────────
 
-@login_required
+@crm_access_required
 def area_list(request):
     qs = Area.objects.select_related('region', 'region__division').annotate(mr_count=Count('mrs'))
     q = request.GET.get('q', '')
@@ -82,10 +87,13 @@ def area_list(request):
         'query': q,
         'regions': Region.objects.filter(is_active=True),
         'total': qs.count(),
+        'export_url': reverse('crm_data_tools:export', args=['area']),
+        'sample_url': reverse('crm_data_tools:sample', args=['area']),
+        'import_url': reverse('crm_data_tools:import', args=['area']),
     })
 
 
-@login_required
+@crm_access_required
 def area_create(request):
     form = AreaForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -95,7 +103,7 @@ def area_create(request):
     return render(request, 'crm/sales/area_form.html', {'form': form, 'action': 'Create'})
 
 
-@login_required
+@crm_access_required
 def area_edit(request, pk):
     obj = get_object_or_404(Area, pk=pk)
     form = AreaForm(request.POST or None, instance=obj)
@@ -106,7 +114,7 @@ def area_edit(request, pk):
     return render(request, 'crm/sales/area_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def area_delete(request, pk):
     obj = get_object_or_404(Area, pk=pk)
     if request.method == 'POST':
@@ -118,7 +126,7 @@ def area_delete(request, pk):
 
 # ─── MEDICAL REPRESENTATIVE ──────────────
 
-@login_required
+@crm_access_required
 def mr_list(request):
     qs = MedicalRepresentative.objects.select_related('division', 'region', 'area')
     q      = request.GET.get('q', '')
@@ -144,10 +152,13 @@ def mr_list(request):
         'regions':  Region.objects.filter(is_active=True),
         'total':    qs.count(),
         'active':   MedicalRepresentative.objects.filter(status='active').count(),
+        'export_url': reverse('crm_data_tools:export', args=['mr']),
+        'sample_url': reverse('crm_data_tools:sample', args=['mr']),
+        'import_url': reverse('crm_data_tools:import', args=['mr']),
     })
 
 
-@login_required
+@crm_access_required
 def mr_detail(request, pk):
     mr = get_object_or_404(MedicalRepresentative, pk=pk)
     visits  = mr.doctor_visits.select_related('doctor').order_by('-visit_date')[:10]
@@ -161,7 +172,7 @@ def mr_detail(request, pk):
     })
 
 
-@login_required
+@crm_access_required
 def mr_create(request):
     form = MedicalRepresentativeForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
@@ -171,7 +182,7 @@ def mr_create(request):
     return render(request, 'crm/sales/mr_form.html', {'form': form, 'action': 'Add'})
 
 
-@login_required
+@crm_access_required
 def mr_edit(request, pk):
     obj  = get_object_or_404(MedicalRepresentative, pk=pk)
     form = MedicalRepresentativeForm(request.POST or None, request.FILES or None, instance=obj)
@@ -182,7 +193,7 @@ def mr_edit(request, pk):
     return render(request, 'crm/sales/mr_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def mr_delete(request, pk):
     obj = get_object_or_404(MedicalRepresentative, pk=pk)
     if request.method == 'POST':

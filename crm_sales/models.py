@@ -21,7 +21,8 @@ class Region(models.Model):
     division = models.ForeignKey(
         Division,
         on_delete=models.CASCADE,
-        related_name='regions'
+        related_name='regions',
+        verbose_name='Territory'
     )
     regional_manager = models.CharField(max_length=150, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -117,7 +118,8 @@ class MedicalRepresentative(models.Model):
         Division,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='mrs'
+        related_name='mrs',
+        verbose_name='Territory'
     )
     region = models.ForeignKey(
         Region,

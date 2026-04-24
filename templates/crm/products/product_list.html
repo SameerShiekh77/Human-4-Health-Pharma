@@ -6,6 +6,7 @@
   <a href="{% url 'crm_products:product_create' %}" class="btn btn-primary btn-sm">
     <i class="fa-solid fa-plus"></i> Add Product
   </a>
+  {% include 'crm/data_tools/topbar_buttons.html' with export_url=export_url sample_url=sample_url import_url=import_url %}
 {% endblock %}
 
 {% block content %}
@@ -45,7 +46,7 @@
     {% endfor %}
   </select>
   <select name="division" style="width:160px">
-    <option value="">All Divisions</option>
+    <option value="">All Territories</option>
     {% for div in divisions %}
     <option value="{{ div.pk }}" {% if request.GET.division == div.pk|stringformat:"s" %}selected{% endif %}>{{ div.name }}</option>
     {% endfor %}
@@ -67,7 +68,7 @@
       <thead>
         <tr>
           <th>Product ID</th><th>Name</th><th>Generic</th><th>Category</th>
-          <th>Strength</th><th>Retail Price</th><th>Division</th><th>Status</th><th>Actions</th>
+          <th>Strength</th><th>Retail Price</th><th>Territory</th><th>Status</th><th>Actions</th>
         </tr>
       </thead>
       <tbody>

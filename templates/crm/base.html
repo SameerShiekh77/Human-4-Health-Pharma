@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Health4Human CRM{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
@@ -24,7 +24,7 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Source Sans 3', sans-serif;
       background: radial-gradient(1200px 600px at 10% -10%, #ffffff 0%, var(--bg) 60%);
       color: var(--text);
       min-height: 100vh;
@@ -46,22 +46,50 @@
       box-shadow: 0 12px 28px rgba(16, 24, 40, 0.08);
     }
     .sidebar-brand {
-      padding: 24px 20px 20px;
+      padding: 18px 16px 16px;
       border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
     }
-    .sidebar-brand .logo-mark {
-      font-family: 'Syne', sans-serif;
+    .sidebar-brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      text-decoration: none;
+    }
+    .sidebar-brand-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 8px 18px rgba(16, 24, 40, 0.12);
+      flex-shrink: 0;
+    }
+    .sidebar-brand-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      line-height: 1.05;
+    }
+    .sidebar-brand-name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
       font-weight: 800;
-      font-size: 18px;
-      color: var(--accent);
-      letter-spacing: -0.5px;
+      color: var(--text);
+      letter-spacing: -0.4px;
+      line-height: 1;
+      white-space: normal;
     }
-    .sidebar-brand .logo-sub {
-      font-size: 11px;
-      color: var(--muted);
+    .sidebar-brand-tagline {
       margin-top: 2px;
-      letter-spacing: 1px;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.8px;
       text-transform: uppercase;
+      white-space: normal;
     }
     .nav-section {
       padding: 12px 12px 4px;
@@ -136,7 +164,7 @@
     }
     .topbar-left { display: flex; align-items: center; gap: 10px; }
     .topbar-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       font-size: 17px;
     }
@@ -185,7 +213,7 @@
       margin-bottom: 28px;
     }
     .page-header h1 {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 26px;
       font-weight: 700;
     }
@@ -213,7 +241,7 @@
       justify-content: space-between;
     }
     .card-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-weight: 700;
       font-size: 15px;
     }
@@ -250,7 +278,7 @@
       margin-bottom: 14px;
     }
     .stat-card .stat-value {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 28px;
       font-weight: 800;
       line-height: 1;
@@ -315,7 +343,7 @@
       color: var(--text);
       padding: 10px 14px;
       font-size: 13.5px;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Source Sans 3', sans-serif;
       transition: border .15s;
       width: 100%;
     }
@@ -332,7 +360,7 @@
       margin-bottom: 20px;
     }
     .form-section-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Manrope', sans-serif;
       font-size: 13px;
       font-weight: 700;
       color: var(--accent);
@@ -424,8 +452,13 @@
 <!-- SIDEBAR -->
 <aside class="sidebar" id="crmSidebar">
   <div class="sidebar-brand">
-    <div class="logo-mark">Health4Human</div>
-    <div class="logo-sub">Pharma CRM</div>
+    <a href="{% url 'crm_analytics:dashboard' %}" class="sidebar-brand-link" aria-label="Health4Human Pharma CRM home">
+      <img src="{% static 'images/HHP.jpg' %}" alt="Health4Human Pharma CRM" class="sidebar-brand-logo">
+      <div class="sidebar-brand-text">
+        <span class="sidebar-brand-name">Health4Human</span>
+        <span class="sidebar-brand-tagline">Pharma CRM</span>
+      </div>
+    </a>
   </div>
 
   <div class="nav-section">Overview</div>
@@ -434,8 +467,8 @@
   </a>
 
   <div class="nav-section">Products</div>
-   <a href="{% url 'crm_products:division_list' %}" class="nav-item {% block nav_divisions %}{% endblock %}">
-    <i class="fa-solid fa-sitemap"></i> Divisions
+  <a href="{% url 'crm_products:division_list' %}" class="nav-item {% block nav_divisions %}{% endblock %}">
+    <i class="fa-solid fa-sitemap"></i> Territories
   </a>
   <a href="{% url 'crm_products:product_list' %}" class="nav-item {% block nav_products %}{% endblock %}">
     <i class="fa-solid fa-pills"></i> Products
@@ -499,6 +532,14 @@
   <a href="{% url 'crm_analytics:expiry_alerts' %}" class="nav-item {% block nav_alerts %}{% endblock %}">
     <i class="fa-solid fa-triangle-exclamation"></i> Expiry Alerts
     {% if expiry_alert_count %}<span class="nav-badge">{{ expiry_alert_count }}</span>{% endif %}
+  </a>
+
+  <div class="nav-section">Access Control</div>
+  <a href="{% url 'crm_analytics:crm_user_list' %}" class="nav-item {% block nav_crm_users %}{% endblock %}">
+    <i class="fa-solid fa-user-shield"></i> CRM Users
+  </a>
+  <a href="{% url 'crm_analytics:crm_role_list' %}" class="nav-item {% block nav_crm_roles %}{% endblock %}">
+    <i class="fa-solid fa-id-badge"></i> CRM Roles
   </a>
 
   <div class="sidebar-footer">

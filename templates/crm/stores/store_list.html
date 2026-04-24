@@ -6,6 +6,7 @@
   <a href="{% url 'crm_stores:store_create' %}" class="btn btn-primary btn-sm">
     <i class="fa-solid fa-plus"></i> Add Store
   </a>
+  {% include 'crm/data_tools/topbar_buttons.html' with export_url=export_url sample_url=sample_url import_url=import_url %}
 {% endblock %}
 
 {% block content %}

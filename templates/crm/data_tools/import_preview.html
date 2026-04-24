@@ -1,0 +1,85 @@
+{% extends 'crm/base.html' %}
+{% block title %}Import Preview — {{ config.title }}{% endblock %}
+{% block topbar_title %}Import Preview{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <a href="{{ export_url }}">{{ config.title }}</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>Preview</span>
+    </div>
+    <h1>Preview {{ config.title }} Import</h1>
+    <p>{{ total_rows }} row(s) loaded, {{ row_errors }} row(s) contain validation errors.</p>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:18px">
+  <div class="card-body">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <a class="btn btn-ghost" href="{{ sample_url }}"><i class="fa-solid fa-file-arrow-down"></i> Sample File</a>
+      <a class="btn btn-ghost" href="{{ import_url }}"><i class="fa-solid fa-rotate-left"></i> Upload Another File</a>
+      <a class="btn btn-ghost" href="{% url config.list_url %}"><i class="fa-solid fa-arrow-left"></i> Back to List</a>
+    </div>
+
+    {% if has_errors %}
+      <div class="alert alert-warning" style="margin-bottom:16px">
+        Some rows have errors. Fix the file and upload it again before confirming.
+      </div>
+    {% else %}
+      <div class="alert alert-success" style="margin-bottom:16px">
+        All rows passed validation. Confirm to save the data.
+      </div>
+    {% endif %}
+
+    <div style="overflow:auto">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Status</th>
+            <th>Raw Data</th>
+            <th>Errors</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in preview_rows %}
+            <tr>
+              <td>{{ row.row_number }}</td>
+              <td>{% if row.errors %}<span class="badge badge-danger">Invalid{% else %}<span class="badge badge-success">Ready{% endif %}</span></td>
+              <td>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  {% for key, value in row.raw.items %}
+                    <div><strong>{{ key }}:</strong> {{ value }}</div>
+                  {% endfor %}
+                </div>
+              </td>
+              <td>
+                {% if row.errors %}
+                  <ul style="margin:0;padding-left:18px">
+                    {% for error in row.errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <span class="text-muted">No errors</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <form method="post" style="margin-top:18px;display:flex;justify-content:flex-end">
+      {% csrf_token %}
+      <input type="hidden" name="confirm" value="1">
+      <button type="submit" class="btn btn-primary" {% if has_errors %}disabled{% endif %}>
+        <i class="fa-solid fa-check"></i> Confirm Import
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

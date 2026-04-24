@@ -1,0 +1,56 @@
+{% extends 'crm/base.html' %}
+{% block title %}CRM Roles — CRM{% endblock %}
+{% block nav_crm_roles %}active{% endblock %}
+{% block topbar_title %}CRM Roles{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="{% url 'crm_analytics:dashboard' %}">Dashboard</a>
+      <i class="fa-solid fa-chevron-right" style="font-size:9px"></i>
+      <span>CRM Roles</span>
+    </div>
+    <h1>CRM Roles</h1>
+    <p>Create roles that determine CRM access for users.</p>
+  </div>
+  <a href="{% url 'crm_analytics:crm_role_create' %}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Role</a>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th><th>Users</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for role in roles %}
+        <tr>
+          <td><strong>{{ role.name|cut:'CRM - ' }}</strong></td>
+          <td><span class="badge badge-blue">{{ role.user_count }}</span></td>
+          <td>
+            <a href="{% url 'crm_analytics:crm_role_edit' role.id %}" class="btn btn-ghost btn-sm">Edit</a>
+            <form method="post" action="{% url 'crm_analytics:crm_role_delete' role.id %}" style="display:inline-block;margin-left:6px" onsubmit="return confirm('Delete this role?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">
+            <div class="empty-state">
+              <i class="fa-solid fa-id-badge"></i>
+              <h3>No CRM roles yet</h3>
+              <p>Create roles like Admin, Manager, or Sales to control CRM access.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

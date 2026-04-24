@@ -13,6 +13,8 @@ urlpatterns = [
     path('<int:pk>/',              views.doctor_detail, name='doctor_detail'),
     path('<int:pk>/edit/',         views.doctor_edit,   name='doctor_edit'),
     path('<int:pk>/delete/',       views.doctor_delete, name='doctor_delete'),
+    path('<int:doctor_id>/locations/', views.doctor_locations_api, name='doctor_locations_api'),
+    path('<int:doctor_id>/last-visit/', views.doctor_last_visit_api, name='doctor_last_visit_api'),
 
     # Doctor Visits
     path('visits/',                views.visit_list,   name='visit_list'),

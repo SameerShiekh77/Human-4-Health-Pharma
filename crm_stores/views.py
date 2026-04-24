@@ -2,15 +2,17 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from core.auth_utils import crm_access_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.urls import reverse
 
 from crm_stores.models import MedicalStore, StoreProductTracking
 from crm_stores.forms import MedicalStoreForm, StoreProductTrackingForm
 
 
-@login_required
+@crm_access_required
 def store_list(request):
     qs = MedicalStore.objects.select_related('area', 'distributor')
     q      = request.GET.get('q', '')
@@ -33,10 +35,13 @@ def store_list(request):
         'query':    q,
         'areas':    Area.objects.filter(is_active=True),
         'total':    qs.count(),
+        'export_url': reverse('crm_data_tools:export', args=['medical_store']),
+        'sample_url': reverse('crm_data_tools:sample', args=['medical_store']),
+        'import_url': reverse('crm_data_tools:import', args=['medical_store']),
     })
 
 
-@login_required
+@crm_access_required
 def store_detail(request, pk):
     store    = get_object_or_404(MedicalStore, pk=pk)
     products = store.product_trackings.select_related('product')
@@ -46,7 +51,7 @@ def store_detail(request, pk):
     })
 
 
-@login_required
+@crm_access_required
 def store_create(request):
     form = MedicalStoreForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -56,7 +61,7 @@ def store_create(request):
     return render(request, 'crm/stores/store_form.html', {'form': form, 'action': 'Add'})
 
 
-@login_required
+@crm_access_required
 def store_edit(request, pk):
     obj  = get_object_or_404(MedicalStore, pk=pk)
     form = MedicalStoreForm(request.POST or None, instance=obj)
@@ -67,7 +72,7 @@ def store_edit(request, pk):
     return render(request, 'crm/stores/store_form.html', {'form': form, 'action': 'Edit', 'obj': obj})
 
 
-@login_required
+@crm_access_required
 def store_delete(request, pk):
     obj = get_object_or_404(MedicalStore, pk=pk)
     if request.method == 'POST':
@@ -77,7 +82,7 @@ def store_delete(request, pk):
     return render(request, 'crm/confirm_delete.html', {'obj': obj, 'obj_name': obj.store_name})
 
 
-@login_required
+@crm_access_required
 def store_product_tracking_create(request, store_pk):
     store = get_object_or_404(MedicalStore, pk=store_pk)
     form  = StoreProductTrackingForm(request.POST or None, initial={'store': store})
