@@ -3,6 +3,122 @@
 {% block nav_crm_roles %}active{% endblock %}
 {% block topbar_title %}{{ action }} CRM Role{% endblock %}
 
+{% block extra_css %}
+<style>
+  .role-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0 14px;
+  }
+  .role-toolbar-left,
+  .role-toolbar-right {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .role-meta {
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: #f9fbff;
+  }
+  .perm-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .perm-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    background: var(--card);
+  }
+  .perm-card h4 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .perm-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .perm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .perm-mini-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .perm-mini-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .perm-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+  }
+  .perm-table th,
+  .perm-table td {
+    border-bottom: 1px solid var(--border);
+    padding: 8px 6px;
+    font-size: 12.5px;
+  }
+  .perm-table th {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    font-size: 11px;
+    text-align: left;
+  }
+  .perm-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .perm-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .perm-label {
+    white-space: nowrap;
+  }
+  @media (max-width: 768px) {
+    .role-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .role-toolbar-left,
+    .role-toolbar-right {
+      width: 100%;
+    }
+    .role-toolbar-left .btn,
+    .role-toolbar-right .btn {
+      flex: 1 1 130px;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <div>
@@ -26,11 +142,193 @@
         <label>Role Name *</label>
         <input type="text" name="name" value="{{ role.name|cut:'CRM - '|default:'' }}" placeholder="Sales Manager" required>
       </div>
+
+      <div class="form-group full" style="margin-top:16px;">
+        <label>Access Permissions</label>
+        <span style="font-size:12px;color:var(--muted)">Choose exact tabs and allowed actions for this role.</span>
+      </div>
+
+      <div class="role-toolbar">
+        <div class="role-toolbar-left">
+          <button type="button" class="btn btn-ghost btn-sm" data-role-action="grant-view-all">
+            <i class="fa-solid fa-eye"></i> Grant View All
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm" data-role-action="grant-full-all">
+            <i class="fa-solid fa-shield"></i> Full Access All
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm" data-role-action="clear-all">
+            <i class="fa-solid fa-eraser"></i> Clear All
+          </button>
+        </div>
+        <div class="role-toolbar-right">
+          <span class="role-meta">Selected: <strong id="permissionSelectedCount">0</strong></span>
+        </div>
+      </div>
+
+      <div class="perm-grid">
+        {% for section in permission_groups %}
+        <div class="perm-card" data-section-id="section-{{ forloop.counter0 }}">
+          <div class="perm-card-head">
+            <h4>{{ section.title }}</h4>
+            <div class="perm-actions">
+              <button type="button" class="perm-mini-btn" data-section-action="view">View</button>
+              <button type="button" class="perm-mini-btn" data-section-action="add">Create</button>
+              <button type="button" class="perm-mini-btn" data-section-action="change">Edit</button>
+              <button type="button" class="perm-mini-btn" data-section-action="delete">Delete</button>
+              <button type="button" class="perm-mini-btn" data-section-action="all">All</button>
+              <button type="button" class="perm-mini-btn" data-section-action="none">None</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="perm-table">
+              <thead>
+                <tr>
+                  <th>Module / Tab</th>
+                  <th>All</th>
+                  <th>View</th>
+                  <th>Create</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in section.items %}
+                <tr>
+                  <td><strong class="perm-label">{{ item.label }}</strong></td>
+                  <td>
+                    <label class="perm-checkbox">
+                      <input type="checkbox" data-row-toggle>
+                    </label>
+                  </td>
+                  {% for action, perm in item.permissions.items %}
+                  <td>
+                    <label class="perm-checkbox">
+                      <input
+                        type="checkbox"
+                        name="permissions"
+                        value="{{ perm.id }}"
+                        data-perm-action="{{ action }}"
+                        {% if perm.id in selected_permission_ids %}checked{% endif %}
+                      >
+                    </label>
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
-    <div class="card-body" style="padding-top:0; display:flex; justify-content:flex-end; gap:10px;">
+    <div class="card-body form-actions" style="padding-top:0;">
       <a href="{% url 'crm_analytics:crm_role_list' %}" class="btn btn-ghost">Cancel</a>
       <button type="submit" class="btn btn-primary">{% if action == 'Create' %}Create Role{% else %}Save Changes{% endif %}</button>
     </div>
   </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function () {
+    const allPermissionBoxes = () => Array.from(document.querySelectorAll('input[name="permissions"]'));
+
+    const updateSelectedCount = () => {
+      const countEl = document.getElementById('permissionSelectedCount');
+      if (!countEl) return;
+      countEl.textContent = String(allPermissionBoxes().filter((box) => box.checked).length);
+    };
+
+    const updateRowToggleState = (row) => {
+      const rowToggle = row.querySelector('input[data-row-toggle]');
+      const rowPerms = Array.from(row.querySelectorAll('input[name="permissions"]'));
+      if (!rowToggle || rowPerms.length === 0) return;
+      rowToggle.checked = rowPerms.every((box) => box.checked);
+    };
+
+    const updateAllRowToggles = () => {
+      document.querySelectorAll('.perm-table tbody tr').forEach(updateRowToggleState);
+    };
+
+    const setByAction = (action, checked) => {
+      allPermissionBoxes().forEach((box) => {
+        if (box.dataset.permAction === action) {
+          box.checked = checked;
+        }
+      });
+      updateAllRowToggles();
+      updateSelectedCount();
+    };
+
+    const setAllPermissions = (checked) => {
+      allPermissionBoxes().forEach((box) => {
+        box.checked = checked;
+      });
+      updateAllRowToggles();
+      updateSelectedCount();
+    };
+
+    document.querySelectorAll('[data-role-action="grant-view-all"]').forEach((btn) => {
+      btn.addEventListener('click', () => setByAction('view', true));
+    });
+
+    document.querySelectorAll('[data-role-action="grant-full-all"]').forEach((btn) => {
+      btn.addEventListener('click', () => setAllPermissions(true));
+    });
+
+    document.querySelectorAll('[data-role-action="clear-all"]').forEach((btn) => {
+      btn.addEventListener('click', () => setAllPermissions(false));
+    });
+
+    document.querySelectorAll('.perm-card').forEach((card) => {
+      const sectionPerms = () => Array.from(card.querySelectorAll('input[name="permissions"]'));
+
+      card.querySelectorAll('[data-section-action]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.sectionAction;
+          const boxes = sectionPerms();
+
+          boxes.forEach((box) => {
+            if (action === 'all') {
+              box.checked = true;
+            } else if (action === 'none') {
+              box.checked = false;
+            } else if (box.dataset.permAction === action) {
+              box.checked = true;
+            }
+          });
+
+          updateAllRowToggles();
+          updateSelectedCount();
+        });
+      });
+    });
+
+    document.querySelectorAll('.perm-table tbody tr').forEach((row) => {
+      const rowToggle = row.querySelector('input[data-row-toggle]');
+      const rowPerms = Array.from(row.querySelectorAll('input[name="permissions"]'));
+
+      if (rowToggle) {
+        rowToggle.addEventListener('change', () => {
+          rowPerms.forEach((box) => {
+            box.checked = rowToggle.checked;
+          });
+          updateSelectedCount();
+        });
+      }
+
+      rowPerms.forEach((box) => {
+        box.addEventListener('change', () => {
+          updateRowToggleState(row);
+          updateSelectedCount();
+        });
+      });
+    });
+
+    updateAllRowToggles();
+    updateSelectedCount();
+  })();
+</script>
 {% endblock %}

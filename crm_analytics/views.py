@@ -7,9 +7,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib import messages
-from core.auth_utils import CRM_ROLE_PREFIX, crm_access_required, is_crm_user
+from core.auth_utils import (
+    CRM_ROLE_PREFIX,
+    crm_access_required,
+    is_crm_user,
+    get_crm_permission_groups,
+    get_crm_allowed_permission_ids,
+)
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count, Avg, F, Max
 from django.utils import timezone
@@ -532,14 +538,25 @@ def crm_user_delete(request, id):
 
 @crm_access_required
 def crm_role_list(request):
-    roles = Group.objects.filter(name__istartswith=CRM_ROLE_PREFIX).annotate(user_count=Count('user')).order_by('name')
+    roles = Group.objects.filter(name__istartswith=CRM_ROLE_PREFIX).annotate(
+        user_count=Count('user'),
+        permission_count=Count('permissions', distinct=True),
+    ).order_by('name')
     return render(request, 'crm/users/role_list.html', {'roles': roles})
 
 
 @crm_access_required
 def crm_role_create(request):
+    permission_groups = get_crm_permission_groups()
+    allowed_permission_ids = get_crm_allowed_permission_ids()
+
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
+        selected_permission_ids = {
+            int(pid) for pid in request.POST.getlist('permissions') if pid.isdigit()
+        }
+        selected_permission_ids &= allowed_permission_ids
+
         if not name:
             messages.error(request, 'Role name is required.')
         else:
@@ -547,17 +564,32 @@ def crm_role_create(request):
             if Group.objects.filter(name=role_name).exists():
                 messages.error(request, 'Role already exists.')
             else:
-                Group.objects.create(name=role_name)
+                role = Group.objects.create(name=role_name)
+                if selected_permission_ids:
+                    permissions = Permission.objects.filter(id__in=selected_permission_ids)
+                    role.permissions.set(permissions)
                 messages.success(request, 'CRM role created successfully.')
                 return redirect('crm_analytics:crm_role_list')
-    return render(request, 'crm/users/role_form.html', {'action': 'Create'})
+    return render(request, 'crm/users/role_form.html', {
+        'action': 'Create',
+        'permission_groups': permission_groups,
+        'selected_permission_ids': set(),
+    })
 
 
 @crm_access_required
 def crm_role_edit(request, id):
-    role = get_object_or_404(Group, id=id)
+    role = get_object_or_404(Group, id=id, name__istartswith=CRM_ROLE_PREFIX)
+    permission_groups = get_crm_permission_groups()
+    allowed_permission_ids = get_crm_allowed_permission_ids()
+
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
+        selected_permission_ids = {
+            int(pid) for pid in request.POST.getlist('permissions') if pid.isdigit()
+        }
+        selected_permission_ids &= allowed_permission_ids
+
         if not name:
             messages.error(request, 'Role name is required.')
         else:
@@ -567,17 +599,23 @@ def crm_role_edit(request, id):
             else:
                 role.name = role_name
                 role.save()
+                permissions = Permission.objects.filter(id__in=selected_permission_ids)
+                role.permissions.set(permissions)
                 messages.success(request, 'CRM role updated successfully.')
                 return redirect('crm_analytics:crm_role_list')
+
+    selected_permission_ids = set(role.permissions.values_list('id', flat=True))
     return render(request, 'crm/users/role_form.html', {
         'role': role,
         'action': 'Edit',
+        'permission_groups': permission_groups,
+        'selected_permission_ids': selected_permission_ids,
     })
 
 
 @crm_access_required
 def crm_role_delete(request, id):
-    role = get_object_or_404(Group, id=id)
+    role = get_object_or_404(Group, id=id, name__istartswith=CRM_ROLE_PREFIX)
     if request.method == 'POST':
         if role.user_set.exists():
             messages.error(request, 'This role is assigned to users and cannot be deleted.')

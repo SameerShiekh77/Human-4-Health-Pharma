@@ -664,81 +664,133 @@
     <i class="fa-solid fa-chart-pie"></i> Dashboard
   </a>
 
+  {% if request.user.is_superuser or perms.crm_products.view_division or perms.crm_products.view_productmaster or perms.crm_products.view_batchmanagement or perms.crm_products.view_companystock %}
   <div class="nav-section">Products</div>
+  {% if request.user.is_superuser or perms.crm_products.view_division %}
   <a href="{% url 'crm_products:division_list' %}" class="nav-item {% block nav_divisions %}{% endblock %}">
     <i class="fa-solid fa-sitemap"></i> Territories
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_products.view_productmaster %}
   <a href="{% url 'crm_products:product_list' %}" class="nav-item {% block nav_products %}{% endblock %}">
     <i class="fa-solid fa-pills"></i> Products
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_products.view_batchmanagement %}
   <a href="{% url 'crm_products:batch_list' %}" class="nav-item {% block nav_batches %}{% endblock %}">
     <i class="fa-solid fa-boxes-stacked"></i> Batches
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_products.view_companystock %}
   <a href="{% url 'crm_products:stock_list' %}" class="nav-item {% block nav_stock %}{% endblock %}">
     <i class="fa-solid fa-warehouse"></i> Company Stock
   </a>
+  {% endif %}
+  {% endif %}
  
 
+  {% if request.user.is_superuser or perms.crm_distributors.view_distributor or perms.crm_distributors.view_distributorsalesvalue or perms.crm_distributors.view_distributorstockentry %}
   <div class="nav-section">Distribution</div>
+  {% if request.user.is_superuser or perms.crm_distributors.view_distributor %}
   <a href="{% url 'crm_distributors:distributor_list' %}" class="nav-item {% block nav_distributors %}{% endblock %}">
     <i class="fa-solid fa-truck"></i> Distributors
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_distributors.view_distributorsalesvalue %}
   <a href="{% url 'crm_distributors:sales_value_list' %}" class="nav-item {% block nav_sales_values %}{% endblock %}">
     <i class="fa-solid fa-truck"></i> Sales Records
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_distributors.view_distributorstockentry %}
   <a href="{% url 'crm_distributors:stock_entry_list' %}" class="nav-item {% block nav_stock_entries %}{% endblock %}">
     <i class="fa-solid fa-file-invoice"></i> Stock Entries
   </a>
+  {% endif %}
+  {% endif %}
 
+  {% if request.user.is_superuser or perms.crm_sales.view_region or perms.crm_sales.view_area or perms.crm_sales.view_medicalrepresentative %}
   <div class="nav-section">Sales Force</div>
+  {% if request.user.is_superuser or perms.crm_sales.view_region %}
   <a href="{% url 'crm_sales:region_list' %}" class="nav-item {% block nav_regions %}{% endblock %}">
     <i class="fa-solid fa-map"></i> Regions
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_sales.view_area %}
   <a href="{% url 'crm_sales:area_list' %}" class="nav-item {% block nav_areas %}{% endblock %}">
     <i class="fa-solid fa-location-dot"></i> Areas
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_sales.view_medicalrepresentative %}
   <a href="{% url 'crm_sales:mr_list' %}" class="nav-item {% block nav_mrs %}{% endblock %}">
     <i class="fa-solid fa-user-tie"></i> Medical Reps
   </a>
+  {% endif %}
+  {% endif %}
 
+  {% if request.user.is_superuser or perms.crm_doctors.view_doctor or perms.crm_doctors.view_doctorvisit or perms.crm_doctors.add_doctorvisit %}
   <div class="nav-section">Field Activity</div>
+  {% if request.user.is_superuser or perms.crm_doctors.view_doctor %}
   <a href="{% url 'crm_doctors:doctor_list' %}" class="nav-item {% block nav_doctors %}{% endblock %}">
     <i class="fa-solid fa-user-doctor"></i> Doctors
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_doctors.view_doctorvisit %}
   <a href="{% url 'crm_doctors:visit_list' %}" class="nav-item {% block nav_visits %}{% endblock %}">
     <i class="fa-solid fa-clipboard-list"></i> Visit Log
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_doctors.add_doctorvisit %}
   <a href="{% url 'crm_doctors:visit_create' %}" class="nav-item {% block nav_visit_new %}{% endblock %}">
     <i class="fa-solid fa-plus-circle"></i> New Visit
   </a>
+  {% endif %}
+  {% endif %}
 
+  {% if request.user.is_superuser or perms.crm_stores.view_medicalstore %}
   <div class="nav-section">Retail</div>
   <a href="{% url 'crm_stores:store_list' %}" class="nav-item {% block nav_stores %}{% endblock %}">
     <i class="fa-solid fa-store"></i> Medical Stores
   </a>
+  {% endif %}
 
+  {% if request.user.is_superuser or perms.crm_analytics.view_mrperformancesnapshot or perms.crm_analytics.view_doctorperformancesnapshot or perms.crm_analytics.view_distributorperformancesnapshot or perms.crm_analytics.view_expiryalert %}
   <div class="nav-section">Analytics</div>
+  {% if request.user.is_superuser or perms.crm_analytics.view_mrperformancesnapshot %}
   <a href="{% url 'crm_analytics:mr_performance' %}" class="nav-item {% block nav_mr_perf %}{% endblock %}">
     <i class="fa-solid fa-ranking-star"></i> MR Performance
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_analytics.view_doctorperformancesnapshot %}
   <a href="{% url 'crm_analytics:doctor_performance' %}" class="nav-item {% block nav_doc_perf %}{% endblock %}">
     <i class="fa-solid fa-stethoscope"></i> Doctor ROI
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_analytics.view_distributorperformancesnapshot %}
   <a href="{% url 'crm_analytics:distributor_performance' %}" class="nav-item {% block nav_dist_perf %}{% endblock %}">
     <i class="fa-solid fa-chart-bar"></i> Distributor Perf.
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.crm_analytics.view_expiryalert %}
   <a href="{% url 'crm_analytics:expiry_alerts' %}" class="nav-item {% block nav_alerts %}{% endblock %}">
     <i class="fa-solid fa-triangle-exclamation"></i> Expiry Alerts
     {% if expiry_alert_count %}<span class="nav-badge">{{ expiry_alert_count }}</span>{% endif %}
   </a>
+  {% endif %}
+  {% endif %}
 
+  {% if request.user.is_superuser or perms.auth.view_user or perms.auth.view_group %}
   <div class="nav-section">Access Control</div>
+  {% if request.user.is_superuser or perms.auth.view_user %}
   <a href="{% url 'crm_analytics:crm_user_list' %}" class="nav-item {% block nav_crm_users %}{% endblock %}">
     <i class="fa-solid fa-user-shield"></i> CRM Users
   </a>
+  {% endif %}
+  {% if request.user.is_superuser or perms.auth.view_group %}
   <a href="{% url 'crm_analytics:crm_role_list' %}" class="nav-item {% block nav_crm_roles %}{% endblock %}">
     <i class="fa-solid fa-id-badge"></i> CRM Roles
   </a>
+  {% endif %}
+  {% endif %}
 
   <div class="sidebar-footer">
     <div class="avatar">{{ request.user.username|slice:":1"|upper }}</div>
