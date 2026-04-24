@@ -548,23 +548,24 @@
 
     @media (max-width: 768px) {
       .topbar {
-        height: auto;
+        height: 60px;
         min-height: 60px;
-        align-items: flex-start;
-        flex-direction: column;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
         padding: 10px 12px;
       }
       .topbar-left,
       .topbar-actions {
-        width: 100%;
+        width: auto;
       }
       .topbar-actions {
-        justify-content: flex-start;
+        margin-left: auto;
+        justify-content: flex-end;
         gap: 8px;
+        flex-wrap: nowrap;
       }
-      .topbar-action-group {
-        width: 100%;
-      }
+      .topbar-action-group { width: auto; }
       .data-tools-inline {
         display: none !important;
       }
