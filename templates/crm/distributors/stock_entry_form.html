@@ -133,7 +133,7 @@
     </div>
   </div>
 
-  <div style="display:flex;gap:12px;justify-content:flex-end">
+  <div class="form-actions">
     <a href="{% url 'crm_distributors:stock_entry_list' %}" class="btn btn-ghost">Cancel</a>
     <button type="submit" class="btn btn-primary">
       <i class="fa-solid fa-floppy-disk"></i> {% if obj %}Update Entry{% else %}Submit Entry{% endif %}

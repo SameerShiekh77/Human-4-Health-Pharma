@@ -179,7 +179,7 @@
   </div>
   {% endif %}
 
-  <div style="display:flex;gap:12px;justify-content:flex-end">
+  <div class="form-actions">
     <a href="{% if obj %}{% url 'crm_doctors:doctor_detail' obj.pk %}{% else %}{% url 'crm_doctors:doctor_list' %}{% endif %}" class="btn btn-ghost">
       Cancel
     </a>
