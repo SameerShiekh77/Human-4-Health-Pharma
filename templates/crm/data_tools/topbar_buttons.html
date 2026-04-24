@@ -1,4 +1,4 @@
-<div class="topbar-action-group">
+<div class="topbar-action-group data-tools-inline">
   <a href="{{ export_url }}" class="btn btn-ghost btn-sm">
     <i class="fa-solid fa-file-export"></i> Export
   </a>
@@ -8,4 +8,22 @@
   <a href="{{ import_url }}" class="btn btn-primary btn-sm">
     <i class="fa-solid fa-file-import"></i> Import
   </a>
+</div>
+
+<div class="data-tools-menu-wrap">
+  <button type="button" class="btn btn-ghost btn-sm data-tools-toggle" aria-haspopup="true" aria-expanded="false" aria-label="Open tools menu">
+    <i class="fa-solid fa-sliders"></i>
+    <span>Tools</span>
+  </button>
+  <div class="data-tools-menu" role="menu">
+    <a href="{{ export_url }}" class="data-tools-menu-link" role="menuitem">
+      <i class="fa-solid fa-file-export"></i> Export
+    </a>
+    <a href="{{ sample_url }}" class="data-tools-menu-link" role="menuitem">
+      <i class="fa-solid fa-file-arrow-down"></i> Sample
+    </a>
+    <a href="{{ import_url }}" class="data-tools-menu-link primary" role="menuitem">
+      <i class="fa-solid fa-file-import"></i> Import
+    </a>
+  </div>
 </div>
