@@ -3,6 +3,75 @@
 {% block title %}Visit #{{ visit.pk }} — CRM{% endblock %}
 {% block nav_visits %}active{% endblock %}
 {% block topbar_title %}Visit Detail{% endblock %}
+
+{% block extra_css %}
+<style>
+  .visit-header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .visit-investment-row,
+  .visit-total-row,
+  .visit-roi-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .visit-investment-row {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .visit-total-row {
+    padding: 12px 0 0;
+    font-weight: 700;
+  }
+  .visit-roi-row {
+    margin-bottom: 8px;
+    font-size: 13.5px;
+  }
+  .visit-roi-row.secondary {
+    margin-bottom: 12px;
+  }
+  .visit-roi-final {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  @media (max-width: 768px) {
+    .visit-header-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .visit-header-actions .btn {
+      flex: 1 1 140px;
+      justify-content: center;
+    }
+    .visit-investment-row,
+    .visit-total-row,
+    .visit-roi-row,
+    .visit-roi-final {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .visit-header-actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <div>
@@ -10,7 +79,7 @@
     <h1>Dr. {{ visit.doctor.doctor_name }}</h1>
     <p>{{ visit.mr.name }} &mdash; {{ visit.visit_date|date:"d F Y" }} at {{ visit.visit_time|time:"H:i" }}</p>
   </div>
-  <div style="display:flex;gap:8px">
+  <div class="visit-header-actions">
     <a href="{% url 'crm_doctors:visit_edit' visit.pk %}" class="btn btn-ghost"><i class="fa-solid fa-pen"></i> Edit</a>
     <a href="{% url 'crm_doctors:visit_delete' visit.pk %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
   </div>
@@ -41,7 +110,7 @@
     </div>
     <div class="card" style="margin-bottom:20px">
       <div class="card-header"><span class="card-title"><i class="fa-solid fa-pills" style="color:var(--accent);margin-right:6px"></i>Products Discussed</span></div>
-      <div class="table-wrap">
+      <div class="table-wrap table-mobile-cards">
         <table>
           <thead><tr><th>Product</th><th>Samples</th><th>Units/Day</th><th>Units/Month</th><th>Value/Month</th></tr></thead>
           <tbody>
@@ -61,7 +130,7 @@
     {% if visit.competitor_info.exists %}
     <div class="card">
       <div class="card-header"><span class="card-title"><i class="fa-solid fa-binoculars" style="color:var(--warn);margin-right:6px"></i>Competitor Products</span></div>
-      <div class="table-wrap">
+      <div class="table-wrap table-mobile-cards">
         <table>
           <thead><tr><th>Product</th><th>Company</th><th>Notes</th></tr></thead>
           <tbody>
@@ -79,12 +148,12 @@
       <div class="card-header"><span class="card-title">Investment Given</span></div>
       <div class="card-body">
         {% for inv in visit.investments.all %}
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px">
+        <div class="visit-investment-row">
           <span><span class="badge badge-yellow">{{ inv.get_investment_type_display }}</span> {{ inv.description|default:"" }}</span>
           <span style="font-weight:600">PKR {{ inv.amount }}</span>
         </div>
         {% empty %}<p style="color:var(--muted);font-size:13px">No investment recorded</p>{% endfor %}
-        <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:700">
+        <div class="visit-total-row">
           <span>Total</span><span style="color:var(--accent)">PKR {{ visit.total_investment|floatformat:2 }}</span>
         </div>
       </div>
@@ -105,15 +174,15 @@
     <div class="card">
       <div class="card-header"><span class="card-title">Visit ROI</span></div>
       <div class="card-body">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13.5px">
+        <div class="visit-roi-row">
           <span style="color:var(--muted)">Est. Revenue</span>
           <span style="color:var(--accent);font-weight:600">PKR {{ visit.total_estimated_value|floatformat:2 }}</span>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:13.5px">
+        <div class="visit-roi-row secondary">
           <span style="color:var(--muted)">Investment</span>
           <span style="color:var(--danger);font-weight:600">PKR {{ visit.total_investment|floatformat:2 }}</span>
         </div>
-        <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;justify-content:space-between;font-weight:700;font-size:15px">
+        <div class="visit-roi-final">
           <span>ROI</span><span style="color:var(--accent)">PKR {{ visit.total_estimated_value|floatformat:2 }}</span>
         </div>
       </div>

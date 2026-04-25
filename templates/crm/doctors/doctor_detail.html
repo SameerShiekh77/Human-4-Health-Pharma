@@ -3,6 +3,89 @@
 {% block nav_doctors %}active{% endblock %}
 {% block topbar_title %}Doctor Profile{% endblock %}
 
+{% block extra_css %}
+<style>
+  .doctor-header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .doctor-visit-history.table-mobile-cards tbody tr {
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .doctor-visit-history.table-mobile-cards tbody tr:last-child {
+    margin-bottom: 0;
+  }
+  .doctor-visit-history.table-mobile-cards tbody td {
+    padding: 11px 12px;
+  }
+  .doctor-visit-action-btn {
+    padding: 4px 8px;
+    min-width: 34px;
+  }
+  .doctor-assigned-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .doctor-assigned-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .doctor-quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .doctor-quick-actions .btn {
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .doctor-header-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .doctor-header-actions .btn {
+      flex: 1 1 140px;
+      justify-content: center;
+    }
+    .doctor-assigned-row {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px 14px;
+    }
+    .doctor-visit-action-btn {
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 0;
+      min-width: auto;
+    }
+    .doctor-visit-action-btn:hover {
+      color: var(--accent);
+      background: transparent;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .doctor-header-actions .btn {
+      flex: 1 1 100%;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="page-header">
   <div>
@@ -16,7 +99,7 @@
     <h1>Dr. {{ doctor.doctor_name }}</h1>
     <p>{{ doctor.specialty }}{% if doctor.qualification %} &mdash; {{ doctor.qualification }}{% endif %}</p>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
+  <div class="doctor-header-actions">
     <span class="badge {% if doctor.status == 'active' %}badge-green{% else %}badge-gray{% endif %}" style="font-size:13px;padding:6px 14px">
       {{ doctor.get_status_display }}
     </span>
@@ -146,7 +229,7 @@
           <i class="fa-solid fa-plus"></i> Log Visit
         </a>
       </div>
-      <div class="table-wrap">
+      <div class="table-wrap table-mobile-cards doctor-visit-history">
         <table>
           <thead>
             <tr>
@@ -156,7 +239,7 @@
               <th>Invested</th>
               <th>Est. Value</th>
               <th>GPS</th>
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -184,7 +267,7 @@
                 {% endif %}
               </td>
               <td>
-                <a href="{% url 'crm_doctors:visit_detail' visit.pk %}" class="btn btn-ghost btn-sm">
+                <a href="{% url 'crm_doctors:visit_detail' visit.pk %}" class="btn btn-ghost btn-sm doctor-visit-action-btn">
                   <i class="fa-solid fa-eye"></i>
                 </a>
               </td>
@@ -296,8 +379,8 @@
       </div>
       <div>
         {% for mr in doctor.assigned_mrs.all %}
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid var(--border)">
-          <div style="display:flex;align-items:center;gap:10px">
+        <div class="doctor-assigned-row">
+          <div class="doctor-assigned-main">
             {% if mr.profile_image %}
             <img src="{{ mr.profile_image.url }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover">
             {% else %}
@@ -328,20 +411,20 @@
     <!-- Quick Actions -->
     <div class="card">
       <div class="card-header"><span class="card-title">Quick Actions</span></div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:8px">
-        <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost" style="justify-content:center">
+      <div class="card-body doctor-quick-actions">
+        <a href="{% url 'crm_doctors:visit_create' %}" class="btn btn-ghost">
           <i class="fa-solid fa-plus"></i> Log New Visit
         </a>
-        <a href="{% url 'crm_doctors:visit_list' %}?doctor={{ doctor.pk }}" class="btn btn-ghost" style="justify-content:center">
+        <a href="{% url 'crm_doctors:visit_list' %}?doctor={{ doctor.pk }}" class="btn btn-ghost">
           <i class="fa-solid fa-list"></i> All Visits for this Doctor
         </a>
-        <a href="{% url 'crm_doctors:doctor_edit' doctor.pk %}" class="btn btn-ghost" style="justify-content:center">
+        <a href="{% url 'crm_doctors:doctor_edit' doctor.pk %}" class="btn btn-ghost">
           <i class="fa-solid fa-pen"></i> Edit Profile
         </a>
-        <a href="{% url 'crm_analytics:doctor_performance' %}" class="btn btn-ghost" style="justify-content:center">
+        <a href="{% url 'crm_analytics:doctor_performance' %}" class="btn btn-ghost">
           <i class="fa-solid fa-chart-line"></i> Performance Report
         </a>
-        <a href="{% url 'crm_doctors:doctor_delete' doctor.pk %}" class="btn btn-danger" style="justify-content:center">
+        <a href="{% url 'crm_doctors:doctor_delete' doctor.pk %}" class="btn btn-danger">
           <i class="fa-solid fa-trash"></i> Delete Doctor
         </a>
       </div>

@@ -276,6 +276,14 @@
       gap: 16px;
       margin-bottom: 28px;
     }
+    .page-header > :last-child:not(:first-child) {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: 100%;
+    }
     .page-header h1 {
       font-family: 'Manrope', sans-serif;
       font-size: 26px;
@@ -362,7 +370,7 @@
     }
 
     /* ── TABLE ── */
-    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%; }
     table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 13.5px; }
     thead th {
       padding: 11px 16px;
@@ -379,6 +387,13 @@
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: rgba(17,24,39,.03); }
     tbody td { padding: 13px 16px; vertical-align: middle; }
+    .table-wrap td > div[style*="display:flex"] {
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+    .table-wrap td .btn {
+      max-width: 100%;
+    }
 
     /* ── BADGES ── */
     .badge {
@@ -474,6 +489,11 @@
       padding-left: 40px;
     }
     .search-bar select { flex: 0 1 auto; }
+    .search-bar input,
+    .search-bar select,
+    .search-bar .btn {
+      max-width: 100%;
+    }
 
     .form-actions {
       display: flex;
@@ -516,6 +536,11 @@
     .kv-row { display: flex; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
     .kv-row:last-child { border-bottom: none; }
     .kv-key { width: 180px; flex-shrink: 0; color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; padding-top: 2px; }
+    .kv-row > :last-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
 
     /* ── MOBILE SIDEBAR ── */
     .sidebar-overlay {
@@ -583,6 +608,10 @@
         flex-direction: column;
         margin-bottom: 20px;
       }
+      .page-header > :last-child:not(:first-child) {
+        width: 100%;
+        justify-content: flex-start;
+      }
       .page-header h1 {
         font-size: 24px;
       }
@@ -602,6 +631,16 @@
         width: 100%;
       }
       .search-bar select {
+        width: 100% !important;
+        flex: 1 1 100%;
+      }
+      .search-bar input[type="text"],
+      .search-bar input[type="search"],
+      .search-bar input[type="date"],
+      .search-bar input[type="month"],
+      .search-bar input[type="number"],
+      .search-bar input[type="email"],
+      .search-bar input[type="tel"] {
         width: 100% !important;
         flex: 1 1 100%;
       }
@@ -627,14 +666,109 @@
       .pagination {
         flex-wrap: wrap;
       }
-      table {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        max-width: 100% !important;
+      }
+      .kv-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+      .kv-key {
+        width: 100%;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .table-wrap table {
         min-width: 560px;
+      }
+      .table-wrap thead th,
+      .table-wrap tbody td {
+        white-space: nowrap;
+      }
+      .table-wrap.table-mobile-cards {
+        overflow-x: visible;
+      }
+      .table-wrap.table-mobile-cards table {
+        min-width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      .table-wrap.table-mobile-cards thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .table-wrap.table-mobile-cards tbody tr {
+        display: block;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 12px;
+        background: var(--card);
+        overflow: hidden;
+      }
+      .table-wrap.table-mobile-cards tbody tr:last-child {
+        margin-bottom: 0;
+      }
+      .table-wrap.table-mobile-cards tbody td {
+        display: grid;
+        grid-template-columns: minmax(92px, 40%) 1fr;
+        gap: 10px;
+        align-items: start;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        text-align: left !important;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .table-wrap.table-mobile-cards tbody td:last-child {
+        border-bottom: none;
+      }
+      .table-wrap.table-mobile-cards tbody td::before {
+        content: attr(data-label);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+      .table-wrap.table-mobile-cards tbody td[colspan] {
+        display: block;
+        text-align: center !important;
+      }
+      .table-wrap.table-mobile-cards tbody td[colspan]::before {
+        content: none;
+      }
+      .table-wrap.table-mobile-cards td .btn.btn-sm {
+        padding: 5px 9px;
       }
     }
 
     @media (max-width: 480px) {
-      table {
+      .stats-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      .table-wrap table {
         min-width: 520px;
+      }
+      .table-wrap.table-mobile-cards tbody td {
+        grid-template-columns: 1fr;
+        gap: 5px;
+      }
+      .table-wrap.table-mobile-cards tbody td::before {
+        margin-bottom: 1px;
       }
     }
 
@@ -892,6 +1026,26 @@
       document.querySelectorAll('.data-tools-toggle').forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
     };
 
+    const applyMobileTableLabels = () => {
+      document.querySelectorAll('.table-wrap.table-mobile-cards table').forEach((table) => {
+        const headers = Array.from(table.querySelectorAll('thead th')).map((th) => th.textContent.trim());
+        if (!headers.length) {
+          return;
+        }
+
+        table.querySelectorAll('tbody tr').forEach((row) => {
+          const cells = row.querySelectorAll('td');
+          cells.forEach((cell, index) => {
+            if (cell.hasAttribute('colspan')) {
+              return;
+            }
+            const label = headers[index] || 'Value';
+            cell.setAttribute('data-label', label);
+          });
+        });
+      });
+    };
+
     document.querySelectorAll('.data-tools-menu-wrap').forEach((wrap) => {
       const btn = wrap.querySelector('.data-tools-toggle');
       const menu = wrap.querySelector('.data-tools-menu');
@@ -924,6 +1078,7 @@
       }
     });
 
+    applyMobileTableLabels();
     setExpanded(false);
   })();
 </script>
