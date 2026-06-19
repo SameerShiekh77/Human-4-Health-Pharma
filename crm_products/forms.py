@@ -16,13 +16,12 @@ class ProductMasterForm(forms.ModelForm):
     class Meta:
         model  = ProductMaster
         fields = [
-            'product_name', 'generic_name', 'brand_name', 'category', 'division',
+            'generic_name', 'brand_name', 'category', 'division',
             'strength', 'packing_size', 'manufacturing_cost_per_unit',
             'trade_price', 'retail_price', 'distributor_price',
             'status', 'description', 'image',
         ]
         widgets = {
-            'product_name':               forms.TextInput(attrs={'placeholder': 'e.g., Amoxicillin 500mg'}),
             'generic_name':               forms.TextInput(attrs={'placeholder': 'e.g., Amoxicillin'}),
             'brand_name':                 forms.TextInput(attrs={'placeholder': 'e.g., Augmentin'}),
             'strength':                   forms.TextInput(attrs={'placeholder': 'e.g., 500mg'}),

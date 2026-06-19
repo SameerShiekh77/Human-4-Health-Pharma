@@ -18,9 +18,8 @@ class Region(models.Model):
 
     region_id = models.CharField(max_length=20, unique=True, editable=False)
     region_name = models.CharField(max_length=100)
-    division = models.ForeignKey(
+    division = models.ManyToManyField(
         Division,
-        on_delete=models.CASCADE,
         related_name='regions',
         verbose_name='Territory'
     )
@@ -52,9 +51,8 @@ class Area(models.Model):
 
     area_id = models.CharField(max_length=20, unique=True, editable=False)
     area_name = models.CharField(max_length=100)
-    region = models.ForeignKey(
+    region = models.ManyToManyField(
         Region,
-        on_delete=models.CASCADE,
         related_name='areas'
     )
     area_manager = models.CharField(max_length=150, blank=True, null=True)
@@ -68,7 +66,7 @@ class Area(models.Model):
         verbose_name_plural = 'Areas'
 
     def __str__(self):
-        return f"{self.area_name} — {self.region.region_name}"
+        return f"{self.area_name}"
 
     def save(self, *args, **kwargs):
         if not self.area_id:

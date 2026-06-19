@@ -18,7 +18,7 @@ from .forms import RegionForm, AreaForm, MedicalRepresentativeForm
 
 @crm_access_required
 def region_list(request):
-    qs = Region.objects.select_related('division').annotate(area_count=Count('areas'))
+    qs = Region.objects.prefetch_related('division').annotate(area_count=Count('areas'))
     q = request.GET.get('q', '')
     div = request.GET.get('division', '')
     if q:
@@ -73,7 +73,7 @@ def region_delete(request, pk):
 
 @crm_access_required
 def area_list(request):
-    qs = Area.objects.select_related('region', 'region__division').annotate(mr_count=Count('mrs'))
+    qs = Area.objects.prefetch_related('region__division','region').annotate(mr_count=Count('mrs'))
     q = request.GET.get('q', '')
     region = request.GET.get('region', '')
     if q:

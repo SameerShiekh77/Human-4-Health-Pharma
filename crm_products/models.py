@@ -73,7 +73,7 @@ class ProductMaster(models.Model):
     product_id = models.CharField(max_length=20, unique=True, editable=False)
 
     # Names
-    product_name = models.CharField(max_length=200)
+    product_name = models.CharField(max_length=200,null=True,blank=True)
     generic_name = models.CharField(max_length=200)
     brand_name = models.CharField(max_length=200)
 

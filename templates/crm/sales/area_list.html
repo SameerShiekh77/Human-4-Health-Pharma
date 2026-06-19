@@ -31,14 +31,14 @@
     <i class="fa-solid fa-magnifying-glass"></i>
     <input type="text" name="q" value="{{ query }}" placeholder="Area name or manager...">
   </div>
-  <select name="region" style="width:200px">
+  {% comment %} <select name="region" style="width:200px">
     <option value="">All Regions</option>
     {% for region in regions %}
     <option value="{{ region.pk }}" {% if request.GET.region == region.pk|stringformat:"s" %}selected{% endif %}>
       {{ region.region_name }}
     </option>
     {% endfor %}
-  </select>
+  </select> {% endcomment %}
   <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
   {% if query or request.GET.region %}
   <a href="{% url 'crm_sales:area_list' %}" class="btn btn-ghost">
@@ -69,10 +69,14 @@
           <td><code style="font-size:11px;color:var(--muted)">{{ area.area_id }}</code></td>
           <td style="font-weight:500">{{ area.area_name }}</td>
           <td>
-            <span style="font-size:13px">{{ area.region.region_name }}</span>
+            {% for region in area.region.all %}
+            <span style="font-size:13px">{{ region.region_name }},</span>
+            {% endfor %}
           </td>
           <td>
-            <span class="badge badge-blue">{{ area.region.division.name }}</span>
+            {% for region in area.region.all %}
+            <span class="badge badge-blue">{{ region.division.name }}</span>
+            {% endfor %}
           </td>
           <td style="color:var(--muted)">{{ area.area_manager|default:"—" }}</td>
           <td style="text-align:center">

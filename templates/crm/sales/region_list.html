@@ -29,14 +29,14 @@
     <i class="fa-solid fa-magnifying-glass"></i>
     <input type="text" name="q" value="{{ query }}" placeholder="Region name or manager...">
   </div>
-  <select name="division" style="width:200px">
+  {% comment %} <select name="division" style="width:200px">
     <option value="">All Territories</option>
     {% for div in divisions %}
     <option value="{{ div.pk }}" {% if request.GET.division == div.pk|stringformat:"s" %}selected{% endif %}>
       {{ div.name }}
     </option>
     {% endfor %}
-  </select>
+  </select> {% endcomment %}
   <button type="submit" class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
   {% if query or request.GET.division %}
   <a href="{% url 'crm_sales:region_list' %}" class="btn btn-ghost">
@@ -66,7 +66,9 @@
           <td><code style="font-size:11px;color:var(--muted)">{{ region.region_id }}</code></td>
           <td style="font-weight:500">{{ region.region_name }}</td>
           <td>
-            <span class="badge badge-blue">{{ region.division.name }}</span>
+            {% for division in region.division.all %}
+            <span class="badge badge-blue">{{ division.name }}</span>
+            {% endfor %}
           </td>
           <td style="color:var(--muted)">{{ region.regional_manager|default:"—" }}</td>
           <td style="text-align:center">

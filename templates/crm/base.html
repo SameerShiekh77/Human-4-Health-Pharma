@@ -802,7 +802,7 @@
   <div class="nav-section">Products</div>
   {% if request.user.is_superuser or perms.crm_products.view_division %}
   <a href="{% url 'crm_products:division_list' %}" class="nav-item {% block nav_divisions %}{% endblock %}">
-    <i class="fa-solid fa-sitemap"></i> Territories
+    <i class="fa-solid fa-sitemap"></i> Cities
   </a>
   {% endif %}
   {% if request.user.is_superuser or perms.crm_products.view_productmaster %}
@@ -812,12 +812,12 @@
   {% endif %}
   {% if request.user.is_superuser or perms.crm_products.view_batchmanagement %}
   <a href="{% url 'crm_products:batch_list' %}" class="nav-item {% block nav_batches %}{% endblock %}">
-    <i class="fa-solid fa-boxes-stacked"></i> Batches
+    <i class="fa-solid fa-boxes-stacked"></i> Warehouse
   </a>
   {% endif %}
   {% if request.user.is_superuser or perms.crm_products.view_companystock %}
   <a href="{% url 'crm_products:stock_list' %}" class="nav-item {% block nav_stock %}{% endblock %}">
-    <i class="fa-solid fa-warehouse"></i> Company Stock
+    <i class="fa-solid fa-warehouse"></i> Stock Alert
   </a>
   {% endif %}
   {% endif %}
@@ -925,7 +925,9 @@
   </a>
   {% endif %}
   {% endif %}
-
+ <a href="{% url 'home' %}" class="nav-item">
+    <i class="fa-solid fa-v"></i> View Website
+  </a>
   <div class="sidebar-footer">
     <div class="avatar">{{ request.user.username|slice:":1"|upper }}</div>
     <div>
